@@ -3,6 +3,7 @@
 Welcome to the CS732 project. We look forward to seeing the amazing things you create this semester! This is your team's repository.
 
 Your team members are:
+
 - Amanda Lowe _(alow719@aucklanduni.ac.nz)_
 - Liam Parker _(lpar161@aucklanduni.ac.nz)_
 - Eason Jin _(ejin458@aucklanduni.ac.nz)_
