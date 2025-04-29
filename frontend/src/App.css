@@ -27,3 +27,7 @@ button {
   border: 1px solid;
   cursor: pointer;
 }
+
+#google-signin-button:hover {
+  opacity: 95%;
+}
