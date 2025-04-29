@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.logo {
+  width: 150px;
+}
+
+.title {
+  font-size: 4rem;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.button {
+  width: 190px;
+  margin-top: 10px;
+  background-color: var(--purple);
+  color: var(--purple-text);
+  border-color: var(--purple);
+  font-size: 23px;
+}
+
+.leaderboardButton {
+  width: 190px;
+  margin-top: 10px;
+  background-color: var(--purple);
+  color: var(--purple-text);
+  border-color: var(--purple);
+  margin-bottom: 60px;
+  font-size: 23px;
+}
