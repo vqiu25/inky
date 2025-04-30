@@ -7,6 +7,7 @@ import Dictionary from "./dictionary-schema";
 const users = [
   {
     username: "testuser1",
+    email: "testuser1@gmail.com",
     profileImage: "https://example.com/image1.jpg",
     totalGames: 0,
     totalPoints: 0,
@@ -27,6 +28,7 @@ const users = [
   },
   {
     username: "testuser2",
+    email: "testuser2@gmail.com",
     profileImage: "https://example.com/image2.jpg",
     totalGames: 0,
     totalPoints: 0,

@@ -1,32 +1,49 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../AppContextProvider";
-import { AppContextType, Player } from "../types/types";
+import { PlayersContext } from "../context/PlayersContextProvider";
+import { UsersContext } from "../context/UsersContextProvider";
+import { Player } from "../types/types";
 import styles from "../assets/LoginPage.module.css";
 import logo from "../assets/logo.svg";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const LoginPage = () => {
-  const { playersList, setPlayersList } = useContext(
-    AppContext,
-  ) as AppContextType;
+  const { playersList, setPlayersList } = useContext(PlayersContext)!;
+  const { usersLoading, users, addUser } = useContext(UsersContext)!;
   const navigate = useNavigate();
 
-  // Function to handle successful Google sign-in
-  function handleGoogleResponse(response: unknown) {
-    // JWT is returned containing the user's name, email and profile picture
-    // TODO: Make API Call to store information from JWT in DB
+  async function handleGoogleResponse(response: unknown) {
     const jwt = (response as { credential: string }).credential;
     const payload = JSON.parse(atob(jwt.split(".")[1]));
     console.log("User:", payload);
+
     const newPlayer: Player = {
       playerName: payload.name,
       playerProfile: payload.picture,
     };
 
-    setPlayersList([...playersList, newPlayer]);
+    if (usersLoading) {
+      return null;
+    }
 
-    navigate("/home");
+    const userExists = users.some((user) => user.email === payload.email);
+
+    if (userExists) {
+      console.log("User already exists.");
+      navigate("/home");
+    } else {
+      try {
+        // Save user in DB
+        await addUser(payload.name, payload.picture, payload.email);
+
+        // Add player to context
+        setPlayersList([...playersList, newPlayer]);
+
+        navigate("/home");
+      } catch (error) {
+        console.error("Failed to create user:", error);
+      }
+    }
   }
 
   return (

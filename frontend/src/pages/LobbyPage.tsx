@@ -1,16 +1,9 @@
 import { useContext } from "react";
-import { AppContext } from "../AppContextProvider";
 import PlayerLobbyCard from "../components/PlayerLobbyCard";
+import PlayersContext from "../context/PlayersContextProvider";
 
 export default function LobbyPage() {
-  const context = useContext(AppContext);
-
-  // To handle the | null type
-  if (!context) {
-    return <div>Loading...</div>;
-  }
-
-  const { playersList } = context;
+  const { playersList } = useContext(PlayersContext)!;
 
   return (
     <>
