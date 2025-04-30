@@ -1,12 +1,15 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppContext, AppContextType } from "../AppContextProvider";
+import { AppContext } from "../AppContextProvider";
+import { AppContextType, Player } from "../types/types";
 import styles from "../assets/LoginPage.module.css";
 import logo from "../assets/logo.svg";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const LoginPage = () => {
-  const { setIsGuest } = useContext(AppContext) as AppContextType;
+  const { playersList, setPlayersList } = useContext(
+    AppContext,
+  ) as AppContextType;
   const navigate = useNavigate();
 
   // Function to handle successful Google sign-in
@@ -16,6 +19,12 @@ const LoginPage = () => {
     const jwt = (response as { credential: string }).credential;
     const payload = JSON.parse(atob(jwt.split(".")[1]));
     console.log("User:", payload);
+    const newPlayer: Player = {
+      playerName: payload.name,
+      playerProfile: payload.picture,
+    };
+
+    setPlayersList([...playersList, newPlayer]);
 
     navigate("/home");
   }
@@ -25,15 +34,6 @@ const LoginPage = () => {
       <img src={logo} className={styles.logo} alt="Logo" />
       <h1 className={styles.title}>Inky</h1>
       <GoogleSignInButton onSignInSuccess={handleGoogleResponse} />
-      <button
-        className={styles.button}
-        onClick={() => {
-          setIsGuest(true);
-          navigate("/home");
-        }}
-      >
-        Play as Guest
-      </button>
     </div>
   );
 };

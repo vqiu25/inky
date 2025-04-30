@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-
-export interface AppContextType {
-  isGuest: boolean;
-  setIsGuest: (value: boolean) => void;
-}
+import { Player, AppContextType } from "./types/types";
 
 const AppContext = React.createContext<AppContextType | undefined>(undefined);
 
 const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isGuest, setIsGuest] = useState<boolean>(false);
+  const [playersList, setPlayersList] = useState<Player[]>([]);
 
   return (
-    <AppContext.Provider value={{ isGuest, setIsGuest }}>
+    <AppContext.Provider value={{ playersList, setPlayersList }}>
       {children}
     </AppContext.Provider>
   );
