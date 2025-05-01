@@ -2,13 +2,13 @@ import "dotenv/config";
 
 import mongoose from "mongoose";
 import User from "./user-schema";
-import Dictionary from "./dictionary-schema";
+import Phrase from "./phrase-schema";
 
 const users = [
   {
     username: "testuser1",
     email: "testuser1@gmail.com",
-    profileImage: "https://example.com/image1.jpg",
+    profilePicture: "https://example.com/image1.jpg",
     totalGames: 0,
     totalPoints: 0,
     highScore: 0,
@@ -29,7 +29,7 @@ const users = [
   {
     username: "testuser2",
     email: "testuser2@gmail.com",
-    profileImage: "https://example.com/image2.jpg",
+    profilePicture: "https://example.com/image2.jpg",
     totalGames: 0,
     totalPoints: 0,
     highScore: 0,
@@ -49,7 +49,7 @@ const users = [
   }
 ];
 
-const dictionary = [
+const phrases = [
   {
     phrase: "Bungee jumping"
   },
@@ -68,10 +68,10 @@ async function run() {
   await mongoose.connect(dbConnectionString);
 
   await User.deleteMany({});
-  await Dictionary.deleteMany({});
+  await Phrase.deleteMany({});
 
   await User.insertMany(users);
-  await Dictionary.insertMany(dictionary);
+  await Phrase.insertMany(phrases);
 
   await mongoose.disconnect();
 }

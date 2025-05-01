@@ -3,25 +3,25 @@ import mongoose, { Schema } from "mongoose";
 const userSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  profileImage: { type: String, required: true },
+  profilePicture: { type: String, required: true },
   totalGames: { type: Number, required: true },
   totalPoints: { type: Number, required: true },
   highScore: { type: Number, required: true },
   powerups: {
     type: {
-      timeIncrease: Number,
-      timeDecrease: Number,
-      revealLetter: Number,
-      inkSplatter: Number,
-      removePoints: Number,
-      eraseDrawing: Number,
+      timeIncrease: { type: Number, required: true },
+      timeDecrease: { type: Number, required: true },
+      revealLetter: { type: Number, required: true },
+      inkSplatter: { type: Number, required: true },
+      removePoints: { type: Number, required: true },
+      eraseDrawing: { type: Number, required: true },
     }, required: true
   },
   achievements: {
     type: {
-      gameAchievement: Boolean,
-      powerupAchievement: Boolean,
-      scoreAchievement: Boolean,
+      gameAchievement: { type: Boolean, required: true },
+      powerupAchievement: { type: Boolean, required: true },
+      scoreAchievement: { type: Boolean, required: true },
     }, required: true
   },
 }, {
