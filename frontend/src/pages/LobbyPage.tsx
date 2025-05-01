@@ -1,8 +1,10 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import PlayerLobbyCard from "../components/PlayerLobbyCard";
 import PlayersContext from "../context/PlayersContextProvider";
 
 export default function LobbyPage() {
+  const navigate = useNavigate();
   const { playersList } = useContext(PlayersContext)!;
 
   return (
@@ -16,7 +18,7 @@ export default function LobbyPage() {
           />
         ))}
       </div>
-      <button>Enter Game</button>
+      <button onClick={() => navigate("/play")}>Enter Game</button>
     </>
   );
 }

@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { fabric } from "fabric";
-import io from "socket.io-client";
+import { socket } from "../services/socket";
 
 const GuesserCanvas: React.FC = () => {
   const canvasRef = useRef<fabric.Canvas | null>(null);
 
-  const socket = io("http://localhost:3000");
   useEffect(() => {
     const canvas = new fabric.Canvas("canv", {
       height: 500,

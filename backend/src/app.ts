@@ -36,8 +36,13 @@ io.on("connection", (socket: Socket) => {
   console.log("A user connected", socket.id);
 
   socket.on("canvas-data", (data) => {
-    console.log("i'm the server and i got something", data);
+    console.log("Server Canvas Data: ", data);
     socket.broadcast.emit("canvas-data", data);
+  });
+
+  socket.on("chat-data", (data) => {
+    console.log("Server Chat Data: ", data);
+    socket.broadcast.emit("chat-data", data);
   });
 
   socket.on("disconnect", () => {

@@ -29,3 +29,8 @@ export interface User {
   powerups: Powerups;
   achievements: Achievements;
 }
+
+export interface ChatMessage {
+  username: string;
+  text: string;
+}

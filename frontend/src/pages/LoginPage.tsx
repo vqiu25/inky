@@ -8,7 +8,8 @@ import logo from "../assets/logo.svg";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const LoginPage = () => {
-  const { playersList, setPlayersList } = useContext(PlayersContext)!;
+  const { playersList, setPlayersList, setCurrentPlayer } =
+    useContext(PlayersContext)!;
   const { usersLoading, users, addUser } = useContext(UsersContext)!;
   const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ const LoginPage = () => {
 
     if (userExists) {
       console.log("User already exists.");
+      setCurrentPlayer(newPlayer);
       navigate("/home");
     } else {
       try {
@@ -37,6 +39,7 @@ const LoginPage = () => {
         await addUser(payload.name, payload.picture, payload.email);
 
         // Add player to context
+        setCurrentPlayer(newPlayer);
         setPlayersList([...playersList, newPlayer]);
 
         navigate("/home");

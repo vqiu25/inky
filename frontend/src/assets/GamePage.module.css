@@ -1,0 +1,14 @@
+.flexContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.canvasWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.chatWrapper {
+  margin-left: 10px;
+}
