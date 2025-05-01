@@ -3,6 +3,9 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import LobbyPage from "./pages/LobbyPage";
+import GamePage from "./pages/GamePage";
+import DrawerCanvas from "./components/DrawerCanvas";
+import GuesserCanvas from "./components/GuesserCanvas";
 
 function App() {
   return (
@@ -13,6 +16,10 @@ function App() {
       <Route path="login" element={<LoginPage />} />
       <Route path="home" element={<HomePage />} />
       <Route path="lobby" element={<LobbyPage />} />
+      <Route path="play" element={<GamePage />}>
+        <Route index element={<DrawerCanvas />} />
+      </Route>
+      <Route path="play/guesser" element={<GuesserCanvas />} />
     </Routes>
   );
 }

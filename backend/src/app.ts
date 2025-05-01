@@ -4,10 +4,19 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import mongoose from "mongoose";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
 
 const PORT = process.env.PORT ?? 3000;
 
 const app = express();
+
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+});
 
 app.use(morgan("combined"));
 app.use(cors());
@@ -23,6 +32,19 @@ if (!dbConnectionString) {
   throw new Error("MONGODB_CONNECTION_STRING is not defined in .env file");
 }
 
+io.on("connection", (socket: Socket) => {
+  console.log("A user connected", socket.id);
+
+  socket.on("canvas-data", (data) => {
+    console.log("i'm the server and i got something", data);
+    socket.broadcast.emit("canvas-data", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected", socket.id);
+  });
+});
+
 mongoose.connect(dbConnectionString).then(() => {
-  app.listen(PORT, () => console.log(`App server listening on port ${PORT}!`));
+  server.listen(PORT, () => console.log(`App server listening on port ${PORT}!`));
 });
