@@ -5,6 +5,9 @@ import { UsersContext } from "../context/UsersContextProvider";
 import { Player } from "../types/types";
 import styles from "../assets/LoginPage.module.css";
 import logo from "../assets/logo.svg";
+import drop from "../assets/drop.svg";
+import paintbrush from "../assets/paintbrush.svg";
+
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const LoginPage = () => {
@@ -13,14 +16,22 @@ const LoginPage = () => {
   const { usersLoading, users, addUser } = useContext(UsersContext)!;
   const navigate = useNavigate();
 
+  function getRandomProfilePicture() {
+    const svgs = [logo, drop, paintbrush];
+    const randomIndex = Math.floor(Math.random() * svgs.length);
+    return svgs[randomIndex];
+  }
+
   async function handleGoogleResponse(response: unknown) {
     const jwt = (response as { credential: string }).credential;
     const payload = JSON.parse(atob(jwt.split(".")[1]));
     console.log("User:", payload);
 
+    const profilePicture = getRandomProfilePicture();
+
     const newPlayer: Player = {
       playerName: payload.name,
-      playerProfile: payload.picture,
+      playerProfile: profilePicture,
     };
 
     if (usersLoading) {
@@ -36,7 +47,7 @@ const LoginPage = () => {
     } else {
       try {
         // Save user in DB
-        await addUser(payload.name, payload.picture, payload.email);
+        await addUser(payload.name, profilePicture, payload.email);
 
         // Add player to context
         setCurrentPlayer(newPlayer);

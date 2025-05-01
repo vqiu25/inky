@@ -13,6 +13,7 @@ interface UsersContextType {
     profilePicture: string,
     email: string,
   ) => Promise<User>;
+  refreshUsers: () => void;
 }
 
 export const UsersContext = createContext<UsersContextType | undefined>(
@@ -44,7 +45,12 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <UsersContext.Provider
-      value={{ users: users ?? [], usersLoading, addUser }}
+      value={{
+        users: users ?? [],
+        usersLoading,
+        addUser,
+        refreshUsers,
+      }}
     >
       {children}
     </UsersContext.Provider>

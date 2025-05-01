@@ -2,9 +2,18 @@ import "../App.css";
 import logo from "../assets/logo.svg";
 import styles from "../assets/HomePage.module.css";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UsersContext } from "../context/UsersContextProvider";
 
 function HomePage() {
   const navigate = useNavigate();
+  const { refreshUsers } = useContext(UsersContext)!;
+
+  function onClickLeaderboard() {
+    refreshUsers();
+    navigate("/leaderboard");
+  }
+
   return (
     <div className={styles.container}>
       <img src={logo} className={styles.logo}></img>
@@ -13,7 +22,12 @@ function HomePage() {
         Play
       </button>
       <button className={styles.button}>Profile</button>
-      <button className={styles.leaderboardButton}>Leaderboard</button>
+      <button
+        className={styles.leaderboardButton}
+        onClick={() => onClickLeaderboard()}
+      >
+        Leaderboard
+      </button>
     </div>
   );
 }

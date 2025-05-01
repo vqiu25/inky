@@ -22,7 +22,7 @@ export interface User {
   _id: string;
   email: string;
   username: string;
-  profileImage: string;
+  profilePicture: string;
   totalGames: number;
   totalPoints: number;
   highScore: number;

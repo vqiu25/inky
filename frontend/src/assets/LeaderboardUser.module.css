@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profilePicture {
+  width: 35px;
+  height: 35px;
+}
+
+.pictureBorder {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: 2px solid var(--purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+}
+
+.pill {
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  width: 20px;
+  font-size: x-large;
+  margin-bottom: 10px;
+}
+
+.points {
+  background-color: var(--purple);
+  width: 180px;
+  color: var(--purple-text);
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.user {
+  background-color: #282a35;
+  color: var(--purple);
+  width: 400px;
+  gap: 10px;
+}

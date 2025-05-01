@@ -1,0 +1,42 @@
+.titleContainer {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.usersContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.backButton {
+  background-color: #282a35;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  border: none;
+  align-self: center;
+}
+
+.backButton:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.left,
+.right {
+  flex: 1;
+  text-align: center;
+}
+
+.arrow {
+  color: var(--purple);
+  font-size: 40px;
+}
