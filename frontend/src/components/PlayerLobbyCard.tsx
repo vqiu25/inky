@@ -1,12 +1,21 @@
-import { Player } from "../types/types";
+import { User } from "../types/types";
 
-export default function PlayerLobbyCard({ playerProfile, playerName }: Player) {
+type PlayerLobbyCardProps = {
+  user: User;
+  isCurrent: boolean;
+};
+
+export default function PlayerLobbyCard({
+  user,
+  isCurrent,
+}: PlayerLobbyCardProps) {
   return (
-    <>
-      <span>
-        <img src={playerProfile} />
-        <div>{playerName}</div>
-      </span>
-    </>
+    <span>
+      <img src={user.profilePicture} alt={`${user.username}'s profile`} />
+      <div>
+        {user.username}
+        {isCurrent ? " (You)" : ""}
+      </div>
+    </span>
   );
 }

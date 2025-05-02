@@ -22,6 +22,7 @@ export interface User {
   _id: string;
   email: string;
   username: string;
+  lobby: number; // 0 = not in lobby, 1 = in lobby, > 1 if we have more lobbies in the future
   profilePicture: string;
   totalGames: number;
   totalPoints: number;
