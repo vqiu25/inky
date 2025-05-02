@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Chat from "../components/Chat";
-import styles from "../assets/GamePage.module.css";
+import styles from "../assets/css-modules/GamePage.module.css";
 
 export default function GamePage() {
   return (

@@ -2,6 +2,7 @@
   --background-colour: #1b1c24;
   --purple: #b1b5e0;
   --purple-text: #494e8a;
+  --dark-background: #282a35;
   font-family: "Inter", sans-serif;
 }
 
@@ -12,6 +13,10 @@ body {
 }
 
 h1 {
+  color: var(--purple);
+}
+
+h2 {
   color: var(--purple);
 }
 

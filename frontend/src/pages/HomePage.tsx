@@ -1,6 +1,6 @@
 import "../App.css";
-import logo from "../assets/logo.svg";
-import styles from "../assets/HomePage.module.css";
+import logo from "../assets/images/logo.svg";
+import styles from "../assets/css-modules/HomePage.module.css";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UsersContext } from "../context/UsersContextProvider";
@@ -21,7 +21,9 @@ function HomePage() {
       <button className={styles.button} onClick={() => navigate("/lobby")}>
         Play
       </button>
-      <button className={styles.button}>Profile</button>
+      <button className={styles.button} onClick={() => navigate("/profile")}>
+        Profile
+      </button>
       <button
         className={styles.leaderboardButton}
         onClick={() => onClickLeaderboard()}

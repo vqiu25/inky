@@ -7,6 +7,7 @@ import GamePage from "./pages/GamePage";
 import DrawerCanvas from "./components/DrawerCanvas";
 import GuesserCanvas from "./components/GuesserCanvas";
 import LeaderboardPage from "./pages/LeaderboardPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       </Route>
       <Route path="play/guesser" element={<GuesserCanvas />} />
       <Route path="leaderboard" element={<LeaderboardPage />} />
+      <Route path="profile" element={<ProfilePage />} />
     </Routes>
   );
 }

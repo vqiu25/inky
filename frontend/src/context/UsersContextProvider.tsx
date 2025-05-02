@@ -5,6 +5,9 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
+/**
+ * Interface for the UsersContext values.
+ */
 interface UsersContextType {
   users: User[];
   usersLoading: boolean;
@@ -14,12 +17,22 @@ interface UsersContextType {
     email: string,
   ) => Promise<User>;
   refreshUsers: () => void;
+  getUserById: (id: string) => Promise<User>;
+  getUserByEmail: (email: string) => Promise<User>;
 }
 
+/**
+ * Context to provide access to user data and users API calls.
+ */
 export const UsersContext = createContext<UsersContextType | undefined>(
   undefined,
 );
 
+/**
+ * Provider component that manages and exposes users data and actions.
+ *
+ * @param children - React components that consume this provider.
+ */
 export const UsersProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
@@ -29,6 +42,14 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     refresh: refreshUsers,
   } = useGet<User[]>(`${API_BASE_URL}/api/users`, []);
 
+  /**
+   * Adds a new user and refreshes the users list.
+   *
+   * @param username - The new user's username.
+   * @param profilePicture - The path to the new user's profile picture.
+   * @param email - The new user's email address.
+   * @returns The created user.
+   */
   async function addUser(
     username: string,
     profilePicture: string,
@@ -43,6 +64,40 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     return response.data;
   }
 
+  /**
+   * Fetches a user using their ID.
+   *
+   * @param id - The user's ID.
+   * @returns The user matching the ID.
+   */
+  async function getUserById(id: string): Promise<User> {
+    try {
+      const response = await axios.get<User>(`${API_BASE_URL}/api/users/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to fetch user with ID ${id}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches a user using their email.
+   *
+   * @param email - The user's email address.
+   * @returns The user matching the email.
+   */
+  async function getUserByEmail(email: string): Promise<User> {
+    try {
+      const response = await axios.get<User>(
+        `${API_BASE_URL}/api/users?email=${email}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to fetch user with email ${email}:`, error);
+      throw error;
+    }
+  }
+
   return (
     <UsersContext.Provider
       value={{
@@ -50,6 +105,8 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         usersLoading,
         addUser,
         refreshUsers,
+        getUserById,
+        getUserByEmail,
       }}
     >
       {children}

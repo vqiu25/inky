@@ -2,7 +2,7 @@ import React, { useEffect, useState, FormEvent, useContext } from "react";
 import { socket } from "../services/socket";
 import { ChatMessage } from "../types/types";
 import { PlayersContext } from "../context/PlayersContextProvider";
-import styles from "../assets/Chat.module.css";
+import styles from "../assets/css-modules/Chat.module.css";
 
 const Chat: React.FC = () => {
   const { currentPlayer } = useContext(PlayersContext)!;
