@@ -4,7 +4,7 @@ const userSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   profilePicture: { type: String, required: true },
-  lobby: {type: Number, required:true},
+  lobby: { type: Number, required: true },
   totalGames: { type: Number, required: true },
   totalPoints: { type: Number, required: true },
   highScore: { type: Number, required: true },

@@ -4,9 +4,10 @@ import ProfilePicture from "./ProfilePicture";
 
 interface UserInfoProps {
   user: User;
+  isCurrent?: boolean;
 }
 
-export default function UserInfo({ user }: UserInfoProps) {
+export default function UserInfo({ user, isCurrent }: UserInfoProps) {
   return (
     <span className={styles.userInfoContainer}>
       <ProfilePicture
@@ -17,7 +18,9 @@ export default function UserInfo({ user }: UserInfoProps) {
           height: "35px",
         }}
       ></ProfilePicture>
-      <div>{user.username}</div>
+      <div>
+        {user.username} {isCurrent ? " (You)" : ""}
+      </div>
     </span>
   );
 }

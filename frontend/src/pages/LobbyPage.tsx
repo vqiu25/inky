@@ -1,8 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import PlayerLobbyCard from "../components/PlayerLobbyCard";
 import { UsersContext } from "../context/UsersContextProvider";
 import { User } from "../types/types";
+import styles from "../assets/css-modules/LobbyPage.module.css";
+import PageHeader from "../components/PageHeader";
+import UserInfo from "../components/UserInfo";
+import InfoPill from "../components/InfoPill";
 
 export default function LobbyPage() {
   const navigate = useNavigate();
@@ -48,16 +51,26 @@ export default function LobbyPage() {
   }, []);
 
   return (
-    <>
-      <div>
+    <div>
+      <PageHeader exitLobby={true}>Lobby</PageHeader>
+      <div className={styles.container}>
         {playersList.map((player) => (
-          <PlayerLobbyCard
-            user={player}
-            isCurrent={currentUser?.email === player.email}
+          <InfoPill
+            children={
+              <UserInfo
+                user={player}
+                isCurrent={currentUser?.email === player.email}
+              />
+            }
+            className="darkBackground"
+            style={{ minWidth: "450px", paddingInlineEnd: "10px" }}
           />
         ))}
+        <div style={{ height: "20px" }}></div>
+        <button className={styles.button} onClick={() => navigate("/play")}>
+          Enter Game
+        </button>
       </div>
-      <button onClick={() => navigate("/play")}>Enter Game</button>
-    </>
+    </div>
   );
 }

@@ -8,7 +8,7 @@ const users = [
   {
     username: "testuser1",
     email: "testuser1@gmail.com",
-    profilePicture: "https://example.com/image1.jpg",
+    profilePicture: "src/assets/images/logo.svg",
     lobby: 1,
     totalGames: 0,
     totalPoints: 0,
@@ -30,7 +30,7 @@ const users = [
   {
     username: "testuser2",
     email: "testuser2@gmail.com",
-    profilePicture: "https://example.com/image2.jpg",
+    profilePicture: "src/assets/images/paintbrush.svg",
     lobby: 0,
     totalGames: 0,
     totalPoints: 0,
