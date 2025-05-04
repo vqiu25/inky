@@ -1,8 +1,15 @@
-import React, { useEffect, useState, FormEvent, useContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  FormEvent,
+  useContext,
+} from "react";
 import { socket } from "../services/socket";
 import { ChatMessage } from "../types/types";
 import { PlayersContext } from "../context/PlayersContextProvider";
-import styles from "../assets/css-modules/Chat.module.css";
+import styles from "../assets/css-modules/GameChat.module.css";
+import planeIcon from "../assets/images/plane.svg";
 
 const Chat: React.FC = () => {
   const { currentPlayer } = useContext(PlayersContext)!;
@@ -10,6 +17,12 @@ const Chat: React.FC = () => {
   const [currentMessage, setCurrentMessage] = useState("");
 
   const username = currentPlayer?.playerName ?? "Anonymous";
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     socket.on("chat-data", (message: ChatMessage) => {
@@ -36,9 +49,10 @@ const Chat: React.FC = () => {
       <div className={styles.messages}>
         {messages.map((msg, idx) => (
           <div key={idx} className={styles.message}>
-            <strong>{msg.username}:</strong> {msg.text}
+            <strong>{msg.username}:</strong> <span>{msg.text}</span>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <form onSubmit={handleSend} className={styles.form}>
@@ -50,7 +64,7 @@ const Chat: React.FC = () => {
           className={styles.input}
         />
         <button type="submit" className={styles.button}>
-          Send
+          <img src={planeIcon} alt="Send" className={styles.icon} />
         </button>
       </form>
     </div>
