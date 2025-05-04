@@ -1,6 +1,5 @@
 name: lint
 
-
 on:
   push:
     branches:
@@ -10,30 +9,58 @@ on:
       - main
 
 jobs:
-  run-linters:
-    name: Run linters
+  ESLint:
+    name: ESLint
     runs-on: ubuntu-latest
     permissions:
-      checks: write        
-      contents: read 
+      checks: write
+      contents: read
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: 22
 
-      # ESLint and Prettier must be in `package.json`
-      - name: Install Node.js dependencies
+      - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm ci
 
-      - name: Run linters
-        uses: wearerequired/lint-action@v2
+      - name: Run frontend ESLint
+        working-directory: ./frontend
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run backend ESLint
+        working-directory: ./backend
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+
+  Prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
-          eslint: true
-          eslint_dir: frontend
-          prettier: true
-          prettier_dir: frontend
+          node-version: 22
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run frontend Prettier
+        working-directory: ./frontend
+        run: npx prettier --check .
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run backend Prettier
+        working-directory: ./backend
+        run: npx prettier --check .

@@ -7,7 +7,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx ./src/app.ts",
-    "init-db": "tsx ./src/db/init-db.ts"
+    "init-db": "tsx ./src/db/init-db.ts",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "axios": "^1.6.7",
@@ -21,15 +23,18 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.26.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.15.3",
+    "eslint": "^9.26.0",
+    "globals": "^16.0.0",
     "nodemon": "^3.0.3",
-    "prettier": "^3.2.4",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "~5.7.2",
-    "typescript-eslint": "^8.24.1"
+    "typescript-eslint": "^8.31.1"
   }
 }

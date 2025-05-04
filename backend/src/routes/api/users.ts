@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import type { Request, Response } from "express";
 import User from "../../db/user-schema";
@@ -20,7 +21,7 @@ router.get("/", async (req: Request, res: Response) => {
       res.send(user);
       return;
     }
-    const filter = (inLobby === 'true') ? { lobby: { $gt: 0 } } : {};
+    const filter = inLobby === "true" ? { lobby: { $gt: 0 } } : {};
     const users = await User.find(filter);
     res.send(users);
   } catch (error) {
@@ -91,8 +92,8 @@ router.post("/", async (req: Request, res: Response) => {
     const addedUser = await newUser.save();
     res.status(201).json(addedUser);
   } catch (error: any) {
-    if (error?.name === 'ValidationError' || error?.name === 'CastError') {
-      res.status(400).json({ message: 'Invalid user data' });
+    if (error?.name === "ValidationError" || error?.name === "CastError") {
+      res.status(400).json({ message: "Invalid user data" });
       return;
     }
 
@@ -112,15 +113,11 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
     const user = User.castObject(req.body);
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      user,
-      {
-        new: true,
-        runValidators: true,
-        context: "query"
-      }
-    );
+    const updatedUser = await User.findByIdAndUpdate(id, user, {
+      new: true,
+      runValidators: true,
+      context: "query"
+    });
 
     if (!updatedUser) {
       res.status(404).json({ message: "User not found" });
@@ -129,8 +126,8 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
     res.send(updatedUser);
   } catch (error: any) {
-    if (error?.name === 'ValidationError' || error?.name === 'CastError') {
-      res.status(400).json({ message: 'Invalid user data' });
+    if (error?.name === "ValidationError" || error?.name === "CastError") {
+      res.status(400).json({ message: "Invalid user data" });
       return;
     }
 
