@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { fabric } from "fabric";
-import { socket } from "../services/socket";
+import { socket } from "../../services/socket";
 
 const DrawerCanvas: React.FC = () => {
   const canvasRef = useRef<fabric.Canvas | null>(null);

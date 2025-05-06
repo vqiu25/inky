@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UsersContext } from "../context/UsersContextProvider";
 import styles from "../assets/css-modules/LeaderboardPage.module.css";
-import LeaderboardUserRow from "../components/LeaderboardUserRow";
-import PageHeader from "../components/PageHeader";
+import LeaderboardUserRow from "../components/leaderboardComponents/LeaderboardUserRow";
+import PageHeader from "../components/layoutComponents/PageHeader";
 
 export default function LeaderboardPage() {
   const { usersList } = useContext(UsersContext)!;

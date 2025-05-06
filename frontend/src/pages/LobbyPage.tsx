@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { UsersContext } from "../context/UsersContextProvider";
 import { User } from "../types/types";
 import styles from "../assets/css-modules/LobbyPage.module.css";
-import PageHeader from "../components/PageHeader";
-import UserInfo from "../components/UserInfo";
-import InfoPill from "../components/InfoPill";
+import PageHeader from "../components/layoutComponents/PageHeader";
+import UserInfo from "../components/userInfoComponents/UserInfo";
+import InfoPill from "../components/userInfoComponents/InfoPill";
 
 export default function LobbyPage() {
   const navigate = useNavigate();

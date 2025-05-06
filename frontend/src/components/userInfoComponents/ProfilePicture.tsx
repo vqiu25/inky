@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import styles from "../assets/css-modules/User.module.css";
+import styles from "../../assets/css-modules/User.module.css";
 
 interface ProfilePictureProps {
   src: string;

@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import styles from "../assets/css-modules/ProfilePage.module.css";
-import PageHeader from "../components/PageHeader";
-import ProfilePicture from "../components/ProfilePicture";
-import ProfileInfoContainer from "../components/ProfileInfoContainer";
+import PageHeader from "../components/layoutComponents/PageHeader";
+import ProfilePicture from "../components/userInfoComponents/ProfilePicture";
+import ProfileInfoContainer from "../components/userInfoComponents/ProfileInfoContainer";
 import { User } from "../types/types";
 import { UsersContext } from "../context/UsersContextProvider";
 import { useLocation } from "react-router-dom";

@@ -1,5 +1,5 @@
-import { User } from "../types/types";
-import styles from "../assets/css-modules/User.module.css";
+import { User } from "../../types/types";
+import styles from "../../assets/css-modules/User.module.css";
 import ProfilePicture from "./ProfilePicture";
 
 interface UserInfoProps {

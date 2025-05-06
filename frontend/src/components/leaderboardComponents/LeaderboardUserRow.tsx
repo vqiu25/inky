@@ -1,7 +1,7 @@
 import LeaderboardUser from "./LeaderboardUser";
-import UserInfo from "./UserInfo";
-import { User } from "../types/types";
-import InfoPill from "./InfoPill";
+import UserInfo from "../userInfoComponents/UserInfo";
+import { User } from "../../types/types";
+import InfoPill from "../userInfoComponents/InfoPill";
 
 export default function LeaderboardUserRow({ user }: { user: User }) {
   return (

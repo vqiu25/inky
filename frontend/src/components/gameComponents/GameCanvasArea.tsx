@@ -1,4 +1,4 @@
-import styles from "../assets/css-modules/GameCanvasArea.module.css";
+import styles from "../../assets/css-modules/GameCanvasArea.module.css";
 import DrawerCanvas from "./DrawerCanvas";
 
 export default function GameCanvasArea() {

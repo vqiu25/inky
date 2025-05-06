@@ -1,4 +1,4 @@
-import styles from "../assets/css-modules/LeaderboardUser.module.css";
+import styles from "../../assets/css-modules/LeaderboardUser.module.css";
 import { ReactNode } from "react";
 
 interface LeaderboardUserProps {

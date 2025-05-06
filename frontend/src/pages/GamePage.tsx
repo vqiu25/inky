@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import styles from "../assets/css-modules/GamePage.module.css";
-import GameToolBar from "../components/GameToolBar";
-import GamePowerups from "../components/GamePowerups";
-import GameStatusBar from "../components/GameStatusBar";
-import GamePlayerList from "../components/GamePlayerList";
-import GameCanvasArea from "../components/GameCanvasArea";
-import GameChat from "../components/GameChat";
+import GameToolBar from "../components/gameComponents/GameToolBar";
+import GamePowerups from "../components/gameComponents/GamePowerups";
+import GameStatusBar from "../components/gameComponents/GameStatusBar";
+import GamePlayerList from "../components/gameComponents/GamePlayerList";
+import GameCanvasArea from "../components/gameComponents/GameCanvasArea";
+import GameChat from "../components/gameComponents/GameChat";
 
 export default function GamePage() {
   const wrapperRef = useRef<HTMLDivElement>(null);

@@ -5,11 +5,11 @@ import React, {
   FormEvent,
   useContext,
 } from "react";
-import { socket } from "../services/socket";
-import { ChatMessage } from "../types/types";
-import styles from "../assets/css-modules/GameChat.module.css";
-import planeIcon from "../assets/images/plane.svg";
-import { UsersContext } from "../context/UsersContextProvider";
+import { socket } from "../../services/socket";
+import { ChatMessage } from "../../types/types";
+import styles from "../../assets/css-modules/GameChat.module.css";
+import planeIcon from "../../assets/images/plane.svg";
+import { UsersContext } from "../../context/UsersContextProvider";
 
 const Chat: React.FC = () => {
   const { currentUser } = useContext(UsersContext)!;

@@ -1,5 +1,5 @@
 import { ReactNode, CSSProperties } from "react";
-import styles from "../assets/css-modules/User.module.css";
+import styles from "../../assets/css-modules/User.module.css";
 
 interface InfoPillProps {
   children: ReactNode;

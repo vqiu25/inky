@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import styles from "../assets/css-modules/ProfilePage.module.css";
+import styles from "../../assets/css-modules/ProfilePage.module.css";
 import InfoPill from "./InfoPill";
 
 interface InfoContainerProps {

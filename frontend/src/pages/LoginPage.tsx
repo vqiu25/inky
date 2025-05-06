@@ -7,7 +7,7 @@ import drop from "../assets/images/drop.svg";
 import paintbrush from "../assets/images/paintbrush.svg";
 import { User } from "../types/types";
 
-import GoogleSignInButton from "../components/GoogleSignInButton";
+import GoogleSignInButton from "../components/signInComponents/GoogleSignInButton";
 
 const LoginPage = () => {
   const { setCurrentUser } = useContext(UsersContext)!;
