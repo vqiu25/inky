@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { UsersContext } from "../context/UsersContextProvider";
+import { UsersContext } from "../context/UsersContext";
 import { User } from "../types/types";
 import styles from "../assets/css-modules/LobbyPage.module.css";
 import PageHeader from "../components/layoutComponents/PageHeader";
@@ -56,6 +56,7 @@ export default function LobbyPage() {
       <div className={styles.container}>
         {playersList.map((player) => (
           <InfoPill
+            key={player._id}
             children={
               <UserInfo
                 user={player}

@@ -2,7 +2,7 @@ import { ReactNode, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../assets/css-modules/PageHeader.module.css";
 import axios from "axios";
-import { UsersContext } from "../../context/UsersContextProvider";
+import { UsersContext } from "../../context/UsersContext";
 
 interface PageHeaderProps {
   children: ReactNode;

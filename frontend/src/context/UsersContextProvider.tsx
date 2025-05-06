@@ -1,14 +1,15 @@
-import React, { createContext, ReactNode, useState, useEffect } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { User } from "../types/types";
 import useGet from "../hooks/useGet";
 import axios from "axios";
+import { UsersContext } from "./UsersContext";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 /**
  * Interface for the UsersContext values.
  */
-interface UsersContextType {
+export interface UsersContextType {
   usersLoading: boolean;
   addUser: (
     username: string,
@@ -23,13 +24,6 @@ interface UsersContextType {
   currentUser: User | null;
   setCurrentUser: (u: User) => void;
 }
-
-/**
- * Context to provide access to user data and users API calls.
- */
-export const UsersContext = createContext<UsersContextType | undefined>(
-  undefined,
-);
 
 /**
  * Provider component that manages and exposes users data and actions.

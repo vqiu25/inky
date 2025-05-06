@@ -3,7 +3,7 @@ import logo from "../assets/images/logo.svg";
 import styles from "../assets/css-modules/HomePage.module.css";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { UsersContext } from "../context/UsersContextProvider";
+import { UsersContext } from "../context/UsersContext";
 import axios from "axios";
 
 function HomePage() {

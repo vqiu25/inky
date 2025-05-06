@@ -1,11 +1,10 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UsersContext } from "../context/UsersContextProvider";
+import { UsersContext } from "../context/UsersContext";
 import styles from "../assets/css-modules/LoginPage.module.css";
 import logo from "../assets/images/logo.svg";
 import drop from "../assets/images/drop.svg";
 import paintbrush from "../assets/images/paintbrush.svg";
-import { User } from "../types/types";
 
 import GoogleSignInButton from "../components/signInComponents/GoogleSignInButton";
 
@@ -24,36 +23,6 @@ const LoginPage = () => {
   let retryCount = 0;
 
   async function handleGoogleResponse(response: unknown) {
-    const jwt = (response as { credential: string }).credential;
-    const payload = JSON.parse(atob(jwt.split(".")[1]));
-    console.log("User:", payload);
-
-    const profilePicture = getRandomProfilePicture();
-
-    const newPlayer: User = {
-      _id: "",
-      email: payload.email,
-      username: payload.name,
-      profilePicture: profilePicture,
-      lobby: 0, // TODO: remove this later
-      totalGames: 0,
-      totalPoints: 0,
-      highScore: 0,
-      powerups: {
-        timeIncrease: 0,
-        timeDecrease: 0,
-        revealLetter: 0,
-        inkSplatter: 0,
-        removePoints: 0,
-        eraseDrawing: 0,
-      },
-      achievements: {
-        gameAchievement: false,
-        powerupAchievement: false,
-        scoreAchievement: false,
-      },
-    };
-
     // Wait until usersLoading is false
     if (usersLoading) {
       if (retryCount < 10) {
@@ -64,6 +33,11 @@ const LoginPage = () => {
       }
       return;
     }
+    const jwt = (response as { credential: string }).credential;
+    const payload = JSON.parse(atob(jwt.split(".")[1]));
+    console.log("User:", payload);
+
+    const profilePicture = getRandomProfilePicture();
 
     const userExists = usersList.some((user) => user.email === payload.email);
 
@@ -78,14 +52,13 @@ const LoginPage = () => {
       }
     }
 
-    // Add player to context
-    setCurrentUser(newPlayer);
-
     navigate("/home");
 
     const currentUser = await getUserByEmail(payload.email);
 
     if (currentUser) {
+      // Add user to context
+      setCurrentUser(currentUser);
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
     }
   }

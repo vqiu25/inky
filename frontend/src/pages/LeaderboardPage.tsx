@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UsersContext } from "../context/UsersContextProvider";
+import { UsersContext } from "../context/UsersContext";
 import styles from "../assets/css-modules/LeaderboardPage.module.css";
 import LeaderboardUserRow from "../components/leaderboardComponents/LeaderboardUserRow";
 import PageHeader from "../components/layoutComponents/PageHeader";

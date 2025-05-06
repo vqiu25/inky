@@ -4,7 +4,7 @@ import PageHeader from "../components/layoutComponents/PageHeader";
 import ProfilePicture from "../components/userInfoComponents/ProfilePicture";
 import ProfileInfoContainer from "../components/userInfoComponents/ProfileInfoContainer";
 import { User } from "../types/types";
-import { UsersContext } from "../context/UsersContextProvider";
+import { UsersContext } from "../context/UsersContext";
 import { useLocation } from "react-router-dom";
 
 export default function ProfilePage() {
