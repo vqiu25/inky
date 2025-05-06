@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import type { Request, Response } from "express";
-import Phrase from "../../db/phrase-schema";
+import Phrase from "../../db/phrase-schema.js";
 import { ObjectId } from "mongodb";
 
 const router = express.Router();

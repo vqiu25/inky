@@ -1,8 +1,8 @@
 import "dotenv/config";
 
 import mongoose from "mongoose";
-import User from "./user-schema";
-import Phrase from "./phrase-schema";
+import User from "./user-schema.js";
+import Phrase from "./phrase-schema.js";
 
 const users = [
   {

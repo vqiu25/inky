@@ -13,7 +13,7 @@ import {
   getNewGameState,
   updatePlayerPoints,
   getMaxRounds
-} from "./game-state/game-state";
+} from "./game-state/game-state.js";
 
 const PORT = process.env.PORT ?? 3000;
 
@@ -34,7 +34,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-import routes from "./routes/routes";
+import routes from "./routes/routes.js";
 app.use("/", routes);
 
 const dbConnectionString = process.env.MONGODB_CONNECTION_STRING;

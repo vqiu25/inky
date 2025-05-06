@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "start": "node dist/app.js",
     "dev": "tsx ./src/app.ts",
     "init-db": "tsx ./src/db/init-db.ts",
     "format": "prettier --write .",
