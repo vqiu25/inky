@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode } from "react";
+import React, { createContext, ReactNode, useState, useEffect } from "react";
 import { User } from "../types/types";
 import useGet from "../hooks/useGet";
 import axios from "axios";
@@ -9,7 +9,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
  * Interface for the UsersContext values.
  */
 interface UsersContextType {
-  users: User[];
   usersLoading: boolean;
   addUser: (
     username: string,
@@ -19,6 +18,10 @@ interface UsersContextType {
   refreshUsers: () => void;
   getUserById: (id: string) => Promise<User>;
   getUserByEmail: (email: string) => Promise<User>;
+  usersList: User[];
+  setUsersList: React.Dispatch<React.SetStateAction<User[]>>;
+  currentUser: User | null;
+  setCurrentUser: (u: User) => void;
 }
 
 /**
@@ -36,12 +39,20 @@ export const UsersContext = createContext<UsersContextType | undefined>(
 export const UsersProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const [usersList, setUsersList] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const {
     data: users,
     isLoading: usersLoading,
     refresh: refreshUsers,
   } = useGet<User[]>(`${API_BASE_URL}/api/users`, []);
-
+  useEffect(() => {
+    if (users == null) {
+      setUsersList([]);
+    } else {
+      setUsersList(users);
+    }
+  }, [users]);
   /**
    * Adds a new user and refreshes the users list.
    *
@@ -101,12 +112,15 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <UsersContext.Provider
       value={{
-        users: users ?? [],
         usersLoading,
         addUser,
         refreshUsers,
         getUserById,
         getUserByEmail,
+        usersList,
+        setUsersList,
+        currentUser,
+        setCurrentUser,
       }}
     >
       {children}

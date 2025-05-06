@@ -5,13 +5,13 @@ import LeaderboardUserRow from "../components/LeaderboardUserRow";
 import PageHeader from "../components/PageHeader";
 
 export default function LeaderboardPage() {
-  const { users } = useContext(UsersContext)!;
+  const { usersList } = useContext(UsersContext)!;
 
   return (
     <div>
       <PageHeader>Leaderboard</PageHeader>
       <div className={styles.usersContainer}>
-        {users
+        {usersList
           .slice()
           .sort((a, b) => b.totalPoints - a.totalPoints)
           .map((user) => (

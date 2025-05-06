@@ -7,16 +7,16 @@ import React, {
 } from "react";
 import { socket } from "../services/socket";
 import { ChatMessage } from "../types/types";
-import { PlayersContext } from "../context/PlayersContextProvider";
 import styles from "../assets/css-modules/GameChat.module.css";
 import planeIcon from "../assets/images/plane.svg";
+import { UsersContext } from "../context/UsersContextProvider";
 
 const Chat: React.FC = () => {
-  const { currentPlayer } = useContext(PlayersContext)!;
+  const { currentUser } = useContext(UsersContext)!;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState("");
 
-  const username = currentPlayer?.playerName ?? "Anonymous";
+  const username = currentUser?.username ?? "Anonymous";
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 

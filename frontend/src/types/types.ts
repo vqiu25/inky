@@ -1,8 +1,3 @@
-export type Player = {
-  playerName: string;
-  playerProfile: string;
-};
-
 export interface Powerups {
   timeIncrease: number;
   timeDecrease: number;

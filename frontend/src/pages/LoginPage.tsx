@@ -1,19 +1,17 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { PlayersContext } from "../context/PlayersContextProvider";
 import { UsersContext } from "../context/UsersContextProvider";
-import { Player } from "../types/types";
 import styles from "../assets/css-modules/LoginPage.module.css";
 import logo from "../assets/images/logo.svg";
 import drop from "../assets/images/drop.svg";
 import paintbrush from "../assets/images/paintbrush.svg";
+import { User } from "../types/types";
 
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const LoginPage = () => {
-  const { playersList, setPlayersList, setCurrentPlayer } =
-    useContext(PlayersContext)!;
-  const { usersLoading, users, addUser, getUserByEmail } =
+  const { setCurrentUser } = useContext(UsersContext)!;
+  const { usersLoading, usersList, addUser, getUserByEmail } =
     useContext(UsersContext)!;
   const navigate = useNavigate();
 
@@ -32,9 +30,28 @@ const LoginPage = () => {
 
     const profilePicture = getRandomProfilePicture();
 
-    const newPlayer: Player = {
-      playerName: payload.name,
-      playerProfile: profilePicture,
+    const newPlayer: User = {
+      _id: "",
+      email: payload.email,
+      username: payload.name,
+      profilePicture: profilePicture,
+      lobby: 0, // TODO: remove this later
+      totalGames: 0,
+      totalPoints: 0,
+      highScore: 0,
+      powerups: {
+        timeIncrease: 0,
+        timeDecrease: 0,
+        revealLetter: 0,
+        inkSplatter: 0,
+        removePoints: 0,
+        eraseDrawing: 0,
+      },
+      achievements: {
+        gameAchievement: false,
+        powerupAchievement: false,
+        scoreAchievement: false,
+      },
     };
 
     // Wait until usersLoading is false
@@ -48,7 +65,7 @@ const LoginPage = () => {
       return;
     }
 
-    const userExists = users.some((user) => user.email === payload.email);
+    const userExists = usersList.some((user) => user.email === payload.email);
 
     if (userExists) {
       console.log("User already exists.");
@@ -56,15 +73,13 @@ const LoginPage = () => {
       try {
         // Save user in DB
         await addUser(payload.name, profilePicture, payload.email);
-
-        setPlayersList([...playersList, newPlayer]);
       } catch (error) {
         console.error("Failed to create user:", error);
       }
     }
 
     // Add player to context
-    setCurrentPlayer(newPlayer);
+    setCurrentUser(newPlayer);
 
     navigate("/home");
 
