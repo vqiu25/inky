@@ -6,7 +6,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import { ObjectId } from "mongodb";
+import { User } from "./types/types.js";
 import {
   GameState,
   getInitialGameState,
@@ -19,6 +19,8 @@ const PORT = process.env.PORT ?? 3000;
 
 let currentGameState: GameState;
 let numPlayersGuessed = 0;
+let lobbyPlayers: User[] = [];
+const maxLobbyPlayers = 6;
 
 const app = express();
 
@@ -53,17 +55,44 @@ io.on("connection", (socket: Socket) => {
       socket.emit("drawer-select", currentGameState.drawer);
     }
   };
+
+  const playerLeave = (leavingPlayer: User): void => {
+    console.log("I'm the server. Got player leave", leavingPlayer.username);
+    lobbyPlayers = lobbyPlayers.filter((player) => player._id !== leavingPlayer._id);
+    console.log("I'm the server. Updated players count:", lobbyPlayers.length);
+    io.emit("lobby-change", lobbyPlayers);
+  };
+
   console.log("A user connected", socket.id);
 
   /**
    * Listener for when a player joins the game.
    * Broadcasts the updated list of players to all clients.
    *
-   * @param players - The players in the game. Will be updated on the clients side.
+   * @param newPlayer - the new player joining the lobby.
    */
-  socket.on("player-join", (players: ObjectId[]) => {
-    console.log("Players is now", players);
-    socket.emit("player-join", players);
+  socket.on("player-join", (newPlayer: User) => {
+    console.log("I'm the server. Got new player", newPlayer.username);
+    if (lobbyPlayers.length >= maxLobbyPlayers) {
+      console.log("I'm the server. Lobby is full. Can't add more players.");
+      io.to(socket.id).emit("lobby-full", "hey there");
+      return;
+    }
+    if (!lobbyPlayers.some((p) => p._id === newPlayer._id)) {
+      lobbyPlayers.push(newPlayer);
+    }
+    console.log("I'm the server. Updated players count:", lobbyPlayers.length);
+    io.emit("lobby-change", lobbyPlayers);
+  });
+
+  /**
+   * Listener for when a player leaves the game.
+   * Broadcasts the updated list of players to all clients.
+   *
+   * @param leavingPlayer - the player leaving the lobby.
+   */
+  socket.on("player-leave", (leavingPlayer: User) => {
+    playerLeave(leavingPlayer);
   });
 
   /**
@@ -72,7 +101,7 @@ io.on("connection", (socket: Socket) => {
    *
    * @param players - The players in the game.
    */
-  socket.on("game-start", (players: ObjectId[]) => {
+  socket.on("game-start", (players: User[]) => {
     currentGameState = getInitialGameState(players);
     socket.emit("drawer-select", currentGameState.drawer);
     console.log("broadcasting drawer", currentGameState.drawer);
@@ -98,7 +127,7 @@ io.on("connection", (socket: Socket) => {
    * @param player - The player who guessed the word.
    * @param timeRemaining - The time remaining when the word was guessed. Ill be kept track of on the clients side.
    */
-  socket.on("word-guessed", (player: ObjectId, timeRemaining: number) => {
+  socket.on("word-guessed", (player: User, timeRemaining: number) => {
     numPlayersGuessed++;
     console.log("Word guessed by player: ", player);
     currentGameState.playerPoints = updatePlayerPoints(currentGameState, player, timeRemaining);

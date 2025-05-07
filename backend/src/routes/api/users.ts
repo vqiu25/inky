@@ -7,8 +7,7 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const { email, inLobby } = req.query;
-  console.log(inLobby);
+  const { email } = req.query;
   try {
     if (typeof email == "string") {
       const user = await User.findOne({ email: email });
@@ -21,8 +20,8 @@ router.get("/", async (req: Request, res: Response) => {
       res.send(user);
       return;
     }
-    const filter = inLobby === "true" ? { lobby: { $gt: 0 } } : {};
-    const users = await User.find(filter);
+
+    const users = await User.find();
     res.send(users);
   } catch (error) {
     console.error(error);
@@ -61,7 +60,6 @@ router.post("/", async (req: Request, res: Response) => {
       username: username,
       email: email,
       profilePicture: profilePicture,
-      lobby: 0,
       totalGames: 0,
       totalPoints: 0,
       highScore: 0,

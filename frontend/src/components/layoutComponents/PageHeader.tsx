@@ -1,7 +1,7 @@
 import { ReactNode, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../assets/css-modules/PageHeader.module.css";
-import axios from "axios";
+import { socket } from "../../services/socket";
 import { UsersContext } from "../../context/UsersContext";
 import backArrow from "../../assets/images/back-arrow.svg";
 
@@ -26,17 +26,8 @@ export default function PageHeader({
         const email = JSON.parse(storedUser).email;
         const currentUser = await getUserByEmail(email);
         if (currentUser) {
-          const res = await axios.patch(
-            `${import.meta.env.VITE_API_BASE_URL}/api/users/${currentUser._id}`,
-            {
-              lobby: 0,
-            },
-          );
-          if (res.status === 200) {
-            console.log(`User ${currentUser.username} left the lobby`);
-          } else {
-            console.error(`Failed to leave the lobby: ${res}`);
-          }
+          console.log("im leave a lobby now. i am", currentUser.username);
+          socket.emit("player-leave", currentUser);
         }
       }
     }

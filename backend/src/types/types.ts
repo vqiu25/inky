@@ -38,5 +38,5 @@ export enum PowerupNames {
   timeIncrease = "Add Time",
   timeDecrease = "Decrease Time",
   eraseDrawing = "Clear Drawing",
-  revealLetter = "Reveal a Letter",
+  revealLetter = "Reveal a Letter"
 }

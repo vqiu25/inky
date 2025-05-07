@@ -2,11 +2,14 @@ import "../App.css";
 import logo from "../assets/images/logo.svg";
 import styles from "../assets/css-modules/HomePage.module.css";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UsersContext } from "../context/UsersContext";
-import axios from "axios";
+import { GameStateContext } from "../context/GameStateContext";
+import { socket } from "../services/socket";
+import { User } from "../types/types";
 
 function HomePage() {
+  const { setNewPlayers } = useContext(GameStateContext)!;
   const navigate = useNavigate();
   const { refreshUsers, getUserByEmail } = useContext(UsersContext)!;
 
@@ -15,23 +18,38 @@ function HomePage() {
     navigate("/leaderboard");
   }
 
+  useEffect(() => {
+    const handleLobbyPlayer = (newPlayers: User[]) => {
+      console.log(
+        "I'm a client in the lobby and got players",
+        newPlayers.length,
+      );
+      setNewPlayers(newPlayers);
+    };
+
+    const handleLobbyFull = (msg: string) => {
+      console.log("I'm a client in the lobby and got this message D:", msg);
+      navigate("/home");
+      alert("Lobby is full. Please try again later.");
+    };
+
+    socket.on("lobby-change", handleLobbyPlayer);
+    socket.on("lobby-full", handleLobbyFull);
+
+    return () => {
+      socket.off("lobby-change", handleLobbyPlayer); // removes only this exact handler
+      socket.off("lobby-full", handleLobbyFull); // removes only this exact handler
+    };
+  }, []);
+
   async function onClickPlay() {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
       const email = JSON.parse(storedUser).email;
       const currentUser = await getUserByEmail(email);
       if (currentUser) {
-        const res = await axios.patch(
-          `${import.meta.env.VITE_API_BASE_URL}/api/users/${currentUser._id}`,
-          {
-            lobby: 1,
-          },
-        );
-        if (res.status === 200) {
-          console.log(`User ${currentUser.username} joined the lobby`);
-        } else {
-          console.error(`Failed to join lobby: ${res}`);
-        }
+        console.log("im join a lobby now. i am", currentUser.username);
+        socket.emit("player-join", currentUser);
       }
     }
     navigate("/lobby");
