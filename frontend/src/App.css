@@ -37,6 +37,10 @@ button {
   opacity: 95%;
 }
 
+#google-signin-button {
+  margin-bottom: 80px;
+}
+
 .material-icons {
   font-family: "Material Icons";
   font-weight: normal;
@@ -57,4 +61,11 @@ button {
   -moz-osx-font-smoothing: grayscale;
 
   font-feature-settings: "liga";
+}
+
+#tooltip {
+  background-color: white !important;
+  color: var(--dark-background) !important;
+  font-size: 18px !important;
+  border-radius: 8px !important;
 }

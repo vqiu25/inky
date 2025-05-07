@@ -7,8 +7,6 @@
   background-color: var(--dark-background);
   align-self: center;
   justify-self: center;
-  border-radius: 30px;
-  padding: 30px;
   margin: 0 auto;
 }
 
@@ -30,4 +28,21 @@
   flex-grow: 1;
   max-width: 300px;
   text-align: center;
+}
+
+.achievementsContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.verticalContainer {
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  background-color: var(--dark-background);
+  align-self: center;
+  justify-self: center;
+  border-radius: 30px;
+  padding: 30px;
+  margin: 0 auto;
 }

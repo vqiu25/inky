@@ -9,13 +9,14 @@ const userSchema = new Schema(
     totalGames: { type: Number, required: true },
     totalPoints: { type: Number, required: true },
     highScore: { type: Number, required: true },
+    totalWins: { type: Number, required: true },
     powerups: {
       type: {
         timeIncrease: { type: Number, required: true },
         timeDecrease: { type: Number, required: true },
         revealLetter: { type: Number, required: true },
         inkSplatter: { type: Number, required: true },
-        removePoints: { type: Number, required: true },
+        scoreMultiplier: { type: Number, required: true },
         eraseDrawing: { type: Number, required: true }
       },
       required: true

@@ -3,7 +3,7 @@ export interface Powerups {
   timeDecrease: number;
   revealLetter: number;
   inkSplatter: number;
-  removePoints: number;
+  scoreMultiplier: number;
   eraseDrawing: number;
 }
 
@@ -24,9 +24,19 @@ export interface User {
   highScore: number;
   powerups: Powerups;
   achievements: Achievements;
+  totalWins: number;
 }
 
 export interface ChatMessage {
   username: string;
   text: string;
+}
+
+export enum PowerupNames {
+  inkSplatter = "Ink Splotch",
+  scoreMultiplier = "Score Multiplier",
+  timeIncrease = "Add Time",
+  timeDecrease = "Decrease Time",
+  eraseDrawing = "Clear Drawing",
+  revealLetter = "Reveal a Letter",
 }

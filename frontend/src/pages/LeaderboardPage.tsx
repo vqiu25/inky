@@ -3,21 +3,29 @@ import { UsersContext } from "../context/UsersContext";
 import styles from "../assets/css-modules/LeaderboardPage.module.css";
 import LeaderboardUserRow from "../components/leaderboardComponents/LeaderboardUserRow";
 import PageHeader from "../components/layoutComponents/PageHeader";
+import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
+import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 
 export default function LeaderboardPage() {
-  const { usersList } = useContext(UsersContext)!;
+  const { usersList, usersLoading } = useContext(UsersContext)!;
 
   return (
     <div>
       <PageHeader>Leaderboard</PageHeader>
-      <div className={styles.usersContainer}>
-        {usersList
-          .slice()
-          .sort((a, b) => b.totalPoints - a.totalPoints)
-          .map((user) => (
-            <LeaderboardUserRow key={user._id} user={user} />
-          ))}
-      </div>
+      {usersList.length > 0 || usersLoading ? (
+        <div className={styles.usersContainer}>
+          {usersList
+            .slice()
+            .sort((a, b) => b.totalPoints - a.totalPoints)
+            .map((user) => (
+              <LeaderboardUserRow key={user._id} user={user} />
+            ))}
+        </div>
+      ) : (
+        <div className={spinnerStyles.spinnerContainer}>
+          <LoadingSpinner />
+        </div>
+      )}
     </div>
   );
 }

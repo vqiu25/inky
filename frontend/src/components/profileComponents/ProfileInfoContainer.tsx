@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import styles from "../../assets/css-modules/ProfilePage.module.css";
-import InfoPill from "./InfoPill";
+import InfoPill from "../userInfoComponents/InfoPill";
 
 interface InfoContainerProps {
   title: string;

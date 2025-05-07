@@ -1,6 +1,6 @@
 import { User } from "../../types/types";
 import styles from "../../assets/css-modules/User.module.css";
-import ProfilePicture from "./ProfilePicture";
+import ProfilePicture from "../profileComponents/ProfilePicture";
 
 interface UserInfoProps {
   user: User;

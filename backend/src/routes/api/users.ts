@@ -65,12 +65,13 @@ router.post("/", async (req: Request, res: Response) => {
       totalGames: 0,
       totalPoints: 0,
       highScore: 0,
+      totalWins: 0,
       powerups: {
         timeIncrease: 0,
         timeDecrease: 0,
         revealLetter: 0,
         inkSplatter: 0,
-        removePoints: 0,
+        scoreMultiplier: 0,
         eraseDrawing: 0
       },
       achievements: {

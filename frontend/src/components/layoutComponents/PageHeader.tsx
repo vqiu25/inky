@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "../../assets/css-modules/PageHeader.module.css";
 import axios from "axios";
 import { UsersContext } from "../../context/UsersContext";
+import backArrow from "../../assets/images/back-arrow.svg";
 
 interface PageHeaderProps {
   children: ReactNode;
@@ -46,10 +47,10 @@ export default function PageHeader({
     <span className={styles.titleContainer}>
       <div className={styles.left}>
         <button
-          className={`${styles.backButton} material-icons ${styles.arrow}`}
+          className={styles.backButton}
           onClick={() => handleBackButtonClick()}
         >
-          arrow_back
+          <img src={backArrow} className={styles.arrow} />
         </button>
       </div>
       <h1>{children}</h1>
