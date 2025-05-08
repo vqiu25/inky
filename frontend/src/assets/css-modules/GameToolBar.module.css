@@ -2,8 +2,47 @@
   grid-area: tools;
   border-radius: 999px;
   background-color: #282a35;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  color: #9da3cb;
+}
+
+.canvasTool {
+  background-color: #1b1c24;
+  width: 80%;
+  aspect-ratio: 1 / 1;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9da3cb;
+}
+
+.canvasTool.selected {
+  border: 2px solid white;
+}
+
+.canvasTool img {
+  width: 70%;
+}
+
+.canvasTool span {
+  border-radius: 50%;
+  width: 85%;
+  aspect-ratio: 1 / 1;
+}
+
+.canvasDrawingTools {
+  margin-left: 2.5%;
+  gap: 8%;
+}
+
+.canvasDrawingTools,
+.colourDrawingTools {
+  display: flex;
+}
+
+.colourDrawingTools {
+  margin-right: 8%;
+  gap: 1%;
 }

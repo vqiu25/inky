@@ -1,10 +1,11 @@
 import styles from "../../assets/css-modules/GameCanvasArea.module.css";
-import DrawerCanvas from "./DrawerCanvas";
+import Canvas from "./Canvas";
 
 export default function GameCanvasArea() {
   return (
     <div className={styles.canvasArea}>
-      <DrawerCanvas />
+      <p>time bar</p>
+      <Canvas />
     </div>
   );
 }

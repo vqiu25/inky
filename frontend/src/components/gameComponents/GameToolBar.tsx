@@ -1,5 +1,111 @@
 import styles from "../../assets/css-modules/GameToolBar.module.css";
+import { canvasRef } from "./Canvas";
+import brushIcon from "../../assets/images/brush.svg";
+import eraserIcon from "../../assets/images/eraser.svg";
+import trashIcon from "../../assets/images/trash.svg";
+import { useEffect, useState } from "react";
 
 export default function GameToolBar() {
-  return <div className={styles.drawingTools}>Drawing Tools</div>;
+  const colours: string[] = [
+    "black",
+    "white",
+    "#e81416",
+    "#ffa500",
+    "#faeb36",
+    "#79c314",
+    "#487de7",
+    "#4b369d",
+    "#70369d",
+  ];
+
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [selectedColour, setSelectedColour] = useState<string | null>(null);
+
+  useEffect(() => {
+    handleColourClick(colours[0]); // Set default colour to the first one in the array
+    setSelectedTool("pen"); // Set default tool to pen
+  }, []);
+
+  const handleToolClick = (tool: string, action: () => void) => {
+    setSelectedTool(tool);
+    action();
+  };
+
+  const handleColourClick = (colour: string) => {
+    setSelectedColour(colour);
+    if (selectedTool === "eraser") {
+      return;
+    }
+    setColour(colour);
+  };
+
+  const setPen = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.freeDrawingBrush.width = 5;
+      canvas.freeDrawingBrush.color = "black";
+      setColour(selectedColour || colours[0]);
+    }
+  };
+
+  const setEraser = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.freeDrawingBrush.color = "white";
+      canvas.freeDrawingBrush.width = 10;
+    }
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.clear();
+      canvas.setBackgroundColor("white", () => canvas.renderAll());
+    }
+  };
+
+  const setColour = (colour: string) => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.freeDrawingBrush.color = colour;
+    }
+  };
+
+  return (
+    <div className={styles.drawingTools}>
+      <div className={styles.canvasDrawingTools}>
+        <button
+          className={`${styles.canvasTool} ${selectedTool === "pen" ? styles.selected : ""}`}
+          onClick={() => handleToolClick("pen", setPen)}
+        >
+          <img src={brushIcon} />
+        </button>
+        <button
+          className={`${styles.canvasTool} ${selectedTool === "eraser" ? styles.selected : ""}`}
+          onClick={() => handleToolClick("eraser", setEraser)}
+        >
+          <img src={eraserIcon} />
+        </button>
+        <button
+          className={`${styles.canvasTool}`}
+          onClick={() => clearCanvas()}
+        >
+          <img src={trashIcon} />
+        </button>
+      </div>
+
+      <div className={styles.colourDrawingTools}>
+        {colours.map((colour, idx) => (
+          <button
+            key={idx}
+            className={`${styles.canvasTool} ${selectedColour === colour ? styles.selected : ""}`}
+            onClick={() => handleColourClick(colour)}
+          >
+            <span style={{ backgroundColor: colour }} />
+          </button>
+        ))}
+        <div />
+      </div>
+    </div>
+  );
 }
