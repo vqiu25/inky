@@ -76,3 +76,36 @@ export const updatePlayerPoints = (
 
   return updatedPlayerPoints;
 };
+
+/**
+ * Increments the count of a specific powerup for a player in the game state.
+ *
+ * @param gameState - The current game state.
+ * @param userId - The ID of the user whose powerup count should be incremented.
+ * @param powerupName - The key of the powerup to increment.
+ * @returns true if update succeeded, false otherwise.
+ */
+export const incrementPowerupCountInGameState = (
+  gameState: GameState,
+  userId: string,
+  powerupName: keyof User["powerups"]
+): boolean => {
+  for (let i = 0; i < gameState.playerPoints.length; i++) {
+    const [user] = gameState.playerPoints[i];
+    if (user._id === userId) {
+      if (user.powerups[powerupName] !== undefined) {
+        user.powerups[powerupName]++;
+        console.log(
+          `Powerup ${powerupName} for user ${userId} incremented to ${user.powerups[powerupName]}`
+        );
+        return true;
+      }
+      // Invalid powerup name
+      console.error(`Invalid powerup name: ${powerupName}`);
+      return false;
+    }
+  }
+  // User not found in the game state
+  console.error(`User with ID ${userId} not found in game state`);
+  return false;
+};

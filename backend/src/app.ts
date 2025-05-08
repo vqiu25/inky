@@ -12,7 +12,8 @@ import {
   getInitialGameState,
   getNewGameState,
   updatePlayerPoints,
-  getMaxRounds
+  getMaxRounds,
+  incrementPowerupCountInGameState
 } from "./game-state/game-state.js";
 
 const PORT = process.env.PORT ?? 3000;
@@ -215,6 +216,11 @@ io.on("connection", (socket: Socket) => {
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
+  });
+
+  /* Powerup Socket Listeners */
+  socket.on("increment-powerup", (userId: string, powerupName: keyof User["powerups"]) => {
+    incrementPowerupCountInGameState(currentGameState, userId, powerupName);
   });
 });
 

@@ -1,14 +1,95 @@
-import React, { useState, useEffect, JSX } from "react";
+import React, { useState, useEffect, JSX, useContext } from "react";
 import ReactDOM from "react-dom";
 import styles from "../../assets/css-modules/GamePowerups.module.css";
 import Button from "./Button";
-import {
-  powerupConfigs,
-  PowerupConfig,
-} from "../../config/GamePowerupsConfig.ts";
+import { UsersContext } from "../../context/UsersContext";
+import { socket } from "../../services/socket";
+import squidIcon from "../../assets/images/squid.svg";
+import magnifyingGlassIcon from "../../assets/images/magnifying-glass.svg";
+import rocketIcon from "../../assets/images/rocket.svg";
+import crossIcon from "../../assets/images/cross.svg";
+import greenHourGlassIcon from "../../assets/images/green-hourglass.svg";
+import redHourGlassIcon from "../../assets/images/red-hourglass.svg";
+
+interface PowerupConfig {
+  imageSrc: string;
+  alt: string;
+  colour: string;
+  handler: () => void;
+}
+
+interface OverlayProps {
+  powerup: PowerupConfig;
+  onClose: () => void;
+}
 
 export default function GamePowerups(): JSX.Element {
   const [selected, setSelected] = useState<PowerupConfig | null>(null);
+  const { currentUser } = useContext(UsersContext)!;
+
+  const powerupConfigs: PowerupConfig[] = [
+    {
+      imageSrc: greenHourGlassIcon,
+      alt: "timeIncrease",
+      colour: "#a3e635",
+      handler: () => {
+        console.log("client: emitting increment-powerup");
+        if (currentUser) {
+          socket.emit("increment-powerup", currentUser._id, "timeIncrease");
+        }
+      },
+    },
+    {
+      imageSrc: magnifyingGlassIcon,
+      alt: "revealLetter",
+      colour: "#d946ef",
+      handler: () => {
+        if (currentUser) {
+          socket.emit("increment-powerup", currentUser._id, "revealLetter");
+        }
+      },
+    },
+    {
+      imageSrc: rocketIcon,
+      alt: "scoreMultiplier",
+      colour: "#f3e3ab",
+      handler: () => {
+        if (currentUser) {
+          socket.emit("increment-powerup", currentUser._id, "scoreMultiplier");
+        }
+      },
+    },
+    {
+      imageSrc: redHourGlassIcon,
+      alt: "timeDecrease",
+      colour: "#ef4444",
+      handler: () => {
+        if (currentUser) {
+          socket.emit("increment-powerup", currentUser._id, "timeDecrease");
+        }
+      },
+    },
+    {
+      imageSrc: squidIcon,
+      alt: "inkSplatter",
+      colour: "#6366f1",
+      handler: () => {
+        if (currentUser) {
+          socket.emit("increment-powerup", currentUser._id, "inkSplatter");
+        }
+      },
+    },
+    {
+      imageSrc: crossIcon,
+      alt: "eraseDrawing",
+      colour: "#f97316",
+      handler: () => {
+        if (currentUser) {
+          socket.emit("increment-powerup", currentUser._id, "eraseDrawing");
+        }
+      },
+    },
+  ];
 
   return (
     <>
@@ -36,11 +117,6 @@ export default function GamePowerups(): JSX.Element {
       )}
     </>
   );
-}
-
-interface OverlayProps {
-  powerup: PowerupConfig;
-  onClose: () => void;
 }
 
 function Overlay({ powerup, onClose }: OverlayProps): React.ReactPortal {
