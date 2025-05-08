@@ -45,7 +45,24 @@ export default function LobbyPage() {
     return () => {
       socket.off("lobby-change", handleLobbyPlayer); // removes only this exact handler
     };
-  }, []);
+  }, [setNewPlayers]);
+
+  useEffect(() => {
+    const handleDrawerSelect = (drawer: unknown) => {
+      console.log("Drawer selected:", drawer);
+      navigate("/play");
+    };
+
+    socket.on("drawer-select", handleDrawerSelect);
+
+    return () => {
+      socket.off("drawer-select", handleDrawerSelect);
+    };
+  }, [navigate]);
+
+  function onStartGame() {
+    socket.emit("game-start", lobbyPlayers);
+  }
 
   return (
     <div>
@@ -65,7 +82,7 @@ export default function LobbyPage() {
           />
         ))}
         <div style={{ height: "20px" }}></div>
-        <button className={styles.button} onClick={() => navigate("/play")}>
+        <button className={styles.button} onClick={() => onStartGame()}>
           Enter Game
         </button>
       </div>
