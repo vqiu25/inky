@@ -14,8 +14,8 @@ function HomePage() {
   const { refreshUsers, getUserByEmail } = useContext(UsersContext)!;
 
   function onClickLeaderboard() {
-    refreshUsers();
     navigate("/leaderboard");
+    refreshUsers();
   }
 
   useEffect(() => {
@@ -40,9 +40,10 @@ function HomePage() {
       socket.off("lobby-change", handleLobbyPlayer); // removes only this exact handler
       socket.off("lobby-full", handleLobbyFull); // removes only this exact handler
     };
-  }, []);
+  }, [navigate, setNewPlayers]);
 
   async function onClickPlay() {
+    navigate("/lobby");
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
       const email = JSON.parse(storedUser).email;
@@ -52,7 +53,6 @@ function HomePage() {
         socket.emit("player-join", currentUser);
       }
     }
-    navigate("/lobby");
   }
 
   return (

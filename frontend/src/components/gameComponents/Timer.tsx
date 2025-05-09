@@ -9,7 +9,6 @@ export default function Timer() {
 
     // Listen for the "timer" event from the server
     socket.on("timer", (duration: number) => {
-      console.log("Timer received with duration:", duration);
       setTimeRemaining(duration); // Update the timer state
     });
 

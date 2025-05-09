@@ -10,7 +10,7 @@ import GoogleSignInButton from "../components/signInComponents/GoogleSignInButto
 
 const LoginPage = () => {
   const { setCurrentUser } = useContext(UsersContext)!;
-  const { usersLoading, usersList, addUser, getUserByEmail } =
+  const { usersLoading, usersList, addUser, getUserByEmail, refreshUsers } =
     useContext(UsersContext)!;
   const navigate = useNavigate();
 
@@ -26,8 +26,9 @@ const LoginPage = () => {
     // Wait until usersLoading is false
     if (usersLoading) {
       if (retryCount < 10) {
+        refreshUsers();
         retryCount++;
-        setTimeout(() => handleGoogleResponse(response), 500);
+        setTimeout(() => handleGoogleResponse(response), 1000);
       } else {
         console.error("Cannot get users");
       }

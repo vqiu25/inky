@@ -27,10 +27,14 @@ export default function PowerupAchievement({
         marginBottom: "10px",
         ...style,
       }}
-      data-tooltip-id="tooltip"
-      data-tooltip-content={tooltipText}
     >
-      <img src={imgSrc} style={imgStyle} alt="Powerup" />
+      <img
+        src={imgSrc}
+        style={imgStyle}
+        alt="Powerup"
+        data-tooltip-id="tooltip"
+        data-tooltip-content={tooltipText}
+      />
       <InfoPill
         className="lightBackground"
         style={{ justifyContent: "center", marginBottom: "0", width: "60px" }}
