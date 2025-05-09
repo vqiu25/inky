@@ -15,7 +15,12 @@ import greenHourglass from "../assets/images/green-hourglass.svg";
 import redHourglass from "../assets/images/red-hourglass.svg";
 import magnifyingGlass from "../assets/images/magnifying-glass.svg";
 import PowerupAchievement from "../components/profileComponents/PowerupAchievement";
-import GameAchievements from "../components/profileComponents/GameAchievements";
+import GameAchievement from "../components/profileComponents/GameAchievement";
+import medal from "../assets/images/medal.svg";
+import podium from "../assets/images/podium.svg";
+import trophy from "../assets/images/trophy.svg";
+import award from "../assets/images/award.svg";
+import militaryTech from "../assets/images/military-tech.svg";
 
 export default function ProfilePage() {
   const location = useLocation();
@@ -27,20 +32,22 @@ export default function ProfilePage() {
     setLoading(true);
     setCurrentUserFromLocalStorage();
     setLoading(false);
-  }, [location, setCurrentUserFromLocalStorage]);
+  }, [location]);
 
   const commonStyle = {
     justifyContent: "center",
-    height: "50px",
+    height: "45px",
     marginBottom: "0",
     flex: 1,
     paddingInline: "25px",
+    width: "fit-content",
+    whiteSpace: "nowrap",
   };
 
   const imgStyle = {
-    width: "40px",
-    height: "40px",
-    marginInline: "10px",
+    width: "50px",
+    height: "50px",
+    marginBottom: "15px",
   };
 
   return (
@@ -51,55 +58,25 @@ export default function ProfilePage() {
           <LoadingSpinner />
         </div>
       ) : (
-        <>
-          <div className={styles.verticalContainer}>
-            <div className={styles.container}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
+        <div>
+          <div className={styles.pageLayout}>
+            <div
+              className={styles.verticalContainer}
+              style={{ padding: "30px", flex: "0 1" }}
+            >
+              <ProfilePicture
+                src={currentUser?.profilePicture}
+                pictureBorderSize={{
+                  width: "140px",
+                  height: "140px",
+                  borderWidth: "5px",
                 }}
-              >
-                <ProfilePicture
-                  src={currentUser?.profilePicture}
-                  pictureBorderSize={{ width: "200px", height: "200px" }}
-                  profilePictureSize={{
-                    width: "140px",
-                    height: "140px",
-                  }}
-                />
-                <div>
-                  {(currentUser.achievements.gameAchievement ||
-                    currentUser.achievements.powerupAchievement ||
-                    currentUser.achievements.scoreAchievement) && (
-                    <h2 style={{ textAlign: "center", marginTop: "30px" }}>
-                      Achievements
-                    </h2>
-                  )}
-                  <div className={styles.achievementsContainer}>
-                    {currentUser.achievements.gameAchievement && (
-                      <GameAchievements
-                        iconName="military_tech"
-                        tooltipContent="Played X Games"
-                      ></GameAchievements>
-                    )}
-                    {currentUser.achievements.powerupAchievement && (
-                      <GameAchievements
-                        iconName="military_tech"
-                        tooltipContent="Used X Powerups"
-                      ></GameAchievements>
-                    )}
-                    {currentUser.achievements.scoreAchievement && (
-                      <GameAchievements
-                        iconName="military_tech"
-                        tooltipContent="Achieved X Points"
-                      ></GameAchievements>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div>
+                profilePictureSize={{
+                  width: "100px",
+                  height: "100px",
+                }}
+              />
+              <div style={{ marginTop: "20px" }}>
                 <ProfileInfoContainer title="Name" pillStyles={commonStyle}>
                   {currentUser?.username}
                 </ProfileInfoContainer>
@@ -109,62 +86,99 @@ export default function ProfilePage() {
                 <ProfileInfoContainer title="Points" pillStyles={commonStyle}>
                   {currentUser?.totalPoints}
                 </ProfileInfoContainer>
+                <ProfileInfoContainer title="Wins" pillStyles={commonStyle}>
+                  {currentUser?.totalWins}
+                </ProfileInfoContainer>
                 <ProfileInfoContainer
                   title="High Score"
                   pillStyles={commonStyle}
                 >
                   {currentUser?.highScore}
                 </ProfileInfoContainer>
-                <ProfileInfoContainer
-                  title="Wins"
-                  containerStyles={{ marginBottom: "0" }}
-                  pillStyles={commonStyle}
-                >
-                  {currentUser?.totalWins}
-                </ProfileInfoContainer>
               </div>
-              <div>
-                <PowerupAchievement
-                  imgSrc={squid}
-                  imgStyle={imgStyle}
-                  pillContent={currentUser?.powerups.inkSplatter}
-                  tooltipText={PowerupNames.inkSplatter}
-                />
-                <PowerupAchievement
-                  imgSrc={cross}
-                  imgStyle={imgStyle}
-                  pillContent={currentUser?.powerups.eraseDrawing}
-                  tooltipText={PowerupNames.eraseDrawing}
-                />
-                <PowerupAchievement
-                  imgSrc={greenHourglass}
-                  imgStyle={imgStyle}
-                  pillContent={currentUser?.powerups.timeIncrease}
-                  tooltipText={PowerupNames.timeIncrease}
-                />
-                <PowerupAchievement
-                  imgSrc={redHourglass}
-                  imgStyle={imgStyle}
-                  pillContent={currentUser?.powerups.timeDecrease}
-                  tooltipText={PowerupNames.timeDecrease}
-                />
-                <PowerupAchievement
-                  imgSrc={rocket}
-                  imgStyle={imgStyle}
-                  pillContent={currentUser?.powerups.scoreMultiplier}
-                  tooltipText={PowerupNames.scoreMultiplier}
-                />
-                <PowerupAchievement
-                  imgSrc={magnifyingGlass}
-                  imgStyle={imgStyle}
-                  pillContent={currentUser?.powerups.revealLetter}
-                  tooltipText={PowerupNames.revealLetter}
-                  style={{ marginBottom: "0" }}
-                />
+            </div>
+            <div className={styles.verticalLayout}>
+              <div
+                className={styles.verticalContainer}
+                style={{ paddingInline: "70px" }}
+              >
+                <h2 className={styles.title}>Powerups Used</h2>
+                <div className={styles.powerupsContainer}>
+                  <PowerupAchievement
+                    imgSrc={greenHourglass}
+                    imgStyle={imgStyle}
+                    pillContent={currentUser?.powerups.timeIncrease}
+                    tooltipText={PowerupNames.timeIncrease}
+                  />
+                  <PowerupAchievement
+                    imgSrc={magnifyingGlass}
+                    imgStyle={imgStyle}
+                    pillContent={currentUser?.powerups.revealLetter}
+                    tooltipText={PowerupNames.revealLetter}
+                  />
+                  <PowerupAchievement
+                    imgSrc={rocket}
+                    imgStyle={imgStyle}
+                    pillContent={currentUser?.powerups.scoreMultiplier}
+                    tooltipText={PowerupNames.scoreMultiplier}
+                  />
+                  <PowerupAchievement
+                    imgSrc={redHourglass}
+                    imgStyle={imgStyle}
+                    pillContent={currentUser?.powerups.timeDecrease}
+                    tooltipText={PowerupNames.timeDecrease}
+                  />
+                  <PowerupAchievement
+                    imgSrc={squid}
+                    imgStyle={imgStyle}
+                    pillContent={currentUser?.powerups.inkSplatter}
+                    tooltipText={PowerupNames.inkSplatter}
+                  />
+                  <PowerupAchievement
+                    imgSrc={cross}
+                    imgStyle={imgStyle}
+                    pillContent={currentUser?.powerups.eraseDrawing}
+                    tooltipText={PowerupNames.eraseDrawing}
+                  />
+                </div>
+              </div>
+              <div
+                className={styles.verticalContainer}
+                style={{ marginTop: "20px" }}
+              >
+                <h2 className={styles.title}>Achievements</h2>
+                <div className={styles.achievementsContainer}>
+                  <GameAchievement
+                    src={medal}
+                    tooltipContent="Score 1000 Points"
+                    achieved={currentUser.achievements.pointsAchievement}
+                  />
+                  <GameAchievement
+                    src={award}
+                    tooltipContent="Use 10 Powerups"
+                    achieved={currentUser.achievements.powerupAchievement}
+                  />
+                  <GameAchievement
+                    src={militaryTech}
+                    tooltipContent="Play 5 Games"
+                    achieved={currentUser.achievements.gameAchievement}
+                    imgSize={{ width: "85px", height: "85px" }}
+                  />
+                  <GameAchievement
+                    src={podium}
+                    tooltipContent="Win 5 Games"
+                    achieved={currentUser.achievements.winsAchievement}
+                  />
+                  <GameAchievement
+                    src={trophy}
+                    tooltipContent="High score of 500+"
+                    achieved={currentUser.achievements.highScoreAchievement}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
     </>
   );

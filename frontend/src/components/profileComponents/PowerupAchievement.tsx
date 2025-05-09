@@ -1,6 +1,7 @@
 import React from "react";
 import InfoPill from "../userInfoComponents/InfoPill";
 import { Tooltip } from "react-tooltip";
+import styles from "../../assets/css-modules/PowerupAchievement.module.css";
 
 interface PowerupDisplayProps {
   imgSrc: string;
@@ -18,16 +19,7 @@ export default function PowerupAchievement({
   style,
 }: PowerupDisplayProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        marginLeft: "40px",
-        alignItems: "center",
-        marginBottom: "10px",
-        ...style,
-      }}
-    >
+    <div className={styles.container} style={style}>
       <img
         src={imgSrc}
         style={imgStyle}
@@ -37,7 +29,12 @@ export default function PowerupAchievement({
       />
       <InfoPill
         className="lightBackground"
-        style={{ justifyContent: "center", marginBottom: "0", width: "60px" }}
+        style={{
+          justifyContent: "center",
+          marginBottom: "0",
+          width: "65px",
+          height: "65px",
+        }}
       >
         {pillContent}
       </InfoPill>

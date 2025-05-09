@@ -11,7 +11,7 @@ import { User } from "../types/types";
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
   const navigate = useNavigate();
-  const { refreshUsers, getUserByEmail } = useContext(UsersContext)!;
+  const { refreshUsers } = useContext(UsersContext)!;
 
   function onClickLeaderboard() {
     navigate("/leaderboard");
@@ -42,16 +42,13 @@ function HomePage() {
     };
   }, [navigate, setNewPlayers]);
 
-  async function onClickPlay() {
+  function onClickPlay() {
     navigate("/lobby");
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
-      const email = JSON.parse(storedUser).email;
-      const currentUser = await getUserByEmail(email);
-      if (currentUser) {
-        console.log("im join a lobby now. i am", currentUser.username);
-        socket.emit("player-join", currentUser);
-      }
+      const currentUser: User = JSON.parse(storedUser);
+      console.log("I'm joining a lobby now. I am", currentUser.username);
+      socket.emit("player-join", currentUser);
     }
   }
 

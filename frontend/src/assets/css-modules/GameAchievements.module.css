@@ -1,9 +1,0 @@
-.img {
-  color: var(--background-colour);
-  font-size: 60px;
-  border: 3px solid var(--purple);
-  border-radius: 50%;
-  background-color: var(--purple);
-  cursor: default;
-  margin-inline: 8px;
-}

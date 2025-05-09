@@ -21,7 +21,6 @@ export interface UsersContextType {
   usersList: User[];
   setUsersList: React.Dispatch<React.SetStateAction<User[]>>;
   currentUser: User | null;
-  setCurrentUser: (u: User) => void;
   setCurrentUserFromLocalStorage: () => Promise<void>;
   getUsers: () => Promise<User[]>;
 }
@@ -123,6 +122,7 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     if (storedUser) {
       const email = JSON.parse(storedUser).email;
       const updatedUser = await getUserByEmail(email);
+      console.log("Updated user from local storage:", updatedUser);
       setCurrentUser(updatedUser);
     }
   }
@@ -137,7 +137,6 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         usersList,
         setUsersList,
         currentUser,
-        setCurrentUser,
         setCurrentUserFromLocalStorage,
         usersLoading,
         getUsers,

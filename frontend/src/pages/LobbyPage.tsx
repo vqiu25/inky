@@ -14,7 +14,7 @@ import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 export default function LobbyPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { getUserByEmail, currentUser, setCurrentUserFromLocalStorage } =
+  const { currentUser, setCurrentUserFromLocalStorage } =
     useContext(UsersContext)!;
   const { setNewPlayers, lobbyPlayers, setCurrentDrawer } =
     useContext(GameStateContext)!;
@@ -25,7 +25,7 @@ export default function LobbyPage() {
     setIsLoading(true);
     setCurrentUserFromLocalStorage();
     setIsLoading(false);
-  }, [location, getUserByEmail, setCurrentUserFromLocalStorage]);
+  }, [location]);
 
   // Get the list of players in the lobby
   useEffect(() => {

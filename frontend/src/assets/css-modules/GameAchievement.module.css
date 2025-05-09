@@ -1,0 +1,18 @@
+.img {
+  color: var(--background-colour);
+  width: 64px;
+  height: 64px;
+  cursor: default;
+}
+
+.pictureBorder {
+  border-radius: 50%;
+  border: 3px solid var(--purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85px;
+  height: 85px;
+  background-color: var(--purple);
+  margin-inline: 8px;
+}

@@ -10,8 +10,8 @@ import GoogleSignInButton from "../components/signInComponents/GoogleSignInButto
 import { User } from "../types/types";
 
 const LoginPage = () => {
-  const { setCurrentUser } = useContext(UsersContext)!;
-  const { addUser, getUserByEmail, getUsers } = useContext(UsersContext)!;
+  const { addUser, getUserByEmail, getUsers, setCurrentUserFromLocalStorage } =
+    useContext(UsersContext)!;
   const navigate = useNavigate();
 
   function getRandomProfilePicture() {
@@ -48,9 +48,8 @@ const LoginPage = () => {
     const currentUser = await getUserByEmail(payload.email);
 
     if (currentUser) {
-      // Add user to context
-      setCurrentUser(currentUser);
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      setCurrentUserFromLocalStorage();
     }
   }
 
