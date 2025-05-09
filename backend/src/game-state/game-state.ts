@@ -1,4 +1,4 @@
-import { User } from "../types/types";
+import { User } from "../types/types.js";
 
 const maxRounds: number = 3;
 const turnTime: number = 90;

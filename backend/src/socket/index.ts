@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
-import registerLobbyHandlers from "./lobbyHandlers";
-import registerGameHandlers from "./gameHandlers";
+import registerLobbyHandlers from "./lobbyHandlers.js";
+import registerGameHandlers from "./gameHandlers.js";
 
 export default function initializeSocketIO(io: Server) {
   io.on("connection", (socket: Socket) => {

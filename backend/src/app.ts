@@ -5,7 +5,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import initializeSocketIO from "./socket";
+import initializeSocketIO from "./socket/index.js";
 
 const PORT = process.env.PORT ?? 3000;
 

@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { User } from "../types/types";
+import { User } from "../types/types.js";
 import {
   GameState,
   getNewGameState,
@@ -7,8 +7,8 @@ import {
   getMaxRounds,
   incrementPowerupCountInGameState,
   getInitialGameState
-} from "../game-state/game-state";
-import { lobbyPlayers } from "./lobbyHandlers";
+} from "../game-state/game-state.js";
+import { lobbyPlayers } from "./lobbyHandlers.js";
 
 export let currentGameState: GameState;
 let numPlayersGuessed = 0;
