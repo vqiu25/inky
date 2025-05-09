@@ -14,6 +14,7 @@ const Canvas: React.FC = () => {
     });
 
     const isDrawer = true; // TODO Placeholder for future socket logic
+    let suppressEmit = false; // <--- Flag
 
     if (isDrawer) {
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -25,18 +26,29 @@ const Canvas: React.FC = () => {
     canvasRef.current = canvas;
 
     canvas.on("path:created", () => {
-      emitCanvasData(canvas);
+      if (!suppressEmit) {
+        emitCanvasData(canvas);
+      }
     });
 
     canvas.on("canvas:cleared", () => {
       console.log("I've cleared the canvas!");
-      emitCanvasData(canvas);
+      if (!suppressEmit) {
+        emitCanvasData(canvas);
+      }
     });
 
     socket.on("canvas-data", (payload: { data: fabric.ICanvasOptions }) => {
-      console.log("I'm the guesser and I got something", payload.data);
-      const { data } = payload;
-      canvas.loadFromJSON(data, canvas.renderAll.bind(canvas));
+      suppressEmit = true;
+      canvas.loadFromJSON(payload.data, () => {
+        // Ensure background color is white if not already set
+        if (!canvas.backgroundColor) {
+          canvas.setBackgroundColor("white", canvas.renderAll.bind(canvas));
+        } else {
+          canvas.renderAll();
+        }
+        suppressEmit = false;
+      });
     });
 
     return () => {
