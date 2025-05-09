@@ -14,12 +14,8 @@ import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 export default function LobbyPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    getUserByEmail,
-    refreshUsers,
-    currentUser,
-    setCurrentUserFromLocalStorage,
-  } = useContext(UsersContext)!;
+  const { getUserByEmail, currentUser, setCurrentUserFromLocalStorage } =
+    useContext(UsersContext)!;
   const { setNewPlayers, lobbyPlayers, setCurrentDrawer } =
     useContext(GameStateContext)!;
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -29,7 +25,7 @@ export default function LobbyPage() {
     setIsLoading(true);
     setCurrentUserFromLocalStorage();
     setIsLoading(false);
-  }, [location, getUserByEmail, refreshUsers]);
+  }, [location, getUserByEmail, setCurrentUserFromLocalStorage]);
 
   // Get the list of players in the lobby
   useEffect(() => {
@@ -60,7 +56,7 @@ export default function LobbyPage() {
     return () => {
       socket.off("drawer-select", handleDrawerSelect);
     };
-  }, [navigate]);
+  }, [navigate, setCurrentDrawer]);
 
   function onStartGame() {
     socket.emit("game-start", lobbyPlayers);

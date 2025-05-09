@@ -1,6 +1,5 @@
-import React, { ReactNode, useState, useEffect } from "react";
+import React, { ReactNode, useState } from "react";
 import { User } from "../types/types";
-import useGet from "../hooks/useGet";
 import axios from "axios";
 import { UsersContext } from "./UsersContext";
 
@@ -16,7 +15,7 @@ export interface UsersContextType {
     profilePicture: string,
     email: string,
   ) => Promise<User>;
-  refreshUsers: () => void;
+  refreshUsers: () => Promise<void>;
   getUserById: (id: string) => Promise<User>;
   getUserByEmail: (email: string) => Promise<User>;
   usersList: User[];
@@ -24,6 +23,7 @@ export interface UsersContextType {
   currentUser: User | null;
   setCurrentUser: (u: User) => void;
   setCurrentUserFromLocalStorage: () => Promise<void>;
+  getUsers: () => Promise<User[]>;
 }
 
 /**
@@ -36,18 +36,32 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [usersList, setUsersList] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const {
-    data: users,
-    isLoading: usersLoading,
-    refresh: refreshUsers,
-  } = useGet<User[]>(`${API_BASE_URL}/api/users`, []);
-  useEffect(() => {
-    if (users == null) {
-      setUsersList([]);
-    } else {
+  const [usersLoading, setUsersLoading] = useState<boolean>(false);
+
+  async function refreshUsers() {
+    await getUsers();
+  }
+
+  /**
+   * Fetches all users.
+   *
+   * @returns An array of user objects.
+   */
+  async function getUsers(): Promise<User[]> {
+    try {
+      setUsersLoading(true);
+      const response = await axios.get<User[]>(`${API_BASE_URL}/api/users`);
+      const users = response.data;
       setUsersList(users);
+      return users;
+    } catch (error) {
+      console.error(`Failed to fetch users`, error);
+      throw error;
+    } finally {
+      setUsersLoading(false);
     }
-  }, [users]);
+  }
+
   /**
    * Adds a new user and refreshes the users list.
    *
@@ -116,7 +130,6 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <UsersContext.Provider
       value={{
-        usersLoading,
         addUser,
         refreshUsers,
         getUserById,
@@ -126,6 +139,8 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         currentUser,
         setCurrentUser,
         setCurrentUserFromLocalStorage,
+        usersLoading,
+        getUsers,
       }}
     >
       {children}

@@ -7,11 +7,11 @@ import drop from "../assets/images/drop.svg";
 import paintbrush from "../assets/images/paintbrush.svg";
 
 import GoogleSignInButton from "../components/signInComponents/GoogleSignInButton";
+import { User } from "../types/types";
 
 const LoginPage = () => {
   const { setCurrentUser } = useContext(UsersContext)!;
-  const { usersLoading, usersList, addUser, getUserByEmail, refreshUsers } =
-    useContext(UsersContext)!;
+  const { addUser, getUserByEmail, getUsers } = useContext(UsersContext)!;
   const navigate = useNavigate();
 
   function getRandomProfilePicture() {
@@ -20,33 +20,23 @@ const LoginPage = () => {
     return svgs[randomIndex];
   }
 
-  let retryCount = 0;
-
   async function handleGoogleResponse(response: unknown) {
-    // Wait until usersLoading is false
-    if (usersLoading) {
-      if (retryCount < 10) {
-        refreshUsers();
-        retryCount++;
-        setTimeout(() => handleGoogleResponse(response), 1000);
-      } else {
-        console.error("Cannot get users");
-      }
-      return;
-    }
+    const users = await getUsers();
+
     const jwt = (response as { credential: string }).credential;
     const payload = JSON.parse(atob(jwt.split(".")[1]));
     console.log("User:", payload);
 
-    const profilePicture = getRandomProfilePicture();
+    console.log("Users:" + users);
 
-    const userExists = usersList.some((user) => user.email === payload.email);
+    const userExists = users.some((user: User) => user.email === payload.email);
 
     if (userExists) {
       console.log("User already exists.");
     } else {
       try {
         // Save user in DB
+        const profilePicture = getRandomProfilePicture();
         await addUser(payload.name, profilePicture, payload.email);
       } catch (error) {
         console.error("Failed to create user:", error);

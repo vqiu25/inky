@@ -19,19 +19,15 @@ import GameAchievements from "../components/profileComponents/GameAchievements";
 
 export default function ProfilePage() {
   const location = useLocation();
-  const {
-    getUserByEmail,
-    refreshUsers,
-    setCurrentUserFromLocalStorage,
-    currentUser,
-  } = useContext(UsersContext)!;
+  const { setCurrentUserFromLocalStorage, currentUser } =
+    useContext(UsersContext)!;
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setLoading(true);
     setCurrentUserFromLocalStorage();
     setLoading(false);
-  }, [location, getUserByEmail, refreshUsers]);
+  }, [location, setCurrentUserFromLocalStorage]);
 
   const commonStyle = {
     justifyContent: "center",
