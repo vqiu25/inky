@@ -18,7 +18,7 @@
   display: grid;
   gap: 25px;
   grid-template-columns: 18% 1fr 18%;
-  grid-template-rows: 9% 1fr 9%;
+  grid-template-rows: 7% 1fr 9%;
   grid-template-areas:
     "status-bar  status-bar  status-bar"
     "left      canvas    chat"

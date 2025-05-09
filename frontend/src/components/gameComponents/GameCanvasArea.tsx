@@ -4,7 +4,6 @@ import Canvas from "./Canvas";
 export default function GameCanvasArea() {
   return (
     <div className={styles.canvasArea}>
-      <p>time bar</p>
       <Canvas />
     </div>
   );

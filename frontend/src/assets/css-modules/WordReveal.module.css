@@ -1,0 +1,20 @@
+.wordReveal {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.letterBox {
+  width: 2rem;
+  height: 2.5rem;
+  padding: 0.2rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #9da3cb;
+  background-color: #282a35;
+}

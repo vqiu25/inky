@@ -18,8 +18,6 @@ export default function Timer() {
   }, []);
 
   return (
-    <div>
-      {timeRemaining !== null ? <h2>{timeRemaining}s</h2> : <h2>90s</h2>}
-    </div>
+    <div>{timeRemaining !== null ? <p>{timeRemaining}s</p> : <p>90s</p>}</div>
   );
 }

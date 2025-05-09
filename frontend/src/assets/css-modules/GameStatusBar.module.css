@@ -1,9 +1,59 @@
 .statusBar {
   grid-area: status-bar;
+  position: relative;
   border-radius: 999px;
+  justify-content: space-between;
+  display: flex;
+  color: #9da3cb;
+  align-items: center;
+}
+
+.statusBarLeft {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.statusBarCenter {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+}
+
+.icon {
+  width: auto;
+  height: 70%;
+  margin-right: 0.7rem;
+}
+
+.buttonIcon {
+  width: auto;
+  height: 70%;
+  cursor: pointer;
+  margin-right: 1rem;
+
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.buttonIcon:hover {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+.roundPill {
   background-color: #282a35;
+  border-radius: 999px;
+  padding: 0.4rem 1.3rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  height: 85%;
+  width: auto;
+  color: #9da3cb;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9da3cb;
+  text-align: center;
 }

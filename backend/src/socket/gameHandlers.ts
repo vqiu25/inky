@@ -16,6 +16,10 @@ let numPlayersGuessed = 0;
 let currentTimerDuration: number | null = null; // Remaining time in seconds
 let timerInterval: NodeJS.Timeout | null = null;
 
+// For the word reveal
+let revealInterval: NodeJS.Timeout | null = null;
+let unrevealedIndices: number[] = [];
+
 const turnTime = 90; // Duration of each turn in seconds
 
 export default function registerGameHandlers(io: Server, socket: Socket) {
@@ -81,6 +85,13 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    */
   const endTurn = (): void => {
     currentGameState = getNewGameState(currentGameState);
+
+    // Reset the timer for word reveal
+    if (revealInterval) {
+      clearInterval(revealInterval);
+      revealInterval = null;
+    }
+
     // if the game is finished
     if (currentGameState.round > getMaxRounds()) {
       io.to("game-room").emit("game-finished", currentGameState);
@@ -102,6 +113,22 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     io.to("game-room").emit("new-turn", currentGameState);
 
     startTimer(turnTime); // Restart the timer for the new turn
+
+    // Reset & Start the Word Reveal Interval
+    if (revealInterval) clearInterval(revealInterval);
+    unrevealedIndices = word.split("").map((_, i) => i);
+
+    revealInterval = setInterval(() => {
+      if (unrevealedIndices.length === 0) {
+        clearInterval(revealInterval!);
+        return;
+      }
+      // Pick a random index from unrevealedIndices every 20 seconds
+      const pickIdx = Math.floor(Math.random() * unrevealedIndices.length);
+      const letterIndex = unrevealedIndices.splice(pickIdx, 1)[0];
+      const letter = word[letterIndex];
+      io.to("game-room").emit("reveal-letter", { index: letterIndex, letter });
+    }, 10_000);
   });
 
   /**
