@@ -20,6 +20,7 @@ export default function PageHeader({
   const { getUserByEmail } = useContext(UsersContext)!;
 
   const handleBackButtonClick = async () => {
+    navigate(backTo);
     if (exitLobby) {
       const storedUser = localStorage.getItem("currentUser");
       if (storedUser) {
@@ -31,7 +32,6 @@ export default function PageHeader({
         }
       }
     }
-    navigate(backTo);
   };
 
   return (

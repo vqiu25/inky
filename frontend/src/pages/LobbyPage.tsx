@@ -8,6 +8,8 @@ import UserInfo from "../components/userInfoComponents/UserInfo";
 import InfoPill from "../components/userInfoComponents/InfoPill";
 import { socket } from "../services/socket";
 import { GameStateContext } from "../context/GameStateContext";
+import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
+import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 
 export default function LobbyPage() {
   const navigate = useNavigate();
@@ -15,16 +17,19 @@ export default function LobbyPage() {
   const { getUserByEmail, refreshUsers } = useContext(UsersContext)!;
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setNewPlayers, lobbyPlayers } = useContext(GameStateContext)!;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Get the current user
   useEffect(() => {
     const fetchUser = async () => {
+      setIsLoading(true); // Start loading
       const storedUser = localStorage.getItem("currentUser");
       if (storedUser) {
         const email = JSON.parse(storedUser).email;
         const updatedUser = await getUserByEmail(email);
         setCurrentUser(updatedUser);
       }
+      setIsLoading(false); // Stop loading
     };
 
     fetchUser();
@@ -67,25 +72,31 @@ export default function LobbyPage() {
   return (
     <div>
       <PageHeader exitLobby={true}>Lobby</PageHeader>
-      <div className={styles.container}>
-        {lobbyPlayers.map((player) => (
-          <InfoPill
-            key={player._id}
-            children={
-              <UserInfo
-                user={player}
-                isCurrent={currentUser?.email === player.email}
-              />
-            }
-            className="darkBackground"
-            style={{ minWidth: "450px", paddingInlineEnd: "10px" }}
-          />
-        ))}
-        <div style={{ height: "20px" }}></div>
-        <button className={styles.button} onClick={() => onStartGame()}>
-          Enter Game
-        </button>
-      </div>
+      {isLoading ? (
+        <div className={spinnerStyles.spinnerContainer}>
+          <LoadingSpinner />
+        </div>
+      ) : (
+        <div className={styles.container}>
+          {lobbyPlayers.map((player) => (
+            <InfoPill
+              key={player._id}
+              children={
+                <UserInfo
+                  user={player}
+                  isCurrent={currentUser?.email === player.email}
+                />
+              }
+              className="darkBackground"
+              style={{ minWidth: "450px", paddingInlineEnd: "10px" }}
+            />
+          ))}
+          <div style={{ height: "20px" }}></div>
+          <button className={styles.button} onClick={() => onStartGame()}>
+            Enter Game
+          </button>
+        </div>
+      )}
     </div>
   );
 }
