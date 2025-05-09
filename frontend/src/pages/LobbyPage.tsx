@@ -14,25 +14,21 @@ import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 export default function LobbyPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { getUserByEmail, refreshUsers } = useContext(UsersContext)!;
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const { setNewPlayers, lobbyPlayers } = useContext(GameStateContext)!;
+  const {
+    getUserByEmail,
+    refreshUsers,
+    currentUser,
+    setCurrentUserFromLocalStorage,
+  } = useContext(UsersContext)!;
+  const { setNewPlayers, lobbyPlayers, setCurrentDrawer } =
+    useContext(GameStateContext)!;
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Get the current user
   useEffect(() => {
-    const fetchUser = async () => {
-      setIsLoading(true); // Start loading
-      const storedUser = localStorage.getItem("currentUser");
-      if (storedUser) {
-        const email = JSON.parse(storedUser).email;
-        const updatedUser = await getUserByEmail(email);
-        setCurrentUser(updatedUser);
-      }
-      setIsLoading(false); // Stop loading
-    };
-
-    fetchUser();
+    setIsLoading(true);
+    setCurrentUserFromLocalStorage();
+    setIsLoading(false);
   }, [location, getUserByEmail, refreshUsers]);
 
   // Get the list of players in the lobby
@@ -53,8 +49,9 @@ export default function LobbyPage() {
   }, [setNewPlayers]);
 
   useEffect(() => {
-    const handleDrawerSelect = (drawer: unknown) => {
-      console.log("Drawer selected:", drawer);
+    const handleDrawerSelect = (drawer: User) => {
+      console.log("Drawer selected:", drawer.username);
+      setCurrentDrawer(drawer);
       navigate("/play");
     };
 

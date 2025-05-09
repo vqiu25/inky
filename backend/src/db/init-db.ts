@@ -57,6 +57,63 @@ const phrases = [
   },
   {
     phrase: "Sky diving"
+  },
+  {
+    phrase: "Cinnamoroll"
+  },
+  {
+    phrase: "SpongeBob SquarePants"
+  },
+  {
+    phrase: "Harry Potter"
+  },
+  {
+    phrase: "The Simpsons"
+  },
+  {
+    phrase: "The Lion King"
+  },
+  {
+    phrase: "The Matrix"
+  },
+  {
+    phrase: "The Avengers"
+  },
+  {
+    phrase: "The Incredibles"
+  },
+  {
+    phrase: "Attack on Titan"
+  },
+  {
+    phrase: "One Piece"
+  },
+  {
+    phrase: "Naruto"
+  },
+  {
+    phrase: "Dragon Ball Z"
+  },
+  {
+    phrase: "My Hero Academia"
+  },
+  {
+    phrase: "Demon Slayer"
+  },
+  {
+    phrase: "Death Note"
+  },
+  {
+    phrase: "Sword Art Online"
+  },
+  {
+    phrase: "Fullmetal Alchemist"
+  },
+  {
+    phrase: "Tokyo Ghoul"
+  },
+  {
+    phrase: "Fairy Tail"
   }
 ];
 

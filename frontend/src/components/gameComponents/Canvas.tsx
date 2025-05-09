@@ -1,11 +1,16 @@
-import React, { useEffect, RefObject, createRef } from "react";
+import React, { useEffect, RefObject, createRef, useContext } from "react";
 import { fabric } from "fabric";
 import { socket } from "../../services/socket";
 import styles from "../../assets/css-modules/Canvas.module.css";
+import { GameStateContext } from "../../context/GameStateContext";
+import { UsersContext } from "../../context/UsersContext";
 
 export const canvasRef: RefObject<fabric.Canvas | null> = createRef();
 
 const Canvas: React.FC = () => {
+  const { currentDrawer } = useContext(GameStateContext)!;
+  const { currentUser } = useContext(UsersContext)!;
+
   useEffect(() => {
     const canvas = new fabric.Canvas("canv", {
       height: 430,
@@ -13,7 +18,7 @@ const Canvas: React.FC = () => {
       backgroundColor: "white",
     });
 
-    const isDrawer = true; // TODO Placeholder for future socket logic
+    const isDrawer = currentDrawer?._id === currentUser?._id;
     let suppressEmit = false; // <--- Flag
 
     if (isDrawer) {

@@ -23,6 +23,7 @@ export interface UsersContextType {
   setUsersList: React.Dispatch<React.SetStateAction<User[]>>;
   currentUser: User | null;
   setCurrentUser: (u: User) => void;
+  setCurrentUserFromLocalStorage: () => Promise<void>;
 }
 
 /**
@@ -103,6 +104,15 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  async function setCurrentUserFromLocalStorage(): Promise<void> {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      const email = JSON.parse(storedUser).email;
+      const updatedUser = await getUserByEmail(email);
+      setCurrentUser(updatedUser);
+    }
+  }
+
   return (
     <UsersContext.Provider
       value={{
@@ -115,6 +125,7 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         setUsersList,
         currentUser,
         setCurrentUser,
+        setCurrentUserFromLocalStorage,
       }}
     >
       {children}

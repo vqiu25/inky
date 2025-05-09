@@ -3,7 +3,7 @@ import styles from "../assets/css-modules/ProfilePage.module.css";
 import PageHeader from "../components/layoutComponents/PageHeader";
 import ProfilePicture from "../components/profileComponents/ProfilePicture";
 import ProfileInfoContainer from "../components/profileComponents/ProfileInfoContainer";
-import { PowerupNames, User } from "../types/types";
+import { PowerupNames } from "../types/types";
 import { UsersContext } from "../context/UsersContext";
 import { useLocation } from "react-router-dom";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
@@ -19,23 +19,18 @@ import GameAchievements from "../components/profileComponents/GameAchievements";
 
 export default function ProfilePage() {
   const location = useLocation();
-  const { getUserByEmail, refreshUsers } = useContext(UsersContext)!;
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const {
+    getUserByEmail,
+    refreshUsers,
+    setCurrentUserFromLocalStorage,
+    currentUser,
+  } = useContext(UsersContext)!;
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      setLoading(true);
-      const storedUser = localStorage.getItem("currentUser");
-      if (storedUser) {
-        const email = JSON.parse(storedUser).email;
-        const updatedUser = await getUserByEmail(email);
-        setCurrentUser(updatedUser);
-      }
-      setLoading(false);
-    };
-
-    fetchUser();
+    setLoading(true);
+    setCurrentUserFromLocalStorage();
+    setLoading(false);
   }, [location, getUserByEmail, refreshUsers]);
 
   const commonStyle = {

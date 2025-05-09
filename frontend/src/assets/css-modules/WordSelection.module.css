@@ -1,0 +1,12 @@
+.wordSelection {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+}

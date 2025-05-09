@@ -40,3 +40,15 @@ export enum PowerupNames {
   eraseDrawing = "Clear Drawing",
   revealLetter = "Reveal a Letter",
 }
+
+export interface Phrase {
+  phrase: string;
+}
+
+export interface GameState {
+  round: number;
+  wordToGuess: string;
+  drawer: User;
+  playerPoints: [User, number][];
+  timeRemaining: number;
+}

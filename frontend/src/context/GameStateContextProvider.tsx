@@ -8,6 +8,16 @@ import { GameStateContext } from "./GameStateContext";
 export interface GameStateContextType {
   lobbyPlayers: User[];
   setNewPlayers: (newPlayers: User[]) => void;
+  currentDrawer: User | null;
+  setCurrentDrawer: (drawer: User) => void;
+  isSelectingWord: boolean;
+  setIsSelectingWord: (isSelectingWord: boolean) => void;
+  round: number;
+  setRound: (round: number) => void;
+  wordToGuess: string;
+  setWordToGuess: (word: string) => void;
+  playerPoints: [User, number][];
+  setPlayerPoints: (playerPoints: [User, number][]) => void;
 }
 
 /**
@@ -19,6 +29,11 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [lobbyPlayers, setLobbyPlayers] = useState<User[]>([]);
+  const [currentDrawer, setCurrentDrawer] = useState<User | null>(null);
+  const [isSelectingWord, setIsSelectingWord] = useState(true);
+  const [round, setRound] = useState(0);
+  const [wordToGuess, setWordToGuess] = useState("");
+  const [playerPoints, setPlayerPoints] = useState<[User, number][]>([]);
 
   function setNewPlayers(newPlayers: User[]) {
     setLobbyPlayers(newPlayers);
@@ -30,6 +45,16 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         lobbyPlayers,
         setNewPlayers,
+        currentDrawer,
+        setCurrentDrawer,
+        isSelectingWord,
+        setIsSelectingWord,
+        round,
+        setRound,
+        wordToGuess,
+        setWordToGuess,
+        playerPoints,
+        setPlayerPoints,
       }}
     >
       {children}

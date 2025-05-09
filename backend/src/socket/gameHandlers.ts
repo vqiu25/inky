@@ -33,9 +33,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     io.to("game-room").emit("lobby-change", lobbyPlayers);
 
     io.to("game-room").emit("drawer-select", currentGameState.drawer);
-    console.log("Broadcasting drawer to game-room:", currentGameState.drawer);
-
-    startTimer(90); // TODO: Remove this line as timer should be started in the word-selected event
+    console.log("Broadcasting drawer to game-room:", currentGameState.drawer.username);
   });
 
   /**
