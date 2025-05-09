@@ -32,8 +32,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   socket.on("game-start", (players: User[]) => {
     currentGameState = getInitialGameState(players);
 
-    // Remove all players from the lobby
-    lobbyPlayers.length = 0;
     io.to("game-room").emit("lobby-change", lobbyPlayers);
 
     io.to("game-room").emit("drawer-select", currentGameState.drawer);

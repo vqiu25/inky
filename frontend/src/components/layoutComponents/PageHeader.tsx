@@ -17,19 +17,14 @@ export default function PageHeader({
   exitLobby = false,
 }: PageHeaderProps) {
   const navigate = useNavigate();
-  const { getUserByEmail } = useContext(UsersContext)!;
+  const { currentUser } = useContext(UsersContext)!;
 
   const handleBackButtonClick = async () => {
     navigate(backTo);
     if (exitLobby) {
-      const storedUser = localStorage.getItem("currentUser");
-      if (storedUser) {
-        const email = JSON.parse(storedUser).email;
-        const currentUser = await getUserByEmail(email);
-        if (currentUser) {
-          console.log("im leave a lobby now. i am", currentUser.username);
-          socket.emit("player-leave", currentUser);
-        }
+      if (currentUser) {
+        console.log("im leave a lobby now. i am", currentUser.username);
+        socket.emit("player-leave", currentUser);
       }
     }
   };

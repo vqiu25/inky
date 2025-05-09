@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { socket } from "../../services/socket";
 import { GameStateContext } from "../../context/GameStateContext";
 import styles from "../../assets/css-modules/GameStatusBar.module.css";
