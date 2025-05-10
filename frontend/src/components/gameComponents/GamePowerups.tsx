@@ -1,4 +1,4 @@
-import React, { useState, useEffect, JSX, useContext } from "react";
+import React, { useState, useEffect, JSX, useContext, useRef } from "react";
 import ReactDOM from "react-dom";
 import styles from "../../assets/css-modules/GamePowerups.module.css";
 import Button from "./Button";
@@ -35,7 +35,7 @@ export default function GamePowerups(): JSX.Element {
       handler: () => {
         console.log("client: emitting increment-powerup");
         if (currentUser) {
-          socket.emit("increment-powerup", currentUser._id, "timeIncrease");
+          socket.emit("increase-time", currentUser._id);
         }
       },
     },
@@ -65,7 +65,7 @@ export default function GamePowerups(): JSX.Element {
       colour: "#ef4444",
       handler: () => {
         if (currentUser) {
-          socket.emit("increment-powerup", currentUser._id, "timeDecrease");
+          socket.emit("decrease-time", currentUser._id);
         }
       },
     },
@@ -110,7 +110,6 @@ export default function GamePowerups(): JSX.Element {
         <Overlay
           powerup={selected}
           onClose={() => {
-            selected.handler();
             setSelected(null);
           }}
         />
@@ -121,6 +120,16 @@ export default function GamePowerups(): JSX.Element {
 
 function Overlay({ powerup, onClose }: OverlayProps): React.ReactPortal {
   const [visible, setVisible] = useState(true);
+
+  const handlerCalledRef = useRef(false);
+
+  useEffect(() => {
+    if (!handlerCalledRef.current) {
+      console.log("Calling powerup handler");
+      powerup.handler();
+      handlerCalledRef.current = true; // Mark the handler as called
+    }
+  }, [powerup]);
 
   useEffect(() => {
     const autoHide = setTimeout(() => setVisible(false), 1000);

@@ -166,4 +166,20 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   socket.on("increment-powerup", (userId: string, powerupName: keyof User["powerups"]) => {
     incrementPowerupCountInGameState(currentGameState, userId, powerupName);
   });
+
+  /* Increase Time Powerup Listener */
+  socket.on("increase-time", (userId: string) => {
+    if (currentTimerDuration) {
+      startTimer((currentTimerDuration += 30));
+    }
+    incrementPowerupCountInGameState(currentGameState, userId, "timeIncrease");
+  });
+
+  /* Decrease Time Powerup Listener */
+  socket.on("decrease-time", (userId: string) => {
+    if (currentTimerDuration) {
+      startTimer((currentTimerDuration -= 30));
+    }
+    incrementPowerupCountInGameState(currentGameState, userId, "timeDecrease");
+  });
 }
