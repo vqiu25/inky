@@ -1,4 +1,10 @@
-import React, { useEffect, RefObject, createRef, useContext } from "react";
+import React, {
+  useEffect,
+  RefObject,
+  createRef,
+  useContext,
+  useRef,
+} from "react";
 import { fabric } from "fabric";
 import { socket } from "../../services/socket";
 import styles from "../../assets/css-modules/Canvas.module.css";
@@ -10,11 +16,21 @@ export const canvasRef: RefObject<fabric.Canvas | null> = createRef();
 const Canvas: React.FC = () => {
   const { currentDrawer } = useContext(GameStateContext)!;
   const { currentUser } = useContext(UsersContext)!;
+  const parentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!parentRef.current) {
+      console.error("Parent ref is null");
+      return;
+    }
+
+    const parent = parentRef.current;
+    const { width: parentWidth, height: parentHeight } =
+      parent.getBoundingClientRect();
+
     const canvas = new fabric.Canvas("canv", {
-      height: 430,
-      width: 600,
+      height: parentHeight, // Set initial height based on parent
+      width: parentWidth, // Set initial width based on parent
       backgroundColor: "white",
     });
 
@@ -29,6 +45,27 @@ const Canvas: React.FC = () => {
     }
 
     canvasRef.current = canvas;
+
+    const resizeCanvas = () => {
+      const { width: newWidth, height: newHeight } =
+        parent.getBoundingClientRect();
+
+      canvas.setWidth(newWidth);
+      canvas.setHeight(newHeight);
+
+      // Optionally scale content proportionally
+      canvas.getObjects().forEach((obj) => {
+        obj.scaleX = (obj.scaleX || 1) * (newWidth / canvas.width!);
+        obj.scaleY = (obj.scaleY || 1) * (newHeight / canvas.height!);
+        obj.left = (obj.left || 0) * (newWidth / canvas.width!);
+        obj.top = (obj.top || 0) * (newHeight / canvas.height!);
+        obj.setCoords();
+      });
+
+      canvas.renderAll();
+    };
+
+    window.addEventListener("resize", resizeCanvas);
 
     canvas.on("path:created", () => {
       if (!suppressEmit) {
@@ -59,8 +96,9 @@ const Canvas: React.FC = () => {
     return () => {
       canvas.dispose(); // Cleanup
       socket.off("canvas-data");
+      window.removeEventListener("resize", resizeCanvas);
     };
-  }, []);
+  }, [parentRef.current]);
 
   const emitCanvasData = (canvas: fabric.Canvas) => {
     const data = canvas.toJSON();
@@ -69,7 +107,7 @@ const Canvas: React.FC = () => {
   };
 
   return (
-    <div>
+    <div ref={parentRef} className={styles.canvasParent}>
       <canvas id="canv" className={styles.canvasElement}></canvas>
     </div>
   );
