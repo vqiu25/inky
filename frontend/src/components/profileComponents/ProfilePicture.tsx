@@ -14,7 +14,7 @@ export default function ProfilePicture({
 }: ProfilePictureProps) {
   return (
     <div className={styles.pictureBorder} style={pictureBorderSize}>
-      <img src={src} style={profilePictureSize} />
+      <img src={src} style={profilePictureSize} className={styles.image} />
     </div>
   );
 }

@@ -33,3 +33,7 @@
   align-items: center;
   padding-left: 5px;
 }
+
+.image {
+  object-fit: contain;
+}

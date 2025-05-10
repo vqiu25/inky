@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { UsersContext } from "../context/UsersContext";
 import styles from "../assets/css-modules/LoginPage.module.css";
 import logo from "../assets/images/logo.svg";
-import drop from "../assets/images/drop.svg";
-import paintbrush from "../assets/images/paintbrush.svg";
+import alicorn from "../assets/images/profile-pictures/alicorn.png";
 
 import GoogleSignInButton from "../components/signInComponents/GoogleSignInButton";
 import { User } from "../types/types";
@@ -14,10 +13,17 @@ const LoginPage = () => {
     useContext(UsersContext)!;
   const navigate = useNavigate();
 
-  function getRandomProfilePicture() {
-    const svgs = [logo, drop, paintbrush];
-    const randomIndex = Math.floor(Math.random() * svgs.length);
-    return svgs[randomIndex];
+  // Import all SVG images from profile-pictures folder
+  const images = import.meta.glob("/src/assets/images/profile-pictures/*.svg");
+
+  function getRandomProfilePicture(): string {
+    // Get the file paths from the keys of the `images` object
+    const profilePictures = Object.keys(images);
+    profilePictures.push(alicorn);
+
+    // Select a random image
+    const randomIndex = Math.floor(Math.random() * profilePictures.length);
+    return profilePictures[randomIndex];
   }
 
   async function handleGoogleResponse(response: unknown) {
