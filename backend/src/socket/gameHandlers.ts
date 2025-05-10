@@ -6,7 +6,9 @@ import {
   updatePlayerPoints,
   getMaxRounds,
   incrementPowerupCountInGameState,
-  getInitialGameState
+  getInitialGameState,
+  setUserSplash,
+  clearUserSplash
 } from "../game-state/game-state.js";
 import { lobbyPlayers } from "./lobbyHandlers.js";
 
@@ -240,5 +242,26 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       startTimer((currentTimerDuration -= 30));
     }
     incrementPowerupCountInGameState(currentGameState, userId, "timeDecrease");
+  });
+
+  /* Ink Splatter Powerup Listener  */
+  socket.on("ink-splash", (userId: string) => {
+    const durationMs = Math.min(10000, (currentTimerDuration ?? turnTime) * 1000);
+    setUserSplash(currentGameState, userId, durationMs);
+    const drawerId = currentGameState.drawer._id;
+    const expiry = currentGameState.splashExpiries[userId];
+
+    // notify clients of splash with expiry timestamp
+    io.to("game-room").emit("splash-changed", {
+      userId,
+      expiry,
+      drawer: drawerId
+    });
+
+    setTimeout(() => {
+      clearUserSplash(currentGameState, userId);
+    }, durationMs);
+
+    incrementPowerupCountInGameState(currentGameState, userId, "inkSplatter");
   });
 }

@@ -1,15 +1,17 @@
-import React, { useState, useEffect, JSX, useContext, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef, JSX } from "react";
 import ReactDOM from "react-dom";
 import styles from "../../assets/css-modules/GamePowerups.module.css";
 import Button from "./Button";
-import { UsersContext } from "../../context/UsersContext";
-import { socket } from "../../services/socket";
 import squidIcon from "../../assets/images/squid.svg";
 import magnifyingGlassIcon from "../../assets/images/magnifying-glass.svg";
 import rocketIcon from "../../assets/images/rocket.svg";
 import crossIcon from "../../assets/images/cross.svg";
 import greenHourGlassIcon from "../../assets/images/green-hourglass.svg";
 import redHourGlassIcon from "../../assets/images/red-hourglass.svg";
+import { UsersContext } from "../../context/UsersContext";
+import { GameStateContext } from "../../context/GameStateContext";
+import { socket } from "../../services/socket";
+import InkSplatterOverlay from "./InkSplatterOverlay";
 
 interface PowerupConfig {
   imageSrc: string;
@@ -24,8 +26,51 @@ interface OverlayProps {
 }
 
 export default function GamePowerups(): JSX.Element {
-  const [selected, setSelected] = useState<PowerupConfig | null>(null);
   const { currentUser } = useContext(UsersContext)!;
+  const { currentDrawer } = useContext(GameStateContext)!;
+
+  // State for ink splash overlay
+  const [showSplash, setShowSplash] = useState(false);
+  const [isSplashFading, setIsSplashFading] = useState(false);
+
+  // Listen for splash-changed events
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const handler = (payload: {
+      userId: string;
+      expiry: number;
+      drawer: string;
+    }) => {
+      const { userId, expiry, drawer } = payload;
+      if (currentUser._id === userId || currentUser._id === drawer) return;
+
+      const now = Date.now();
+      const msLeft = expiry - now;
+      if (msLeft <= 0) return;
+
+      setShowSplash(true);
+      setIsSplashFading(false);
+
+      const fadeTimer = setTimeout(() => setIsSplashFading(true), msLeft - 250);
+      const hideTimer = setTimeout(() => {
+        setShowSplash(false);
+        setIsSplashFading(false);
+      }, msLeft);
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(hideTimer);
+      };
+    };
+
+    socket.on("splash-changed", handler);
+    return () => {
+      socket.off("splash-changed", handler);
+    };
+  }, [currentUser, currentDrawer]);
+
+  const [selected, setSelected] = useState<PowerupConfig | null>(null);
 
   const powerupConfigs: PowerupConfig[] = [
     {
@@ -33,10 +78,7 @@ export default function GamePowerups(): JSX.Element {
       alt: "timeIncrease",
       colour: "#a3e635",
       handler: () => {
-        console.log("client: emitting increment-powerup");
-        if (currentUser) {
-          socket.emit("increase-time", currentUser._id);
-        }
+        if (currentUser) socket.emit("increase-time", currentUser._id);
       },
     },
     {
@@ -44,9 +86,8 @@ export default function GamePowerups(): JSX.Element {
       alt: "revealLetter",
       colour: "#d946ef",
       handler: () => {
-        if (currentUser) {
+        if (currentUser)
           socket.emit("increment-powerup", currentUser._id, "revealLetter");
-        }
       },
     },
     {
@@ -54,9 +95,8 @@ export default function GamePowerups(): JSX.Element {
       alt: "scoreMultiplier",
       colour: "#f3e3ab",
       handler: () => {
-        if (currentUser) {
+        if (currentUser)
           socket.emit("increment-powerup", currentUser._id, "scoreMultiplier");
-        }
       },
     },
     {
@@ -64,9 +104,7 @@ export default function GamePowerups(): JSX.Element {
       alt: "timeDecrease",
       colour: "#ef4444",
       handler: () => {
-        if (currentUser) {
-          socket.emit("decrease-time", currentUser._id);
-        }
+        if (currentUser) socket.emit("decrease-time", currentUser._id);
       },
     },
     {
@@ -75,7 +113,7 @@ export default function GamePowerups(): JSX.Element {
       colour: "#6366f1",
       handler: () => {
         if (currentUser) {
-          socket.emit("increment-powerup", currentUser._id, "inkSplatter");
+          socket.emit("ink-splash", currentUser._id);
         }
       },
     },
@@ -84,9 +122,8 @@ export default function GamePowerups(): JSX.Element {
       alt: "eraseDrawing",
       colour: "#f97316",
       handler: () => {
-        if (currentUser) {
+        if (currentUser)
           socket.emit("increment-powerup", currentUser._id, "eraseDrawing");
-        }
       },
     },
   ];
@@ -107,27 +144,21 @@ export default function GamePowerups(): JSX.Element {
       </div>
 
       {selected && (
-        <Overlay
-          powerup={selected}
-          onClose={() => {
-            setSelected(null);
-          }}
-        />
+        <Overlay powerup={selected} onClose={() => setSelected(null)} />
       )}
+      {showSplash && <InkSplatterOverlay fading={isSplashFading} />}
     </>
   );
 }
 
 function Overlay({ powerup, onClose }: OverlayProps): React.ReactPortal {
   const [visible, setVisible] = useState(true);
-
   const handlerCalledRef = useRef(false);
 
   useEffect(() => {
     if (!handlerCalledRef.current) {
-      console.log("Calling powerup handler");
       powerup.handler();
-      handlerCalledRef.current = true; // Mark the handler as called
+      handlerCalledRef.current = true;
     }
   }, [powerup]);
 

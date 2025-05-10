@@ -110,6 +110,8 @@ export default function GamePage() {
   return (
     <>
       {isSelectingWord && <WordSelection />}
+      {isSelectingWord && <WordSelection />}
+      {isSelectingWord && <WordSelection />}
       {isTurnFinished && <TurnEnd timeOut={timedOut} />}
       <div ref={wrapperRef} className={styles.gameWrapper}>
         <div className={styles.gameGrid}>

@@ -9,6 +9,7 @@ export interface GameState {
   drawer: User;
   playerPoints: [User, number][];
   timeRemaining: number;
+  splashExpiries: Record<string, number>;
 }
 
 export const getMaxRounds = (): number => {
@@ -21,7 +22,8 @@ export const getInitialGameState = (players: User[]): GameState => {
     wordToGuess: "",
     drawer: players[0],
     playerPoints: players.map((player) => [player, 0]),
-    timeRemaining: turnTime
+    timeRemaining: turnTime,
+    splashExpiries: {}
   };
 };
 
@@ -48,7 +50,8 @@ export const getNewGameState = (previousGameState: GameState): GameState => {
     wordToGuess: newWord,
     drawer: newDrawer,
     playerPoints: previousGameState.playerPoints,
-    timeRemaining: turnTime
+    timeRemaining: turnTime,
+    splashExpiries: {}
   };
 };
 
@@ -114,4 +117,35 @@ export const incrementPowerupCountInGameState = (
   // User not found in the game state
   console.error(`User with ID ${userId} not found in game state`);
   return false;
+};
+
+/**
+ * Activate a splash for a user for the given duration (ms).
+ */
+export const setUserSplash = (gameState: GameState, userId: string, durationMs: number): void => {
+  gameState.splashExpiries[userId] = Date.now() + durationMs;
+};
+
+/**
+ * Clear a user's splash immediately, or remove expired splashes if no userId.
+ */
+export const clearUserSplash = (gameState: GameState, userId?: string): void => {
+  if (userId) {
+    delete gameState.splashExpiries[userId];
+  } else {
+    const now = Date.now();
+    Object.entries(gameState.splashExpiries).forEach(([id, expiry]) => {
+      if (expiry <= now) {
+        delete gameState.splashExpiries[id];
+      }
+    });
+  }
+};
+
+/**
+ * Check if a user's splash is still active.
+ */
+export const isUserSplashActive = (gameState: GameState, userId: string): boolean => {
+  const expiry = gameState.splashExpiries[userId];
+  return expiry !== undefined && expiry > Date.now();
 };

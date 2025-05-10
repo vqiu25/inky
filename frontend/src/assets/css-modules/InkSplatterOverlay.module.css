@@ -1,0 +1,74 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 9999;
+
+  /* visible state */
+  opacity: 1;
+  transition: opacity 0.25s ease-out;
+}
+
+.overlayFade {
+  /* fade-out state */
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+.container {
+  position: relative;
+  width: 45rem;
+  height: 33rem;
+}
+
+.image {
+  position: absolute;
+  width: 22rem;
+  object-fit: contain;
+
+  /* only pop-in animation */
+  animation: inkSplash 0.6s ease-out var(--delay, 0s) both;
+}
+
+.top {
+  top: 0;
+  left: 50%;
+  margin-left: -11rem;
+  --rotate: -15deg;
+  --delay: 0s;
+}
+
+.bottomLeft {
+  bottom: 0;
+  left: 0;
+  --rotate: 15deg;
+  --delay: 0.1s;
+}
+
+.bottomRight {
+  bottom: 0;
+  right: 0;
+  --rotate: -15deg;
+  --delay: 0.2s;
+}
+
+@keyframes inkSplash {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(var(--rotate));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.2) rotate(calc(var(--rotate) * 0.5));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
