@@ -193,12 +193,11 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     console.log("Word guessed by player: ", player.username);
     currentGameState.playerPoints = updatePlayerPoints(currentGameState, player, timeRemaining);
     io.to("game-room").emit("new-scores", currentGameState.playerPoints);
+    io.to("game-room").emit("word-guessed", player); // Broadcast the player who guessed the word
     // If all players have guessed the word, the turn should end
     if (numPlayersGuessed >= currentGameState.playerPoints.length - 1) {
       numPlayersGuessed = 0;
       endTurn();
-    } else {
-      io.to("game-room").emit("word-guessed", player); // Broadcast the player who guessed the word
     }
   });
 

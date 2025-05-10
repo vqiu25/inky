@@ -59,7 +59,7 @@ export default function GamePage() {
       setPlayerPoints(playersPoints);
     });
     return () => {
-      socket.off("chat-data");
+      socket.off("new-scores");
     };
   });
 
