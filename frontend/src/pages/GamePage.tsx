@@ -55,6 +55,15 @@ export default function GamePage() {
   }, []);
 
   useEffect(() => {
+    socket.on("new-scores", (playersPoints) => {
+      setPlayerPoints(playersPoints);
+    });
+    return () => {
+      socket.off("chat-data");
+    };
+  });
+
+  useEffect(() => {
     console.log("Registering game-finished listener");
     socket.on("game-finished", (gameState: GameState) => {
       setPlayerPoints(gameState.playerPoints);

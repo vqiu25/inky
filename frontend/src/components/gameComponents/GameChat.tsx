@@ -6,15 +6,19 @@ import React, {
   useContext,
 } from "react";
 import { socket } from "../../services/socket";
-import { ChatMessage } from "../../types/types";
+import { ChatMessage, User } from "../../types/types";
 import styles from "../../assets/css-modules/GameChat.module.css";
 import planeIcon from "../../assets/images/plane.svg";
 import { UsersContext } from "../../context/UsersContext";
+import { GameStateContext } from "../../context/GameStateContext";
 
 const Chat: React.FC = () => {
   const { currentUser } = useContext(UsersContext)!;
+  const { wordToGuess, currentDrawer, timeRemaining } =
+    useContext(GameStateContext)!;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState("");
+  const [haveGuessed, setHaveGuessed] = useState(false);
 
   const username = currentUser?.username ?? "Anonymous";
 
@@ -33,14 +37,63 @@ const Chat: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    socket.on("word-guessed", (player: User) => {
+      const message = {
+        username: "System",
+        text: `${player.username} has guessed the word!`,
+      };
+      setMessages((prev) => [...prev, message]);
+    });
+    return () => {
+      socket.off("word-guessed");
+    };
+  }, []);
+
   const handleSend = (e: FormEvent) => {
     e.preventDefault();
     const text = currentMessage.trim();
     if (!text) return;
+    let message: ChatMessage | null = null;
 
-    const message: ChatMessage = { username: username, text };
-    socket.emit("chat-data", message);
-    setMessages((prev) => [...prev, message]);
+    if (text.toLowerCase().includes(wordToGuess.toLowerCase())) {
+      if (currentUser?._id !== currentDrawer?._id) {
+        // Guesser case
+        if (text.toLowerCase() === wordToGuess.toLowerCase()) {
+          // If they have actually guessed the word and not previously guessed
+          if (!haveGuessed) {
+            socket.emit("word-guessed", currentUser, timeRemaining);
+            console.log(
+              `Guesser ${currentUser?.username} guessed the word at time ${timeRemaining}`,
+            );
+            message = { username: username, text };
+            setHaveGuessed(true);
+          } else {
+            // If they have already guessed the word
+            message = {
+              username: "System",
+              text: `You have already guessed the word!`,
+            };
+          }
+        } else {
+          // If their answer contains the word
+          message = { username: "System", text: `"${text}" is very close` };
+        }
+      } else {
+        // Drawer case
+        message = {
+          username: "System",
+          text: "Do not reveal the answer to the guessers!",
+        };
+      }
+    } else {
+      // Normal chat message
+      message = { username: username, text };
+      socket.emit("chat-data", message);
+    }
+    if (message) {
+      setMessages((prev) => [...prev, message]);
+    }
     setCurrentMessage("");
   };
 

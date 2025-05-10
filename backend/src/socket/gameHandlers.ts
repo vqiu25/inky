@@ -108,7 +108,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
         user.achievements.pointsAchievement = true;
       }
       const totalPowerups = Object.values(user.powerups)
-        .filter(value => typeof value === 'number')
+        .filter((value) => typeof value === "number")
         .reduce((acc, value) => acc + value, 0);
       if (totalPowerups >= powerupsForAchievement) {
         user.achievements.powerupAchievement = true;
@@ -190,11 +190,11 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    */
   socket.on("word-guessed", (player: User, timeRemaining: number) => {
     numPlayersGuessed++;
-    console.log("Word guessed by player: ", player);
+    console.log("Word guessed by player: ", player.username);
     currentGameState.playerPoints = updatePlayerPoints(currentGameState, player, timeRemaining);
-
+    io.to("game-room").emit("new-scores", currentGameState.playerPoints);
     // If all players have guessed the word, the turn should end
-    if (numPlayersGuessed >= currentGameState.playerPoints.length) {
+    if (numPlayersGuessed >= currentGameState.playerPoints.length - 1) {
       numPlayersGuessed = 0;
       endTurn();
     } else {

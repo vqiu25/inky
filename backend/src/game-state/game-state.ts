@@ -67,10 +67,16 @@ export const updatePlayerPoints = (
 ): [User, number][] => {
   const updatedPlayerPoints: [User, number][] = gameState.playerPoints;
   for (let i = 0; i < updatedPlayerPoints.length; i++) {
-    if (updatedPlayerPoints[i][0] == player) {
-      updatedPlayerPoints[i][1] += timeRemaining; //TODO: check what we want for this
-    } else if (updatedPlayerPoints[i][0] == gameState.drawer) {
-      updatedPlayerPoints[i][1] += timeRemaining / gameState.playerPoints.length; //TODO: check what we want for this
+    if (updatedPlayerPoints[i][0]._id === player._id) {
+      updatedPlayerPoints[i][1] += timeRemaining;
+      console.log(
+        `Updating points for ${updatedPlayerPoints[i][0].username}(guesser) to ${updatedPlayerPoints[i][1]}`
+      );
+    } else if (updatedPlayerPoints[i][0]._id === gameState.drawer._id) {
+      updatedPlayerPoints[i][1] += timeRemaining / (gameState.playerPoints.length - 1);
+      console.log(
+        `Updating points for ${updatedPlayerPoints[i][0].username}(drawer) to ${updatedPlayerPoints[i][1]}`
+      );
     }
   }
 

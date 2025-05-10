@@ -18,6 +18,8 @@ export interface GameStateContextType {
   setWordToGuess: (word: string) => void;
   playerPoints: [User, number][];
   setPlayerPoints: (playerPoints: [User, number][]) => void;
+  timeRemaining: number | null;
+  updateTime: (newTime: number) => void;
 }
 
 /**
@@ -34,10 +36,15 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   const [round, setRound] = useState(0);
   const [wordToGuess, setWordToGuess] = useState("");
   const [playerPoints, setPlayerPoints] = useState<[User, number][]>([]);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
 
   function setNewPlayers(newPlayers: User[]) {
     setLobbyPlayers(newPlayers);
     console.log("Lobby player", newPlayers.length);
+  }
+
+  function updateTime(newTime: number) {
+    setTimeRemaining(newTime);
   }
 
   return (
@@ -55,6 +62,8 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
         setWordToGuess,
         playerPoints,
         setPlayerPoints,
+        timeRemaining,
+        updateTime,
       }}
     >
       {children}
