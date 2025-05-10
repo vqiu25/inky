@@ -6,6 +6,7 @@ import LobbyPage from "./pages/LobbyPage";
 import GamePage from "./pages/GamePage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ProfilePage from "./pages/ProfilePage";
+import PodiumPage from "./pages/PodiumPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="play" element={<GamePage />} />
       <Route path="leaderboard" element={<LeaderboardPage />} />
       <Route path="profile" element={<ProfilePage />} />
+      <Route path="podium" element={<PodiumPage />} />
     </Routes>
   );
 }

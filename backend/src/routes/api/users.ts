@@ -59,24 +59,7 @@ router.post("/", async (req: Request, res: Response) => {
     const newUser = new User({
       username: username,
       email: email,
-      profilePicture: profilePicture,
-      totalGames: 0,
-      totalPoints: 0,
-      highScore: 0,
-      totalWins: 0,
-      powerups: {
-        timeIncrease: 0,
-        timeDecrease: 0,
-        revealLetter: 0,
-        inkSplatter: 0,
-        scoreMultiplier: 0,
-        eraseDrawing: 0
-      },
-      achievements: {
-        gameAchievement: false,
-        powerupAchievement: false,
-        scoreAchievement: false
-      }
+      profilePicture: profilePicture
     });
 
     await User.validate(newUser);

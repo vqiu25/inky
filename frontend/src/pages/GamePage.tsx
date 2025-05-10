@@ -11,8 +11,10 @@ import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
 import { GameState } from "../types/types";
 import { UsersContext } from "../context/UsersContext";
+import { useNavigate } from "react-router-dom";
 
 export default function GamePage() {
+  const navigate = useNavigate();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const {
     isSelectingWord,
@@ -51,6 +53,14 @@ export default function GamePage() {
 
     setIsSelectingWord(true);
   }, []);
+
+  useEffect(() => {
+    console.log("Registering game-finished listener");
+    socket.on("game-finished", (gameState: GameState) => {
+      setPlayerPoints(gameState.playerPoints);
+      navigate("/podium");
+    });
+  }, [navigate, setPlayerPoints]);
 
   return (
     <>

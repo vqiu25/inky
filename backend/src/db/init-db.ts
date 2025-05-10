@@ -8,46 +8,12 @@ const users = [
   {
     username: "testuser1",
     email: "testuser1@gmail.com",
-    profilePicture: "src/assets/images/logo.svg",
-    totalGames: 0,
-    totalPoints: 0,
-    highScore: 0,
-    totalWins: 0,
-    powerups: {
-      timeIncrease: 0,
-      timeDecrease: 0,
-      revealLetter: 0,
-      inkSplatter: 0,
-      scoreMultiplier: 0,
-      eraseDrawing: 0
-    },
-    achievements: {
-      gameAchievement: false,
-      powerupAchievement: false,
-      scoreAchievement: false
-    }
+    profilePicture: "src/assets/images/logo.svg"
   },
   {
     username: "testuser2",
     email: "testuser2@gmail.com",
-    profilePicture: "src/assets/images/paintbrush.svg",
-    totalGames: 0,
-    totalPoints: 0,
-    highScore: 0,
-    totalWins: 0,
-    powerups: {
-      timeIncrease: 0,
-      timeDecrease: 0,
-      revealLetter: 0,
-      inkSplatter: 0,
-      scoreMultiplier: 0,
-      eraseDrawing: 0
-    },
-    achievements: {
-      gameAchievement: false,
-      powerupAchievement: false,
-      scoreAchievement: false
-    }
+    profilePicture: "src/assets/images/paintbrush.svg"
   }
 ];
 

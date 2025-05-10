@@ -18,6 +18,7 @@ export interface UsersContextType {
   refreshUsers: () => Promise<void>;
   getUserById: (id: string) => Promise<User>;
   getUserByEmail: (email: string) => Promise<User>;
+  updateGamePlayers: (users: User[]) => Promise<User[]>;
   usersList: User[];
   setUsersList: React.Dispatch<React.SetStateAction<User[]>>;
   currentUser: User | null;
@@ -117,6 +118,26 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  async function updateGamePlayers(users: User[]): Promise<User[]> {
+    const responseData = [];
+    try {
+      for (const user of users) {
+        const response = await axios.patch<User>(
+          `${API_BASE_URL}/api/users/${user._id}`,
+          user,
+        );
+        if (response.status !== 200) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        responseData.push(response.data);
+      }
+    } catch (error) {
+      console.error("Error updating game players:", error);
+      throw error;
+    }
+    return responseData;
+  }
+
   async function setCurrentUserFromLocalStorage(): Promise<void> {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
@@ -134,6 +155,7 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         refreshUsers,
         getUserById,
         getUserByEmail,
+        updateGamePlayers,
         usersList,
         setUsersList,
         currentUser,

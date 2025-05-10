@@ -22,6 +22,13 @@ let unrevealedIndices: number[] = [];
 
 const turnTime = 90; // Duration of each turn in seconds
 
+// Benchmark values for achievements
+const gamesForAchievement = 5;
+const pointsForAchievement = 1000;
+const powerupsForAchievement = 10;
+const winsForAchievement = 5;
+const highScoreForAchievement = 500;
+
 export default function registerGameHandlers(io: Server, socket: Socket) {
   /**
    * Listener for when the game starts (from the lobby).
@@ -77,8 +84,52 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   };
 
   /**
+   * Update all of the user properties based on the game results.
+   */
+  const finishGame = (): [User, number][] => {
+    const updatedPlayerPoints = currentGameState.playerPoints;
+    let winner = updatedPlayerPoints[0];
+    for (let i = 0; i < updatedPlayerPoints.length; i++) {
+      const user = updatedPlayerPoints[i][0];
+      const userPoints = updatedPlayerPoints[i][1];
+
+      if (userPoints > winner[1]) {
+        winner = updatedPlayerPoints[i];
+      }
+
+      user.totalGames += 1;
+      user.totalPoints += userPoints;
+      user.highScore = Math.max(user.highScore, userPoints);
+
+      if (user.totalGames === gamesForAchievement) {
+        user.achievements.gameAchievement = true;
+      }
+      if (user.totalPoints >= pointsForAchievement) {
+        user.achievements.pointsAchievement = true;
+      }
+      const totalPowerups = Object.values(user.powerups)
+        .filter(value => typeof value === 'number')
+        .reduce((acc, value) => acc + value, 0);
+      if (totalPowerups >= powerupsForAchievement) {
+        user.achievements.powerupAchievement = true;
+      }
+      if (user.highScore >= highScoreForAchievement) {
+        user.achievements.highScoreAchievement = true;
+      }
+    }
+
+    const winnerUser = winner[0];
+    winnerUser.totalWins += 1;
+    if (winnerUser.totalWins === winsForAchievement) {
+      winnerUser.achievements.winsAchievement = true;
+    }
+
+    return updatedPlayerPoints;
+  };
+
+  /**
    * Ends the current turn and starts a new one.
-   * If the game is finished, it emits a "game-finished" event.
+   * If the game is finished, it emits a "game-finished" event and updates user properties.
    * Otherwise, it emits a "drawer-select" event to select the next drawer.
    */
   const endTurn = (): void => {
@@ -92,6 +143,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
 
     // if the game is finished
     if (currentGameState.round > getMaxRounds()) {
+      finishGame();
       io.to("game-room").emit("game-finished", currentGameState);
     } else {
       io.to("game-room").emit("drawer-select", currentGameState.drawer);

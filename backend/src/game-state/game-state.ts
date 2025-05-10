@@ -66,7 +66,7 @@ export const updatePlayerPoints = (
   timeRemaining: number
 ): [User, number][] => {
   const updatedPlayerPoints: [User, number][] = gameState.playerPoints;
-  for (let i = 0; i < updatePlayerPoints.length; i++) {
+  for (let i = 0; i < updatedPlayerPoints.length; i++) {
     if (updatedPlayerPoints[i][0] == player) {
       updatedPlayerPoints[i][1] += timeRemaining; //TODO: check what we want for this
     } else if (updatedPlayerPoints[i][0] == gameState.drawer) {
