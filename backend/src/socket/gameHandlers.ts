@@ -75,7 +75,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
           console.log("Timer ended");
           io.to("game-room").emit("timer", 0); // Emit 0 to indicate the timer has ended
 
-          endTurn();
+          endTurn(true);
         } else {
           io.to("game-room").emit("timer", currentTimerDuration); // Emit the time
         }
@@ -132,7 +132,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    * If the game is finished, it emits a "game-finished" event and updates user properties.
    * Otherwise, it emits a "drawer-select" event to select the next drawer.
    */
-  const endTurn = (): void => {
+  const endTurn = (timeOut: boolean): void => {
     currentGameState = getNewGameState(currentGameState);
 
     // Reset the timer for word reveal
@@ -141,13 +141,11 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       revealInterval = null;
     }
 
-    // if the game is finished
-    if (currentGameState.round > getMaxRounds()) {
-      finishGame();
-      io.to("game-room").emit("game-finished", currentGameState);
-    } else {
-      io.to("game-room").emit("drawer-select", currentGameState.drawer);
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
     }
+    io.to("game-room").emit("turn-end", timeOut);
   };
 
   /**
@@ -181,6 +179,16 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     }, 10_000);
   });
 
+  socket.on("next-turn", () => {
+    // if the game is finished
+    if (currentGameState.round > getMaxRounds()) {
+      finishGame();
+      io.to("game-room").emit("game-finished", currentGameState);
+    } else {
+      io.to("game-room").emit("drawer-select", currentGameState.drawer);
+    }
+  });
+
   /**
    * Listener for when someone guesses the word.
    * Broadcasts the player who guessed the word to all clients.
@@ -197,7 +205,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     // If all players have guessed the word, the turn should end
     if (numPlayersGuessed >= currentGameState.playerPoints.length - 1) {
       numPlayersGuessed = 0;
-      endTurn();
+      endTurn(false);
     }
   });
 

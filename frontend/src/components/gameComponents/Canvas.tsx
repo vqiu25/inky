@@ -98,7 +98,7 @@ const Canvas: React.FC = () => {
       socket.off("canvas-data");
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [parentRef.current]);
+  }, [parentRef.current, currentDrawer]);
 
   const emitCanvasData = (canvas: fabric.Canvas) => {
     const data = canvas.toJSON();

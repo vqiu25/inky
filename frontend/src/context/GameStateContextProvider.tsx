@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import { User } from "../types/types";
 import { GameStateContext } from "./GameStateContext";
+import { canvasRef } from "../components/gameComponents/Canvas";
 
 /**
  * Interface for the UsersContext values.
@@ -20,6 +21,9 @@ export interface GameStateContextType {
   setPlayerPoints: (playerPoints: [User, number][]) => void;
   timeRemaining: number | null;
   updateTime: (newTime: number) => void;
+  clearCanvas: () => void;
+  isTurnFinished: boolean;
+  setIsTurnFinished: (isTurnFinished: boolean) => void;
 }
 
 /**
@@ -37,6 +41,7 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   const [wordToGuess, setWordToGuess] = useState("");
   const [playerPoints, setPlayerPoints] = useState<[User, number][]>([]);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [isTurnFinished, setIsTurnFinished] = useState(false);
 
   function setNewPlayers(newPlayers: User[]) {
     setLobbyPlayers(newPlayers);
@@ -46,6 +51,14 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   function updateTime(newTime: number) {
     setTimeRemaining(newTime);
   }
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.clear();
+      canvas.setBackgroundColor("white", () => canvas.renderAll());
+    }
+  };
 
   return (
     <GameStateContext.Provider
@@ -64,6 +77,9 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
         setPlayerPoints,
         timeRemaining,
         updateTime,
+        clearCanvas,
+        isTurnFinished,
+        setIsTurnFinished,
       }}
     >
       {children}

@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { socket } from "../../services/socket";
-import { ChatMessage, User } from "../../types/types";
+import { ChatMessage, GameState, User } from "../../types/types";
 import styles from "../../assets/css-modules/GameChat.module.css";
 import planeIcon from "../../assets/images/plane.svg";
 import { UsersContext } from "../../context/UsersContext";
@@ -30,10 +30,22 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket.on("chat-data", (message: ChatMessage) => {
+      console.log("I received a message", message);
       setMessages((prev) => [...prev, message]);
     });
     return () => {
       socket.off("chat-data");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("new-turn", (gameState: GameState) => {
+      setMessages([]);
+      setHaveGuessed(false);
+      console.log("New turn started", gameState);
+    });
+    return () => {
+      socket.off("new-turn");
     };
   }, []);
 
@@ -89,6 +101,7 @@ const Chat: React.FC = () => {
     } else {
       // Normal chat message
       message = { username: username, text };
+      console.log("sending a message", message);
       socket.emit("chat-data", message);
     }
     if (message) {

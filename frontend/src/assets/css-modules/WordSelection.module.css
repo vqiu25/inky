@@ -12,16 +12,12 @@
 }
 
 .wordSelectionText {
-  /* font-weight: bold; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2%;
   height: 100%;
-  /* font-size: 2.5rem; */
-  /* color: black; */
-  /* text-shadow: 0px 0px 5px white; */
 }
 
 .wordSelectionWord {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "../assets/css-modules/GamePage.module.css";
 import GameToolBar from "../components/gameComponents/GameToolBar";
 import GamePowerups from "../components/gameComponents/GamePowerups";
@@ -7,9 +7,10 @@ import GamePlayerList from "../components/gameComponents/GamePlayerList";
 import GameCanvasArea from "../components/gameComponents/GameCanvasArea";
 import GameChat from "../components/gameComponents/GameChat";
 import WordSelection from "../components/gameComponents/WordSelection";
+import TurnEnd from "../components/gameComponents/TurnEnd";
 import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
-import { GameState } from "../types/types";
+import { GameState, User } from "../types/types";
 import { UsersContext } from "../context/UsersContext";
 import { useNavigate } from "react-router-dom";
 
@@ -23,8 +24,13 @@ export default function GamePage() {
     setWordToGuess,
     setPlayerPoints,
     currentDrawer,
+    setCurrentDrawer,
+    clearCanvas,
+    isTurnFinished,
+    setIsTurnFinished,
   } = useContext(GameStateContext)!;
   const { currentUser } = useContext(UsersContext)!;
+  const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -49,9 +55,11 @@ export default function GamePage() {
       setRound(gameState.round);
       setWordToGuess(gameState.wordToGuess);
       setPlayerPoints(gameState.playerPoints);
+      clearCanvas();
     });
 
     setIsSelectingWord(true);
+    setIsTurnFinished(false);
   }, []);
 
   useEffect(() => {
@@ -64,16 +72,45 @@ export default function GamePage() {
   });
 
   useEffect(() => {
+    socket.on("turn-end", (timeOut: boolean) => {
+      console.log("Turn ended");
+      setIsTurnFinished(true);
+      setTimedOut(timeOut);
+    });
+
+    return () => {
+      socket.off("turn-end");
+    };
+  });
+
+  useEffect(() => {
     console.log("Registering game-finished listener");
     socket.on("game-finished", (gameState: GameState) => {
       setPlayerPoints(gameState.playerPoints);
+      socket.emit("player-leave", currentUser);
       navigate("/podium");
     });
   }, [navigate, setPlayerPoints]);
 
+  useEffect(() => {
+    const handleDrawerSelect = (drawer: User) => {
+      console.log("Drawer selected:", drawer.username);
+      setCurrentDrawer(drawer);
+      setIsSelectingWord(true);
+      setIsTurnFinished(false);
+    };
+
+    socket.on("drawer-select", handleDrawerSelect);
+
+    return () => {
+      socket.off("drawer-select", handleDrawerSelect);
+    };
+  }, [setCurrentDrawer]);
+
   return (
     <>
       {isSelectingWord && <WordSelection />}
+      {isTurnFinished && <TurnEnd timeOut={timedOut} />}
       <div ref={wrapperRef} className={styles.gameWrapper}>
         <div className={styles.gameGrid}>
           <GameStatusBar />

@@ -3,9 +3,11 @@ import { canvasRef } from "./Canvas";
 import brushIcon from "../../assets/images/brush.svg";
 import eraserIcon from "../../assets/images/eraser.svg";
 import trashIcon from "../../assets/images/trash.svg";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { GameStateContext } from "../../context/GameStateContext";
 
 export default function GameToolBar() {
+  const { clearCanvas } = useContext(GameStateContext)!;
   const colours: string[] = [
     "black",
     "white",
@@ -56,13 +58,13 @@ export default function GameToolBar() {
     }
   };
 
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      canvas.clear();
-      canvas.setBackgroundColor("white", () => canvas.renderAll());
-    }
-  };
+  // const clearCanvas = () => {
+  //   const canvas = canvasRef.current;
+  //   if (canvas) {
+  //     canvas.clear();
+  //     canvas.setBackgroundColor("white", () => canvas.renderAll());
+  //   }
+  // };
 
   const setColour = (colour: string) => {
     const canvas = canvasRef.current;

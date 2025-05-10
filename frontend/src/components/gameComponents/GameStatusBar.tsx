@@ -22,6 +22,10 @@ export default function GameStatusBar() {
     };
   }, [setRound]);
 
+  const handleHomeClick = () => {
+    navigate("/home");
+  };
+
   return (
     <div className={styles.statusBar}>
       <div className={styles.statusBarLeft}>
@@ -29,7 +33,7 @@ export default function GameStatusBar() {
           src={homeIcon}
           alt="Home"
           className={styles.buttonIcon}
-          onClick={() => navigate("/home")}
+          onClick={() => handleHomeClick()}
         />
         <div className={styles.roundPill}>Round {round} / 3</div>
       </div>
