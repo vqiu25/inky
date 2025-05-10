@@ -51,8 +51,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <>
-      <PageHeader>Profile</PageHeader>
+    <div className={styles.pageContainer}>
+      <PageHeader marginTop="0">Profile</PageHeader>
       {loading || !currentUser ? (
         <div className={spinnerStyles.spinnerContainer}>
           <LoadingSpinner />
@@ -180,6 +180,6 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -22,9 +22,13 @@ export default function LobbyPage() {
 
   // Get the current user
   useEffect(() => {
-    setIsLoading(true);
-    setCurrentUserFromLocalStorage();
-    setIsLoading(false);
+    const fetchCurrentUser = async () => {
+      setIsLoading(true);
+      await setCurrentUserFromLocalStorage();
+      setIsLoading(false);
+    };
+
+    fetchCurrentUser();
   }, [location]);
 
   // Get the list of players in the lobby

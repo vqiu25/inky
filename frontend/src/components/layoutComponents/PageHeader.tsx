@@ -9,12 +9,14 @@ interface PageHeaderProps {
   children: ReactNode;
   backTo?: string; // This is optional and it defaults to "/home"
   exitLobby?: boolean; // Set lobby field of player back to 0 if true
+  marginTop?: string; // Optional margin top for the header
 }
 
 export default function PageHeader({
   children,
   backTo = "/home",
   exitLobby = false,
+  marginTop = "",
 }: PageHeaderProps) {
   const navigate = useNavigate();
   const { currentUser } = useContext(UsersContext)!;
@@ -30,7 +32,10 @@ export default function PageHeader({
   };
 
   return (
-    <span className={styles.titleContainer}>
+    <span
+      className={styles.titleContainer}
+      style={marginTop ? { marginTop } : {}}
+    >
       <div className={styles.left}>
         <button
           className={styles.backButton}
