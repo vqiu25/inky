@@ -47,7 +47,9 @@ export default function WordSelection() {
     <div className={styles.wordSelection}>
       {currentUser?._id === currentDrawer?._id ? (
         <div className={styles.wordSelectionText}>
-          Select a word to draw!
+          <div className={styles.wordSelectionTitle}>
+            Select a word to draw!
+          </div>
           <div className={styles.wordSelectionWords}>
             {wordsToSelect.map((word, index) => (
               <button
@@ -61,7 +63,9 @@ export default function WordSelection() {
           </div>
         </div>
       ) : (
-        <div>Waiting for the {currentDrawer?.username} to select a word...</div>
+        <div className={styles.wordSelectionTitle}>
+          Waiting for {currentDrawer?.username} to select a word...
+        </div>
       )}
     </div>
   );
