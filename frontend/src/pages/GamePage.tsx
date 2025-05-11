@@ -31,6 +31,7 @@ export default function GamePage() {
   } = useContext(GameStateContext)!;
   const { currentUser } = useContext(UsersContext)!;
   const [timedOut, setTimedOut] = useState(false);
+  const [isCurrentUserDrawer, setIsCurrentUserDrawer] = useState(false);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -60,6 +61,7 @@ export default function GamePage() {
 
     setIsSelectingWord(true);
     setIsTurnFinished(false);
+    setIsCurrentUserDrawer(currentUser?._id === currentDrawer?._id);
   }, []);
 
   useEffect(() => {
@@ -98,6 +100,7 @@ export default function GamePage() {
       setCurrentDrawer(drawer);
       setIsSelectingWord(true);
       setIsTurnFinished(false);
+      setIsCurrentUserDrawer(currentUser?._id === drawer._id);
     };
 
     socket.on("drawer-select", handleDrawerSelect);
@@ -119,7 +122,7 @@ export default function GamePage() {
 
           <div className={styles.left}>
             <GamePlayerList />
-            <GamePowerups />
+            {!isCurrentUserDrawer && <GamePowerups />}
           </div>
 
           <GameCanvasArea />

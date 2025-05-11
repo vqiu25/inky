@@ -33,6 +33,8 @@ export default function GamePowerups(): JSX.Element {
   const [showSplash, setShowSplash] = useState(false);
   const [isSplashFading, setIsSplashFading] = useState(false);
 
+  const [isPowerupsDisabled, setIsPowerupsDisabled] = useState(false);
+
   // Listen for splash-changed events
   useEffect(() => {
     if (!currentUser) return;
@@ -72,6 +74,7 @@ export default function GamePowerups(): JSX.Element {
 
   useEffect(() => {
     const endHandler = () => {
+      setIsPowerupsDisabled(false);
       if (showSplash) {
         setIsSplashFading(true);
         setTimeout(() => {
@@ -148,7 +151,13 @@ export default function GamePowerups(): JSX.Element {
 
   return (
     <>
-      <div className={styles.powerupArea}>
+      <div
+        className={styles.powerupArea}
+        style={{
+          opacity: isPowerupsDisabled ? 0.3 : 1,
+          cursor: isPowerupsDisabled ? "not-allowed" : "default",
+        }}
+      >
         <div className={styles.powerupGrid}>
           {powerupConfigs.map((powerup, idx) => (
             <Button
@@ -156,13 +165,20 @@ export default function GamePowerups(): JSX.Element {
               imageSrc={powerup.imageSrc}
               alt={powerup.alt}
               onClick={() => setSelected(powerup)}
+              disabled={isPowerupsDisabled}
             />
           ))}
         </div>
       </div>
 
       {selected && (
-        <Overlay powerup={selected} onClose={() => setSelected(null)} />
+        <Overlay
+          powerup={selected}
+          onClose={() => {
+            setSelected(null);
+            setIsPowerupsDisabled(true);
+          }}
+        />
       )}
       {showSplash && <InkSplatterOverlay fading={isSplashFading} />}
     </>
@@ -213,6 +229,6 @@ function Overlay({ powerup, onClose }: OverlayProps): React.ReactPortal {
         className={`${styles.overlayImage} ${visible ? styles.popIn : styles.popOut}`}
       />
     </div>,
-    document.body
+    document.body,
   );
 }

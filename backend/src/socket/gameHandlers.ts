@@ -170,7 +170,10 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
 
     // Reset & Start the Word Reveal Interval
     if (revealInterval) clearInterval(revealInterval);
-    unrevealedIndices = word.slice(1).split("").map((_, i) => i + 1);
+    unrevealedIndices = word
+      .slice(1)
+      .split("")
+      .map((_, i) => i + 1);
 
     revealInterval = setInterval(() => {
       if (unrevealedIndices.length === 0) {
