@@ -27,7 +27,7 @@ interface OverlayProps {
 
 export default function GamePowerups(): JSX.Element {
   const { currentUser } = useContext(UsersContext)!;
-  const { currentDrawer } = useContext(GameStateContext)!;
+  const { currentDrawer, clearCanvas } = useContext(GameStateContext)!;
 
   // State for ink splash overlay
   const [showSplash, setShowSplash] = useState(false);
@@ -145,6 +145,7 @@ export default function GamePowerups(): JSX.Element {
       handler: () => {
         if (currentUser)
           socket.emit("increment-powerup", currentUser._id, "eraseDrawing");
+        clearCanvas();
       },
     },
   ];
