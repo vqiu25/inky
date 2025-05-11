@@ -32,6 +32,7 @@ const Canvas: React.FC = () => {
       height: parentHeight, // Set initial height based on parent
       width: parentWidth, // Set initial width based on parent
       backgroundColor: "white",
+      selection: false,
     });
 
     const isDrawer = currentDrawer?._id === currentUser?._id;
@@ -83,6 +84,11 @@ const Canvas: React.FC = () => {
     socket.on("canvas-data", (payload: { data: fabric.ICanvasOptions }) => {
       suppressEmit = true;
       canvas.loadFromJSON(payload.data, () => {
+        // Disable selection for all objects
+        canvas.getObjects().forEach((obj) => {
+          obj.selectable = false;
+          obj.hoverCursor = "default";
+        });
         // Ensure background color is white if not already set
         if (!canvas.backgroundColor) {
           canvas.setBackgroundColor("white", canvas.renderAll.bind(canvas));

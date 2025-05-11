@@ -70,6 +70,25 @@ export default function GamePowerups(): JSX.Element {
     };
   }, [currentUser, currentDrawer]);
 
+  useEffect(() => {
+    const endHandler = () => {
+      if (showSplash) {
+        setIsSplashFading(true);
+        setTimeout(() => {
+          setShowSplash(false);
+          setIsSplashFading(false);
+        }, 250);
+      }
+    };
+
+    socket.on("new-turn", endHandler);
+    socket.on("game-finished", endHandler);
+    return () => {
+      socket.off("new-turn", endHandler);
+      socket.off("game-finished", endHandler);
+    };
+  }, [showSplash]);
+
   const [selected, setSelected] = useState<PowerupConfig | null>(null);
 
   const powerupConfigs: PowerupConfig[] = [
@@ -195,6 +214,6 @@ function Overlay({ powerup, onClose }: OverlayProps): React.ReactPortal {
         className={`${styles.overlayImage} ${visible ? styles.popIn : styles.popOut}`}
       />
     </div>,
-    document.body,
+    document.body
   );
 }
