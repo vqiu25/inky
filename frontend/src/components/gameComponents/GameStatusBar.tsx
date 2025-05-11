@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { socket } from "../../services/socket";
 import { GameStateContext } from "../../context/GameStateContext";
 import styles from "../../assets/css-modules/GameStatusBar.module.css";
@@ -7,20 +7,25 @@ import clockIcon from "../../assets/images/clock.svg";
 import Timer from "./Timer";
 import { useNavigate } from "react-router-dom";
 import WordReveal from "./WordReveal";
+import { UsersContext } from "../../context/UsersContext";
 
 export default function GameStatusBar() {
   const navigate = useNavigate();
   const { round, setRound } = useContext(GameStateContext)!;
+  const [isDrawer, setIsDrawer] = useState(false);
+  const { currentDrawer } = useContext(GameStateContext)!;
+  const { currentUser } = useContext(UsersContext)!;
 
   useEffect(() => {
     const handleNewTurn = (state: { round: number }) => {
       setRound(state.round);
+      setIsDrawer(currentUser?._id === currentDrawer?._id);
     };
     socket.on("new-turn", handleNewTurn);
     return () => {
       socket.off("new-turn", handleNewTurn);
     };
-  }, [setRound]);
+  }, [currentDrawer?._id, currentUser?._id, setRound]);
 
   const handleHomeClick = () => {
     navigate("/home");
@@ -39,7 +44,7 @@ export default function GameStatusBar() {
       </div>
 
       <div className={styles.statusBarCenter}>
-        <WordReveal />
+        <WordReveal isDrawer={isDrawer} />
       </div>
 
       <div className={styles.roundPill}>

@@ -105,8 +105,7 @@ export default function GamePowerups(): JSX.Element {
       alt: "revealLetter",
       colour: "#d946ef",
       handler: () => {
-        if (currentUser)
-          socket.emit("increment-powerup", currentUser._id, "revealLetter");
+        if (currentUser) socket.emit("reveal-letter-powerup", currentUser._id);
       },
     },
     {

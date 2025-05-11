@@ -90,13 +90,15 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    */
   const finishGame = (): [User, number][] => {
     const updatedPlayerPoints = currentGameState.playerPoints;
-    let winner = updatedPlayerPoints[0];
+    let winners: [User, number][] = [];
     for (let i = 0; i < updatedPlayerPoints.length; i++) {
       const user = updatedPlayerPoints[i][0];
       const userPoints = updatedPlayerPoints[i][1];
 
-      if (userPoints > winner[1]) {
-        winner = updatedPlayerPoints[i];
+      if (winners.length === 0 || userPoints > winners[0][1]) {
+        winners = [updatedPlayerPoints[i]];
+      } else if (userPoints === winners[0][1]) {
+        winners.push(updatedPlayerPoints[i]);
       }
 
       user.totalGames += 1;
@@ -120,10 +122,12 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       }
     }
 
-    const winnerUser = winner[0];
-    winnerUser.totalWins += 1;
-    if (winnerUser.totalWins === winsForAchievement) {
-      winnerUser.achievements.winsAchievement = true;
+    for (const winner of winners) {
+      const winnerUser = winner[0];
+      winnerUser.totalWins += 1;
+      if (winnerUser.totalWins === winsForAchievement) {
+        winnerUser.achievements.winsAchievement = true;
+      }
     }
 
     return updatedPlayerPoints;
@@ -166,7 +170,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
 
     // Reset & Start the Word Reveal Interval
     if (revealInterval) clearInterval(revealInterval);
-    unrevealedIndices = word.split("").map((_, i) => i);
+    unrevealedIndices = word.slice(1).split("").map((_, i) => i + 1);
 
     revealInterval = setInterval(() => {
       if (unrevealedIndices.length === 0) {
@@ -176,9 +180,8 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       // Pick a random index from unrevealedIndices every 20 seconds
       const pickIdx = Math.floor(Math.random() * unrevealedIndices.length);
       const letterIndex = unrevealedIndices.splice(pickIdx, 1)[0];
-      const letter = word[letterIndex];
-      io.to("game-room").emit("reveal-letter", { index: letterIndex, letter });
-    }, 10_000);
+      io.to("game-room").emit("reveal-letter", { index: letterIndex });
+    }, 20_000);
   });
 
   socket.on("next-turn", () => {
@@ -263,5 +266,11 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     }, durationMs);
 
     incrementPowerupCountInGameState(currentGameState, userId, "inkSplatter");
+  });
+
+  /* Reveal Letter Powerup Listener */
+  socket.on("reveal-letter-powerup", (userId: string) => {
+    io.to("game-room").emit("reveal-letter", { index: 0, userId });
+    incrementPowerupCountInGameState(currentGameState, userId, "revealLetter");
   });
 }

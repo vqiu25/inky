@@ -1,24 +1,40 @@
 import { useContext, useEffect, useState } from "react";
 import { socket } from "../../services/socket";
 import { GameStateContext } from "../../context/GameStateContext";
+import { UsersContext } from "../../context/UsersContext";
 import styles from "../../assets/css-modules/WordReveal.module.css";
 
-export default function WordReveal() {
+type WordRevealProps = {
+  isDrawer: boolean;
+};
+
+export default function WordReveal({ isDrawer }: WordRevealProps) {
   const { wordToGuess } = useContext(GameStateContext)!;
+  const { currentUser } = useContext(UsersContext)!;
   const letters = wordToGuess.split("");
 
   // track which positions have been revealed
   const [revealedIndices, setRevealedIndices] = useState<number[]>([]);
 
   useEffect(() => {
-    // whenever the word changes, start fresh
-    setRevealedIndices([]);
+    // reveal all letters if the drawer
+    setRevealedIndices(isDrawer ? letters.map((_, idx) => idx) : []);
 
     // handler for server-driven reveals
-    const handleReveal = ({ index }: { index: number }) => {
-      setRevealedIndices((prev) =>
-        prev.includes(index) ? prev : [...prev, index],
-      );
+    const handleReveal = ({
+      index,
+      userId,
+    }: {
+      index: number;
+      userId: string;
+    }) => {
+      const isCurrentUser = currentUser?._id === userId;
+
+      if ((userId && isCurrentUser) || !userId) {
+        setRevealedIndices((prev) =>
+          prev.includes(index) ? prev : [...prev, index],
+        );
+      }
     };
 
     socket.on("reveal-letter", handleReveal);
