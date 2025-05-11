@@ -279,6 +279,5 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   socket.on("reveal-letter-powerup", (userId: string) => {
     io.to("game-room").emit("reveal-letter", { index: 0, userId });
     incrementPowerupCountInGameState(currentGameState, userId, "revealLetter");
-
   });
 }
