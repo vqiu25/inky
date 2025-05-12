@@ -5,6 +5,7 @@ import { UsersContext } from "../../context/UsersContext";
 import useGet from "../../hooks/useGet";
 import { Phrase } from "../../types/types";
 import { socket } from "../../services/socket";
+import { Line } from "rc-progress";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -17,8 +18,13 @@ export default function WordSelection() {
     [],
   ) ?? { data: [] };
   const [wordsToSelect, setWordsToSelect] = useState<string[]>([]);
+  const [wordSelected, setWordSelected] = useState<boolean>(false);
+  const [timeRemaining, setTimeRemaining] = useState<number>(5);
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout | null = null;
+    let interval: NodeJS.Timeout | null = null;
+
     if (
       isSelectingWord &&
       currentUser?._id === currentDrawer?._id &&
@@ -34,11 +40,33 @@ export default function WordSelection() {
       }
       setWordsToSelect(selectedWords);
       console.log("selectedWords", selectedWords);
+
+      // Set a timeout to auto-select a random word after 5 seconds
+      timeout = setTimeout(() => {
+        if (!wordSelected) {
+          const randomWord =
+            selectedWords[Math.floor(Math.random() * selectedWords.length)];
+          handleWordSelection(randomWord);
+        }
+      }, 5000);
+
+      // Sets an interval to update the timer every second
+      interval = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev > 0) return prev - 1;
+          return 0;
+        });
+      }, 1000);
     }
-  }, [currentUser, currentDrawer, allWords]);
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+      if (interval) clearInterval(interval);
+    };
+  }, [currentUser, currentDrawer, allWords, isSelectingWord, wordSelected]);
 
   function handleWordSelection(word: string) {
-    console.log("Selected word:", word);
+    setWordSelected(true);
     // Emit the selected word to the server
     socket.emit("word-selected", word);
   }
@@ -61,6 +89,13 @@ export default function WordSelection() {
               </button>
             ))}
           </div>
+          <Line
+            percent={(timeRemaining / 5) * 100}
+            strokeWidth={4}
+            strokeColor="#b1b5e0"
+            trailWidth={4}
+            style={{ marginTop: "20px" }}
+          />
         </div>
       ) : (
         <div className={styles.wordSelectionTitle}>

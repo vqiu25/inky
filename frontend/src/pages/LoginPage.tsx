@@ -9,12 +9,8 @@ import { User } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
-  const {
-    addUser,
-    getUserByEmail,
-    getUsers,
-    setCurrentUserFromLocalStorage,
-  } = useContext(UsersContext)!;
+  const { addUser, getUserByEmail, getUsers, setCurrentUserFromLocalStorage } =
+    useContext(UsersContext)!;
   const { setJwt, setIsAuthenticated } = useContext(AuthContext)!;
   const navigate = useNavigate();
 

@@ -19,20 +19,18 @@ function App() {
       <Route path="/">
         <Route
           index
-          element={
-            (() => {
-              console.log("JWT valid?", isJwtValid());
-              return isJwtValid() ? (
-                <Navigate to="/home" replace />
-              ) : (
-                <Navigate to="/login" replace />
-              );
-            })()
-          }
+          element={(() => {
+            console.log("JWT valid?", isJwtValid());
+            return isJwtValid() ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            );
+          })()}
         />
-
       </Route>
-      <Route path="home"
+      <Route
+        path="home"
         element={
           <ProtectedRoute>
             <HomePage />

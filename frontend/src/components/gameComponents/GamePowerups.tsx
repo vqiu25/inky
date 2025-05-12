@@ -228,6 +228,6 @@ function Overlay({ powerup, onClose }: OverlayProps): React.ReactPortal {
         className={`${styles.overlayImage} ${visible ? styles.popIn : styles.popOut}`}
       />
     </div>,
-    document.body
+    document.body,
   );
 }

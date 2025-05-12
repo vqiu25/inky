@@ -12,8 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
   const navigate = useNavigate();
-  const { setCurrentUserFromLocalStorage } =
-    useContext(UsersContext)!;
+  const { setCurrentUserFromLocalStorage } = useContext(UsersContext)!;
   const { setProgress } = useContext(AuthContext)!;
 
   useEffect(() => {

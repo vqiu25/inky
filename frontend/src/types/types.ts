@@ -42,7 +42,6 @@ export enum PowerupNames {
   revealLetter = "Reveal a Letter",
 }
 
-
 export enum Progress {
   HOME = "home",
   LOBBY = "lobby",

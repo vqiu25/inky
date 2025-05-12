@@ -23,8 +23,8 @@ export default function LobbyPage() {
   const { setProgress } = useContext(AuthContext)!;
 
   useEffect(() => {
-      setProgress(Progress.LOBBY);
-    }, [setProgress]);
+    setProgress(Progress.LOBBY);
+  }, [setProgress]);
 
   // Get the current user
   useEffect(() => {

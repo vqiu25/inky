@@ -29,6 +29,4 @@ const ProtectedRoute = ({ children, requiredStep }: ProtectedRouteProps) => {
   return <>{children}</>;
 };
 
-
-
 export default ProtectedRoute;
