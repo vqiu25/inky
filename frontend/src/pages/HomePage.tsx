@@ -11,7 +11,8 @@ import { User } from "../types/types";
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
   const navigate = useNavigate();
-  const { refreshUsers } = useContext(UsersContext)!;
+  const { refreshUsers, setCurrentUserFromLocalStorage } =
+    useContext(UsersContext)!;
 
   function onClickLeaderboard() {
     navigate("/leaderboard");
@@ -42,8 +43,9 @@ function HomePage() {
     };
   }, [navigate, setNewPlayers]);
 
-  function onClickPlay() {
+  async function onClickPlay() {
     navigate("/lobby");
+    await setCurrentUserFromLocalStorage();
 
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import type { Request, Response } from "express";
 import User from "../../db/user-schema.js";
@@ -73,8 +72,11 @@ router.post("/", async (req: Request, res: Response) => {
 
     const addedUser = await newUser.save();
     res.status(201).json(addedUser);
-  } catch (error: any) {
-    if (error?.name === "ValidationError" || error?.name === "CastError") {
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error?.name === "ValidationError" || error?.name === "CastError")
+    ) {
       res.status(400).json({ message: "Invalid user data" });
       return;
     }
@@ -107,8 +109,11 @@ router.patch("/:id", async (req: Request, res: Response) => {
     }
 
     res.send(updatedUser);
-  } catch (error: any) {
-    if (error?.name === "ValidationError" || error?.name === "CastError") {
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error?.name === "ValidationError" || error?.name === "CastError")
+    ) {
       res.status(400).json({ message: "Invalid user data" });
       return;
     }

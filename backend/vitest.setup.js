@@ -1,3 +1,3 @@
 import { vi } from "vitest";
 
-global.jest = vi;
+globalThis.jest = vi;

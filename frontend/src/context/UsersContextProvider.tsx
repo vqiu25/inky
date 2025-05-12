@@ -144,6 +144,7 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
       const email = JSON.parse(storedUser).email;
       const updatedUser = await getUserByEmail(email);
       console.log("Updated user from local storage:", updatedUser);
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
       setCurrentUser(updatedUser);
     }
   }

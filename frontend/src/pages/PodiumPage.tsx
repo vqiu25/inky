@@ -1,5 +1,5 @@
 import styles from "../assets/css-modules/LeaderboardPage.module.css";
-import LeaderboardUserRow from "../components/leaderboardComponents/LeaderboardUserRow";
+import PodiumUserRow from "../components/podiumComponents/PodiumUserRow";
 import PageHeader from "../components/layoutComponents/PageHeader";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
@@ -13,20 +13,23 @@ export default function PodiumPage() {
   const gamePlayers = playerPoints.map((player) => player[0]);
 
   (async () => {
-    console.log(gamePlayers);
     await updateGamePlayers(gamePlayers);
   })();
 
   return (
     <div>
       <PageHeader>Results</PageHeader>
-      {gamePlayers.length > 0 ? (
+      {playerPoints.length > 0 ? (
         <div className={styles.usersContainer}>
-          {gamePlayers
+          {playerPoints
             .slice()
-            .sort((a, b) => b.totalPoints - a.totalPoints)
+            .sort((a, b) => b[1] - a[1])
             .map((user) => (
-              <LeaderboardUserRow key={user._id} user={user} />
+              <PodiumUserRow
+                key={user[0]._id}
+                user={user[0]}
+                points={user[1]}
+              />
             ))}
         </div>
       ) : (

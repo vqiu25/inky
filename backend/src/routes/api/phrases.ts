@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import type { Request, Response } from "express";
 import Phrase from "../../db/phrase-schema.js";
@@ -58,8 +57,11 @@ router.post("/", async (req: Request, res: Response) => {
 
     const addedPhrase = await newPhrase.save();
     res.status(201).json(addedPhrase);
-  } catch (error: any) {
-    if (error?.name === "ValidationError" || error?.name === "CastError") {
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error?.name === "ValidationError" || error?.name === "CastError")
+    ) {
       res.status(400).json({ message: "Invalid phrase data" });
       return;
     }
