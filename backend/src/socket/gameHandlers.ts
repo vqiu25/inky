@@ -229,11 +229,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     socket.to("game-room").emit("chat-data", data);
   });
 
-  /* Powerup Socket Listeners */
-  socket.on("increment-powerup", (userId: string, powerupName: keyof User["powerups"]) => {
-    incrementPowerupCountInGameState(currentGameState, userId, powerupName);
-  });
-
   /* Increase Time Powerup Listener */
   socket.on("increase-time", (userId: string) => {
     if (currentTimerDuration) {
@@ -271,7 +266,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     incrementPowerupCountInGameState(currentGameState, userId, "inkSplatter");
   });
 
-  socket.on("clear-canvas", (userId: string) => {
+  socket.on("clear-canvas-powerup", (userId: string) => {
     incrementPowerupCountInGameState(currentGameState, userId, "eraseDrawing");
   });
 

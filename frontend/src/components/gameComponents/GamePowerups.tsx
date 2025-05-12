@@ -142,8 +142,7 @@ export default function GamePowerups(): JSX.Element {
       alt: "eraseDrawing",
       colour: "#f97316",
       handler: () => {
-        if (currentUser)
-          socket.emit("increment-powerup", currentUser._id, "eraseDrawing");
+        if (currentUser) socket.emit("clear-canvas-powerup", currentUser._id);
         clearCanvas();
       },
     },
@@ -229,6 +228,6 @@ function Overlay({ powerup, onClose }: OverlayProps): React.ReactPortal {
         className={`${styles.overlayImage} ${visible ? styles.popIn : styles.popOut}`}
       />
     </div>,
-    document.body,
+    document.body
   );
 }
