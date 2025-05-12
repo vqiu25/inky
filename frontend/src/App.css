@@ -42,8 +42,10 @@ button {
 }
 
 #tooltip {
-  background-color: white !important;
+  background-color: var(--purple) !important;
   color: var(--dark-background) !important;
   font-size: 18px !important;
   border-radius: 8px !important;
+  z-index: 1000 !important;
+  font-weight: 600 !important;
 }

@@ -15,7 +15,8 @@ import InkSplatterOverlay from "./InkSplatterOverlay";
 
 interface PowerupConfig {
   imageSrc: string;
-  alt: string;
+  tooltipText: string;
+  alt?: string;
   colour: string;
   handler: () => void;
 }
@@ -34,6 +35,7 @@ export default function GamePowerups(): JSX.Element {
   const [isSplashFading, setIsSplashFading] = useState(false);
 
   const [isPowerupsDisabled, setIsPowerupsDisabled] = useState(false);
+  const [hoveredTooltip, setHoveredTooltip] = useState<string | null>(null);
 
   // Listen for splash-changed events
   useEffect(() => {
@@ -97,6 +99,7 @@ export default function GamePowerups(): JSX.Element {
   const powerupConfigs: PowerupConfig[] = [
     {
       imageSrc: greenHourGlassIcon,
+      tooltipText: "Increase Time",
       alt: "timeIncrease",
       colour: "#a3e635",
       handler: () => {
@@ -105,6 +108,7 @@ export default function GamePowerups(): JSX.Element {
     },
     {
       imageSrc: magnifyingGlassIcon,
+      tooltipText: "Reveal Letter",
       alt: "revealLetter",
       colour: "#d946ef",
       handler: () => {
@@ -113,6 +117,7 @@ export default function GamePowerups(): JSX.Element {
     },
     {
       imageSrc: rocketIcon,
+      tooltipText: "Score Multiplier",
       alt: "scoreMultiplier",
       colour: "#f3e3ab",
       handler: () => {
@@ -121,6 +126,7 @@ export default function GamePowerups(): JSX.Element {
     },
     {
       imageSrc: redHourGlassIcon,
+      tooltipText: "Decrease Time",
       alt: "timeDecrease",
       colour: "#ef4444",
       handler: () => {
@@ -129,6 +135,7 @@ export default function GamePowerups(): JSX.Element {
     },
     {
       imageSrc: squidIcon,
+      tooltipText: "Ink Splash",
       alt: "inkSplatter",
       colour: "#6366f1",
       handler: () => {
@@ -139,6 +146,7 @@ export default function GamePowerups(): JSX.Element {
     },
     {
       imageSrc: crossIcon,
+      tooltipText: "Erase Canvas",
       alt: "eraseDrawing",
       colour: "#f97316",
       handler: () => {
@@ -153,18 +161,25 @@ export default function GamePowerups(): JSX.Element {
       <div
         className={styles.powerupArea}
         style={{
+          position: "relative",
           opacity: isPowerupsDisabled ? 0.3 : 1,
           cursor: isPowerupsDisabled ? "not-allowed" : "default",
         }}
       >
+        {/* tooltip box */}
+        {hoveredTooltip && (
+          <div className={styles.tooltipContainer}>{hoveredTooltip}</div>
+        )}
         <div className={styles.powerupGrid}>
           {powerupConfigs.map((powerup, idx) => (
             <Button
               key={idx}
               imageSrc={powerup.imageSrc}
-              alt={powerup.alt}
+              tooltipText={""}
               onClick={() => setSelected(powerup)}
               disabled={isPowerupsDisabled}
+              onMouseEnter={() => setHoveredTooltip(powerup.tooltipText)}
+              onMouseLeave={() => setHoveredTooltip(null)}
             />
           ))}
         </div>

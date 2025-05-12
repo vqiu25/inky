@@ -8,6 +8,7 @@
   color: #9da3cb;
   overflow: hidden;
   padding: 1rem;
+  overflow: visible;
 }
 
 .powerupGrid {
@@ -123,5 +124,39 @@
   100% {
     opacity: 0;
     transform: rotate(calc(360deg / 12 * var(--i))) translateX(200px) scale(0);
+  }
+}
+
+.tooltipContainer {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dark-background);
+  color: var(--purple);
+  padding: 12px 14px;
+  font-size: 1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  pointer-events: none;
+  margin-bottom: 8px;
+  z-index: 10;
+  border-radius: 999px;
+  transform-origin: bottom center;
+  animation: riseUp 0.4s ease-out both;
+}
+
+@keyframes riseUp {
+  0% {
+    transform: translateX(-50%) translateY(20px) scaleY(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-50%) translateY(-8px) scaleY(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(0) scaleY(1);
+    opacity: 1;
   }
 }
