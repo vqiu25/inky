@@ -19,7 +19,6 @@ export default function WordReveal({ isDrawer }: WordRevealProps) {
   useEffect(() => {
     // reveal all letters if the drawer
     setRevealedIndices(isDrawer ? letters.map((_, idx) => idx) : []);
-
     // handler for server-driven reveals
     const handleReveal = ({
       index,
@@ -41,7 +40,7 @@ export default function WordReveal({ isDrawer }: WordRevealProps) {
     return () => {
       socket.off("reveal-letter", handleReveal);
     };
-  }, [wordToGuess]);
+  }, [wordToGuess, isDrawer]);
 
   return (
     <div className={styles.wordReveal}>
