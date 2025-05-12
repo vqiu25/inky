@@ -16,7 +16,7 @@ export default function Timer() {
     return () => {
       socket.off("timer");
     };
-  }, [updateTime]);
+  }, []);
 
   return (
     <div>{timeRemaining !== null ? <p>{timeRemaining}s</p> : <p>90s</p>}</div>

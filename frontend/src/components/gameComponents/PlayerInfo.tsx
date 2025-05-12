@@ -1,20 +1,17 @@
-import { useContext } from "react";
-import { GameStateContext } from "../../context/GameStateContext";
 import ProfilePicture from "../profileComponents/ProfilePicture";
 import styles from "../../assets/css-modules/PlayerInfo.module.css";
 
 export default function PlayerInfo({
-  id,
   username,
   profilePicture,
+  points,
+  isCurrentUser,
 }: {
-  id: string;
   username: string;
   profilePicture: string;
+  points: number;
+  isCurrentUser: boolean;
 }) {
-  const { playerPoints } = useContext(GameStateContext)!;
-  const points = playerPoints.find(([u]) => u._id === id)?.[1] ?? 0;
-
   return (
     <div className={styles.playerInfoContainer}>
       <ProfilePicture
@@ -40,7 +37,9 @@ export default function PlayerInfo({
         }}
       />
       <div className={styles.playerInfoSubContainer}>
-        <div className={styles.playerInfoUsername}>{username}</div>
+        <div className={styles.playerInfoUsername}>
+          {username} {isCurrentUser ? " (You)" : ""}
+        </div>
         <div className={styles.playerInfoPoints}>
           {points} {points === 1 ? "Point" : "Points"}
         </div>

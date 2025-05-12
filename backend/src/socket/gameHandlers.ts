@@ -15,14 +15,18 @@ import { lobbyPlayers } from "./lobbyHandlers.js";
 export let currentGameState: GameState;
 let numPlayersGuessed = 0;
 
+// For the timer
 let currentTimerDuration: number | null = null; // Remaining time in seconds
 let timerInterval: NodeJS.Timeout | null = null;
+const turnTime = 90; // Duration of each turn in seconds
 
 // For the word reveal
 let revealInterval: NodeJS.Timeout | null = null;
 let unrevealedIndices: number[] = [];
 
-const turnTime = 90; // Duration of each turn in seconds
+// For the next turn countdown
+let nextTurnCountdownInterval: NodeJS.Timeout | null = null;
+let nextTurnCountdownDuration = 4;
 
 // Benchmark values for achievements
 const gamesForAchievement = 5;
@@ -152,6 +156,35 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       timerInterval = null;
     }
     io.to("game-room").emit("turn-end", timeOut);
+
+    // Clear any existing interval
+    if (nextTurnCountdownInterval) {
+      clearInterval(nextTurnCountdownInterval);
+    }
+
+    // Start a new interval to emit the timer every second
+    nextTurnCountdownInterval = setInterval(() => {
+      nextTurnCountdownDuration -= 1; // Decrement the timer
+      if (nextTurnCountdownDuration <= 0) {
+        if (nextTurnCountdownInterval) {
+          clearInterval(nextTurnCountdownInterval); // Stop the timer when it reaches 0
+        }
+        nextTurnCountdownInterval = null;
+        nextTurnCountdownDuration = 4;
+
+        console.log("Next turn countdown ended");
+        io.to("game-room").emit("next-turn-timer", 0); // Emit 0 to indicate the timer has ended
+
+        if (currentGameState.round > getMaxRounds()) {
+          finishGame();
+          io.to("game-room").emit("game-finished", currentGameState);
+        } else {
+          io.to("game-room").emit("drawer-select", currentGameState.drawer);
+        }
+      } else {
+        io.to("game-room").emit("next-turn-timer", nextTurnCountdownDuration); // Emit the time
+      }
+    }, 1000);
   };
 
   /**
@@ -185,16 +218,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       const letterIndex = unrevealedIndices.splice(pickIdx, 1)[0];
       io.to("game-room").emit("reveal-letter", { index: letterIndex });
     }, 20_000);
-  });
-
-  socket.on("next-turn", () => {
-    // if the game is finished
-    if (currentGameState.round > getMaxRounds()) {
-      finishGame();
-      io.to("game-room").emit("game-finished", currentGameState);
-    } else {
-      io.to("game-room").emit("drawer-select", currentGameState.drawer);
-    }
   });
 
   /**
