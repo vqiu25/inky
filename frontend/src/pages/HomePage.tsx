@@ -6,17 +6,22 @@ import { useContext, useEffect } from "react";
 import { UsersContext } from "../context/UsersContext";
 import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
-import { User } from "../types/types";
+import { Progress, User } from "../types/types";
+import { AuthContext } from "../context/AuthContext";
 
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
   const navigate = useNavigate();
-  const { refreshUsers, setCurrentUserFromLocalStorage } =
+  const { setCurrentUserFromLocalStorage } =
     useContext(UsersContext)!;
+  const { setProgress } = useContext(AuthContext)!;
+
+  useEffect(() => {
+    setProgress(Progress.HOME);
+  }, [setProgress]);
 
   function onClickLeaderboard() {
     navigate("/leaderboard");
-    refreshUsers();
   }
 
   useEffect(() => {

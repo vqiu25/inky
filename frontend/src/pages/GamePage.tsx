@@ -10,9 +10,10 @@ import WordSelection from "../components/gameComponents/WordSelection";
 import TurnEnd from "../components/gameComponents/TurnEnd";
 import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
-import { GameState, User } from "../types/types";
+import { GameState, Progress, User } from "../types/types";
 import { UsersContext } from "../context/UsersContext";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 export default function GamePage() {
   const navigate = useNavigate();
@@ -32,6 +33,11 @@ export default function GamePage() {
   const { currentUser } = useContext(UsersContext)!;
   const [timedOut, setTimedOut] = useState(false);
   const [isCurrentUserDrawer, setIsCurrentUserDrawer] = useState(false);
+  const { setProgress } = useContext(AuthContext)!;
+
+  useEffect(() => {
+    setProgress(Progress.GAME);
+  }, [setProgress]);
 
   useEffect(() => {
     const el = wrapperRef.current;

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UsersContext } from "../context/UsersContext";
 import styles from "../assets/css-modules/LeaderboardPage.module.css";
 import LeaderboardUserRow from "../components/leaderboardComponents/LeaderboardUserRow";
@@ -7,7 +7,11 @@ import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 
 export default function LeaderboardPage() {
-  const { usersList, usersLoading } = useContext(UsersContext)!;
+  const { usersList, usersLoading, refreshUsers } = useContext(UsersContext)!;
+
+  useEffect(() => {
+    refreshUsers();
+  }, [refreshUsers]);
 
   return (
     <div>

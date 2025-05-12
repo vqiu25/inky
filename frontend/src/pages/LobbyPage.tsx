@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { UsersContext } from "../context/UsersContext";
-import { User } from "../types/types";
+import { Progress, User } from "../types/types";
 import styles from "../assets/css-modules/LobbyPage.module.css";
 import PageHeader from "../components/layoutComponents/PageHeader";
 import UserInfo from "../components/userInfoComponents/UserInfo";
@@ -10,6 +10,7 @@ import { socket } from "../services/socket";
 import { GameStateContext } from "../context/GameStateContext";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
+import { AuthContext } from "../context/AuthContext";
 
 export default function LobbyPage() {
   const navigate = useNavigate();
@@ -19,6 +20,11 @@ export default function LobbyPage() {
   const { setNewPlayers, lobbyPlayers, setCurrentDrawer } =
     useContext(GameStateContext)!;
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { setProgress } = useContext(AuthContext)!;
+
+  useEffect(() => {
+      setProgress(Progress.LOBBY);
+    }, [setProgress]);
 
   // Get the current user
   useEffect(() => {

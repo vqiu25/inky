@@ -7,10 +7,16 @@ import alicorn from "../assets/images/profile-pictures/alicorn.png";
 
 import GoogleSignInButton from "../components/signInComponents/GoogleSignInButton";
 import { User } from "../types/types";
+import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
-  const { addUser, getUserByEmail, getUsers, setCurrentUserFromLocalStorage } =
-    useContext(UsersContext)!;
+  const {
+    addUser,
+    getUserByEmail,
+    getUsers,
+    setCurrentUserFromLocalStorage,
+  } = useContext(UsersContext)!;
+  const { setJwt, setIsAuthenticated } = useContext(AuthContext)!;
   const navigate = useNavigate();
 
   // Import all SVG images from profile-pictures folder
@@ -30,6 +36,8 @@ const LoginPage = () => {
     const users = await getUsers();
 
     const jwt = (response as { credential: string }).credential;
+    setJwt(jwt);
+    setIsAuthenticated(true);
     const payload = JSON.parse(atob(jwt.split(".")[1]));
     console.log("User:", payload);
 

@@ -3,7 +3,7 @@ import PodiumUserRow from "../components/podiumComponents/PodiumUserRow";
 import PageHeader from "../components/layoutComponents/PageHeader";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GameStateContext } from "../context/GameStateContext";
 import { UsersContext } from "../context/UsersContext";
 
@@ -12,9 +12,12 @@ export default function PodiumPage() {
   const { playerPoints } = useContext(GameStateContext)!;
   const gamePlayers = playerPoints.map((player) => player[0]);
 
-  (async () => {
-    await updateGamePlayers(gamePlayers);
-  })();
+  useEffect(() => {
+    const updateUsers = async () => {
+      await updateGamePlayers(gamePlayers);
+    };
+    updateUsers();
+  }, [gamePlayers, updateGamePlayers]);
 
   return (
     <div>
