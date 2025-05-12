@@ -7,7 +7,7 @@ export interface GameState {
   round: number;
   wordToGuess: string;
   drawer: User;
-  playerPoints: [User, number][];
+  playerPoints: [User, number, boolean][];
   timeRemaining: number;
   splashExpiries: Record<string, number>;
 }
@@ -21,7 +21,7 @@ export const getInitialGameState = (players: User[]): GameState => {
     round: 1,
     wordToGuess: "",
     drawer: players[0],
-    playerPoints: players.map((player) => [player, 0]),
+    playerPoints: players.map((player) => [player, 0, false]),
     timeRemaining: turnTime,
     splashExpiries: {}
   };
@@ -45,6 +45,11 @@ export const getNewGameState = (previousGameState: GameState): GameState => {
     ? previousGameState.playerPoints[0][0]
     : previousGameState.playerPoints[previousDrawerIndex + 1][0];
 
+  // reset boolean in playerPoints to false
+  for (let i = 0; i < previousGameState.playerPoints.length; i++) {
+    previousGameState.playerPoints[i][2] = false;
+  }
+
   return {
     round: newRound,
     wordToGuess: newWord,
@@ -67,11 +72,11 @@ export const updatePlayerPoints = (
   gameState: GameState,
   player: User,
   timeRemaining: number
-): [User, number][] => {
-  const updatedPlayerPoints: [User, number][] = gameState.playerPoints;
+): [User, number, boolean][] => {
+  const updatedPlayerPoints: [User, number, boolean][] = gameState.playerPoints;
   for (let i = 0; i < updatedPlayerPoints.length; i++) {
     if (updatedPlayerPoints[i][0]._id === player._id) {
-      updatedPlayerPoints[i][1] += timeRemaining;
+      updatedPlayerPoints[i][1] += updatedPlayerPoints[i][2] ? timeRemaining * 2 : timeRemaining;
       console.log(
         `Updating points for ${updatedPlayerPoints[i][0].username}(guesser) to ${updatedPlayerPoints[i][1]}`
       );

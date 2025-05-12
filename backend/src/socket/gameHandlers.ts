@@ -88,9 +88,9 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   /**
    * Update all of the user properties based on the game results.
    */
-  const finishGame = (): [User, number][] => {
+  const finishGame = (): [User, number, boolean][] => {
     const updatedPlayerPoints = currentGameState.playerPoints;
-    let winners: [User, number][] = [];
+    let winners: [User, number, boolean][] = [];
     for (let i = 0; i < updatedPlayerPoints.length; i++) {
       const user = updatedPlayerPoints[i][0];
       const userPoints = updatedPlayerPoints[i][1];
@@ -279,5 +279,16 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   socket.on("reveal-letter-powerup", (userId: string) => {
     io.to("game-room").emit("reveal-letter", { index: 0, userId });
     incrementPowerupCountInGameState(currentGameState, userId, "revealLetter");
+  });
+
+  /* Multiplier Powerup Listener */
+  socket.on("multiplier-powerup", (userId: string) => {
+    //set boolean in playerPoints for the player to true
+    currentGameState.playerPoints.forEach((player) => {
+      if (player[0]._id === userId) {
+        player[2] = true;
+      }
+    });
+    incrementPowerupCountInGameState(currentGameState, userId, "scoreMultiplier");
   });
 }

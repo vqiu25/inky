@@ -117,7 +117,7 @@ export default function GamePowerups(): JSX.Element {
       colour: "#f3e3ab",
       handler: () => {
         if (currentUser)
-          socket.emit("increment-powerup", currentUser._id, "scoreMultiplier");
+          socket.emit("multiplier-powerup", currentUser._id);
       },
     },
     {
