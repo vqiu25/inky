@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { UsersContext } from "../context/UsersContext";
 import styles from "../assets/css-modules/LoginPage.module.css";
 import logo from "../assets/images/logo.svg";
-import alicorn from "../assets/images/profile-pictures/alicorn.png";
 
 import GoogleSignInButton from "../components/signInComponents/GoogleSignInButton";
 import { User } from "../types/types";
@@ -19,17 +18,28 @@ const LoginPage = () => {
   const { setJwt, setIsAuthenticated } = useContext(AuthContext)!;
   const navigate = useNavigate();
 
-  // Import all SVG images from profile-pictures folder
-  const images = import.meta.glob("/src/assets/images/profile-pictures/*.svg");
-
   function getRandomProfilePicture(): string {
-    // Get the file paths from the keys of the `images` object
-    const profilePictures = Object.keys(images);
-    profilePictures.push(alicorn);
+    const filenames = [
+      "alicorn.png",
+      "bear.png",
+      "cat.svg",
+      "crow.svg",
+      "dog.svg",
+      "dove.svg",
+      "dragon.svg",
+      "fish.svg",
+      "frog.svg",
+      "hippo.svg",
+      "horse.svg",
+      "kiwi.svg",
+      "mosquito.svg",
+      "otter.svg",
+      "shrimp.svg",
+      "worm.svg",
+    ];
 
-    // Select a random image
-    const randomIndex = Math.floor(Math.random() * profilePictures.length);
-    return profilePictures[randomIndex];
+    const randomIndex = Math.floor(Math.random() * filenames.length);
+    return `profile-pictures/${filenames[randomIndex]}`;
   }
 
   async function handleGoogleResponse(response: unknown) {

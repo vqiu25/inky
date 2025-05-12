@@ -171,7 +171,7 @@ export default function ProfilePage() {
                   />
                   <GameAchievement
                     src={trophy}
-                    tooltipContent="High score of 500+"
+                    tooltipContent="High Score of 500+"
                     achieved={currentUser.achievements.highScoreAchievement}
                   />
                 </div>

@@ -3,6 +3,7 @@
   width: 64px;
   height: 64px;
   cursor: default;
+  transform: scale(0.85);
 }
 
 .pictureBorder {

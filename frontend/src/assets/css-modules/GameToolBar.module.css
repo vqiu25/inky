@@ -26,6 +26,10 @@
   width: 70%;
 }
 
+.canvasToolErase img {
+  width: 55%;
+}
+
 .canvasTool span {
   border-radius: 50%;
   width: 85%;

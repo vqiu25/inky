@@ -11,13 +11,13 @@ export default function GameToolBar() {
   const colours: string[] = [
     "black",
     "white",
-    "#e81416",
-    "#ffa500",
-    "#faeb36",
-    "#79c314",
-    "#487de7",
-    "#4b369d",
-    "#70369d",
+    "#FF8686",
+    "#ff9e64",
+    "#FFD65B",
+    "#A7EA92",
+    "#A7B1FC",
+    "#bb9af7",
+    "#D29F80",
   ];
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
@@ -89,7 +89,7 @@ export default function GameToolBar() {
           <img src={eraserIcon} />
         </button>
         <button
-          className={`${styles.canvasTool}`}
+          className={`${styles.canvasTool} ${styles.canvasToolErase}`}
           onClick={() => clearCanvas()}
         >
           <img src={trashIcon} />

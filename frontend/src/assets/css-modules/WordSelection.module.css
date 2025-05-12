@@ -28,6 +28,11 @@
   color: var(--purple-text);
   border-color: var(--purple);
   font-size: 23px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.wordSelectionWord:hover {
+  transform: scale(1.05);
 }
 
 .wordSelectionWords {

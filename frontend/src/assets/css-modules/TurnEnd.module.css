@@ -8,7 +8,7 @@
   align-items: center;
   position: fixed;
   z-index: 1000;
-  background-color: rgba(45, 44, 43, 0.696);
+  background-color: rgba(27, 28, 36, 0.7);
 }
 
 .turnEndText {
@@ -34,4 +34,9 @@
   color: var(--purple-text);
   border-color: var(--purple);
   font-size: 23px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.button:hover {
+  transform: scale(1.05);
 }
