@@ -1,5 +1,4 @@
 import "../App.css";
-import logo from "../assets/images/logo.svg";
 import infoIcon from "../assets/images/info.svg";
 import InfoPopup from "../components/homeComponents/InfoPopup";
 import styles from "../assets/css-modules/HomePage.module.css";
@@ -9,6 +8,7 @@ import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
 import { Progress, User } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
+import AnimatedLogo from "../components/homeComponents/AnimatedLogo";
 
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
@@ -62,7 +62,7 @@ function HomePage() {
 
   return (
     <div className={styles.container}>
-      <img src={logo} className={styles.logo}></img>
+      <AnimatedLogo size={120} hoverThreshold={150} />
       <h1 className={styles.title}>Inky</h1>
       <button className={styles.button} onClick={() => onClickPlay()}>
         Play

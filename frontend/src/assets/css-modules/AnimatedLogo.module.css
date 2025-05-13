@@ -1,0 +1,17 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+.logo {
+  display: block;
+  pointer-events: none;
+}
+
+.droplet {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}

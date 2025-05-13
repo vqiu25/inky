@@ -60,3 +60,20 @@
 .infoButton:hover {
   transform: scale(1.05);
 }
+
+.logo {
+  width: 120px;
+}
+
+.logoWrapper {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+.droplet {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}

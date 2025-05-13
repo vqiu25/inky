@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UsersContext } from "../context/UsersContext";
+import AnimatedLogo from "../components/homeComponents/AnimatedLogo";
 import styles from "../assets/css-modules/LoginPage.module.css";
-import logo from "../assets/images/logo.svg";
 
 import GoogleSignInButton from "../components/signInComponents/GoogleSignInButton";
 import { User } from "../types/types";
@@ -78,7 +78,7 @@ const LoginPage = () => {
 
   return (
     <div className={styles.container}>
-      <img src={logo} className={styles.logo} alt="Logo" />
+      <AnimatedLogo size={120} hoverThreshold={150} />
       <h1 className={styles.title}>Inky</h1>
       <GoogleSignInButton onSignInSuccess={handleGoogleResponse} />
     </div>
