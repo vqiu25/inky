@@ -1,0 +1,159 @@
+.popup {
+  background: #282a35;
+  color: #ccc;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  transform-origin: center;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.popupIn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.popupOut {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: #ccc;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.title {
+  color: #9da3cb;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.text {
+  text-align: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.overlayIn {
+  background: rgba(27, 28, 36, 0.7);
+}
+
+.overlayOut {
+  background: rgba(27, 28, 36, 0);
+}
+
+.closeButton {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #1b1c24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+.closeButton:hover {
+  transform: scale(1.05);
+}
+
+.closeIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.cardContainer {
+  width: 100%;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease;
+}
+
+.indicator:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.active {
+  background: #9da3cb;
+}
+
+.carouselWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.navButton:hover {
+  transform: scale(1.1);
+}
+
+.prevButton {
+  margin-right: 0.5rem;
+}
+
+.nextButton {
+  margin-left: 0.5rem;
+}
+
+.navIcon {
+  width: 32px;
+  height: 32px;
+}

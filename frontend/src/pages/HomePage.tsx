@@ -1,8 +1,10 @@
 import "../App.css";
 import logo from "../assets/images/logo.svg";
+import infoIcon from "../assets/images/info.svg";
+import InfoPopup from "../components/homeComponents/InfoPopup";
 import styles from "../assets/css-modules/HomePage.module.css";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UsersContext } from "../context/UsersContext";
 import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
@@ -14,6 +16,7 @@ function HomePage() {
   const navigate = useNavigate();
   const { setCurrentUserFromLocalStorage } = useContext(UsersContext)!;
   const { setProgress } = useContext(AuthContext)!;
+  const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
     setProgress(Progress.HOME);
@@ -76,6 +79,13 @@ function HomePage() {
       >
         Leaderboard
       </button>
+      <img
+        src={infoIcon}
+        alt="Info"
+        className={styles.infoButton}
+        onClick={() => setShowInfo(true)}
+      />
+      {showInfo && <InfoPopup onClose={() => setShowInfo(false)} />}
     </div>
   );
 }
