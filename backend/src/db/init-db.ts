@@ -1,8 +1,13 @@
 import "dotenv/config";
-
 import mongoose from "mongoose";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import User from "./user-schema.js";
 import Phrase from "./phrase-schema.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const users = [
   {
@@ -17,71 +22,23 @@ const users = [
   }
 ];
 
-const phrases = [
-  {
-    phrase: "Bungee jumping"
-  },
-  {
-    phrase: "Sky diving"
-  },
-  {
-    phrase: "Cinnamoroll"
-  },
-  {
-    phrase: "SpongeBob SquarePants"
-  },
-  {
-    phrase: "Harry Potter"
-  },
-  {
-    phrase: "The Simpsons"
-  },
-  {
-    phrase: "The Lion King"
-  },
-  {
-    phrase: "The Matrix"
-  },
-  {
-    phrase: "The Avengers"
-  },
-  {
-    phrase: "The Incredibles"
-  },
-  {
-    phrase: "Attack on Titan"
-  },
-  {
-    phrase: "One Piece"
-  },
-  {
-    phrase: "Naruto"
-  },
-  {
-    phrase: "Dragon Ball Z"
-  },
-  {
-    phrase: "My Hero Academia"
-  },
-  {
-    phrase: "Demon Slayer"
-  },
-  {
-    phrase: "Death Note"
-  },
-  {
-    phrase: "Sword Art Online"
-  },
-  {
-    phrase: "Fullmetal Alchemist"
-  },
-  {
-    phrase: "Tokyo Ghoul"
-  },
-  {
-    phrase: "Fairy Tail"
+async function loadPhrasesFromFile(filePath: string): Promise<{ phrase: string }[]> {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const lines = fileContent
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "");
+  return lines.map((line) => ({ phrase: line }));
+}
+
+async function insertPhrases() {
+  const phrasesFilePath = path.resolve(__dirname, "phrases.txt");
+  const phrases = await loadPhrasesFromFile(phrasesFilePath);
+  for (let i = 0; i < phrases.length; i += 100) {
+    const batch = phrases.slice(i, i + 100);
+    await Phrase.insertMany(batch);
   }
-];
+}
 
 async function run() {
   const dbConnectionString = process.env.MONGODB_CONNECTION_STRING;
@@ -96,7 +53,7 @@ async function run() {
   await Phrase.deleteMany({});
 
   await User.insertMany(users);
-  await Phrase.insertMany(phrases);
+  await insertPhrases();
 
   await mongoose.disconnect();
 }
