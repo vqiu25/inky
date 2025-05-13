@@ -5,7 +5,6 @@ import InfoPopup from "../components/homeComponents/InfoPopup";
 import styles from "../assets/css-modules/HomePage.module.css";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { UsersContext } from "../context/UsersContext";
 import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
 import { Progress, User } from "../types/types";
@@ -14,7 +13,6 @@ import { AuthContext } from "../context/AuthContext";
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
   const navigate = useNavigate();
-  const { setCurrentUserFromLocalStorage } = useContext(UsersContext)!;
   const { setProgress } = useContext(AuthContext)!;
   const [showInfo, setShowInfo] = useState(false);
 
@@ -50,9 +48,8 @@ function HomePage() {
     };
   }, [navigate, setNewPlayers]);
 
-  async function onClickPlay() {
+  function onClickPlay() {
     navigate("/lobby");
-    await setCurrentUserFromLocalStorage();
 
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {

@@ -5,7 +5,6 @@ import ProfilePicture from "../components/profileComponents/ProfilePicture";
 import ProfileInfoContainer from "../components/profileComponents/ProfileInfoContainer";
 import { PowerupNames } from "../types/types";
 import { UsersContext } from "../context/UsersContext";
-import { useLocation } from "react-router-dom";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 import squid from "../assets/images/squid.svg";
@@ -23,16 +22,16 @@ import award from "../assets/images/award.svg";
 import militaryTech from "../assets/images/military-tech.svg";
 
 export default function ProfilePage() {
-  const location = useLocation();
   const { setCurrentUserFromLocalStorage, currentUser } =
     useContext(UsersContext)!;
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    console.log("Loading profile page");
     setLoading(true);
     setCurrentUserFromLocalStorage();
     setLoading(false);
-  }, [location]);
+  }, []);
 
   const commonStyle = {
     justifyContent: "center",

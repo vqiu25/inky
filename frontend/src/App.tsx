@@ -7,28 +7,46 @@ import GamePage from "./pages/GamePage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import PodiumPage from "./pages/PodiumPage";
+import LoadingSpinner from "./components/layoutComponents/LoadingSpinner";
+import spinnerStyles from "./assets/css-modules/LoadingSpinner.module.css";
+import { useJwtValidation } from "./hooks/useJwtValidation";
 import ProtectedRoute from "./services/ProtectedRoute";
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
 import { Progress } from "./types/types";
 
 function App() {
-  const { isJwtValid } = useContext(AuthContext)!;
+  const { validJwt, isLoading } = useJwtValidation();
+
+  if (isLoading) {
+    return (
+      <div className={spinnerStyles.spinnerContainer}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/">
         <Route
           index
-          element={(() => {
-            console.log("JWT valid?", isJwtValid());
-            return isJwtValid() ? (
+          element={
+            validJwt ? (
               <Navigate to="/home" replace />
             ) : (
               <Navigate to="/login" replace />
-            );
-          })()}
+            )
+          }
         />
       </Route>
+      <Route
+        path="home"
+        element={
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="home"
         element={

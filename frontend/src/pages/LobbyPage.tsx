@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UsersContext } from "../context/UsersContext";
 import { Progress, User } from "../types/types";
 import styles from "../assets/css-modules/LobbyPage.module.css";
@@ -14,7 +14,6 @@ import { AuthContext } from "../context/AuthContext";
 
 export default function LobbyPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { currentUser, setCurrentUserFromLocalStorage } =
     useContext(UsersContext)!;
   const { setNewPlayers, lobbyPlayers, setCurrentDrawer } =
@@ -35,7 +34,7 @@ export default function LobbyPage() {
     };
 
     fetchCurrentUser();
-  }, [location]);
+  }, []);
 
   // Get the list of players in the lobby
   useEffect(() => {

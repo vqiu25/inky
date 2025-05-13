@@ -1,7 +1,8 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 import { User } from "../types/types";
 import axios from "axios";
 import { UsersContext } from "./UsersContext";
+import { AuthContext } from "./AuthContext";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -17,7 +18,6 @@ export interface UsersContextType {
   ) => Promise<User>;
   refreshUsers: () => Promise<void>;
   getUserById: (id: string) => Promise<User>;
-  getUserByEmail: (email: string) => Promise<User>;
   updateGamePlayers: (users: User[]) => Promise<User[]>;
   usersList: User[];
   setUsersList: React.Dispatch<React.SetStateAction<User[]>>;
@@ -37,6 +37,7 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
   const [usersList, setUsersList] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [usersLoading, setUsersLoading] = useState<boolean>(false);
+  const { getUserByEmail } = useContext(AuthContext)!;
 
   async function refreshUsers() {
     await getUsers();
@@ -100,24 +101,6 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
-  /**
-   * Fetches a user using their email.
-   *
-   * @param email - The user's email address.
-   * @returns The user matching the email.
-   */
-  async function getUserByEmail(email: string): Promise<User> {
-    try {
-      const response = await axios.get<User>(
-        `${API_BASE_URL}/api/users?email=${email}`,
-      );
-      return response.data;
-    } catch (error) {
-      console.error(`Failed to fetch user with email ${email}:`, error);
-      throw error;
-    }
-  }
-
   async function updateGamePlayers(users: User[]): Promise<User[]> {
     const responseData = [];
     try {
@@ -155,7 +138,6 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         addUser,
         refreshUsers,
         getUserById,
-        getUserByEmail,
         updateGamePlayers,
         usersList,
         setUsersList,

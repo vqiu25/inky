@@ -9,8 +9,9 @@ import { User } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
-  const { addUser, getUserByEmail, getUsers, setCurrentUserFromLocalStorage } =
+  const { addUser, getUsers, setCurrentUserFromLocalStorage } =
     useContext(UsersContext)!;
+  const { getUserByEmail } = useContext(AuthContext)!;
   const { setJwt, setIsAuthenticated } = useContext(AuthContext)!;
   const navigate = useNavigate();
 
@@ -42,6 +43,8 @@ const LoginPage = () => {
     const users = await getUsers();
 
     const jwt = (response as { credential: string }).credential;
+    setJwt(jwt);
+    setIsAuthenticated(true);
     setJwt(jwt);
     setIsAuthenticated(true);
     const payload = JSON.parse(atob(jwt.split(".")[1]));

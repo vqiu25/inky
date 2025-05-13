@@ -2,6 +2,9 @@ import { Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Progress } from "../types/types";
+import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
+import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
+import { useJwtValidation } from "../hooks/useJwtValidation";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -9,11 +12,20 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute = ({ children, requiredStep }: ProtectedRouteProps) => {
-  const { isJwtValid, progress } = useContext(AuthContext)!;
-  // const progress = sessionStorage.getItem("progress");
+  const { progress } = useContext(AuthContext)!;
+  const { validJwt, isLoading } = useJwtValidation();
+
   console.log("Last progress:", progress);
 
-  if (!isJwtValid()) {
+  if (isLoading) {
+    return (
+      <div className={spinnerStyles.spinnerContainer}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!validJwt) {
     return <Navigate to="/login" replace />;
   }
 
