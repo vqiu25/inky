@@ -11,6 +11,7 @@ import { GameStateContext } from "../context/GameStateContext";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 import { AuthContext } from "../context/AuthContext";
+import { Tooltip } from "react-tooltip";
 
 export default function LobbyPage() {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ export default function LobbyPage() {
     useContext(GameStateContext)!;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { setProgress } = useContext(AuthContext)!;
+  const canStart = lobbyPlayers.length >= 2;
+  const tooltipId = "enter-game-tip";
 
   useEffect(() => {
     setProgress(Progress.LOBBY);
@@ -94,9 +97,23 @@ export default function LobbyPage() {
             />
           ))}
           <div style={{ height: "20px" }}></div>
-          <button className={styles.button} onClick={() => onStartGame()}>
-            Enter Game
-          </button>
+          <span
+            style={{ display: "inline-block" }}
+            {...(!canStart && {
+              // only attach tooltip when needed
+              "data-tooltip-id": tooltipId,
+              "data-tooltip-content": "Not enough players",
+            })}
+          >
+            <button
+              className={styles.button}
+              onClick={() => onStartGame()}
+              disabled={!canStart}
+            >
+              Enter Game
+            </button>
+          </span>
+          <Tooltip id={tooltipId} />
         </div>
       )}
     </div>
