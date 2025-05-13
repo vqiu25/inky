@@ -44,8 +44,11 @@ export default function GameToolBar() {
   const setPen = () => {
     const canvas = canvasRef.current;
     if (canvas) {
+      canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.width = 5;
       canvas.freeDrawingBrush.color = "black";
+      canvas.freeDrawingCursor = "url('/cursors/brush.svg') 0 32, auto";
+      canvas.renderAll();
       setColour(selectedColour || colours[0]);
     }
   };
@@ -53,18 +56,13 @@ export default function GameToolBar() {
   const setEraser = () => {
     const canvas = canvasRef.current;
     if (canvas) {
+      canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.color = "white";
       canvas.freeDrawingBrush.width = 10;
+      canvas.freeDrawingCursor = "url('/cursors/eraser.svg') 4 28, auto";
+      canvas.renderAll();
     }
   };
-
-  // const clearCanvas = () => {
-  //   const canvas = canvasRef.current;
-  //   if (canvas) {
-  //     canvas.clear();
-  //     canvas.setBackgroundColor("white", () => canvas.renderAll());
-  //   }
-  // };
 
   const setColour = (colour: string) => {
     const canvas = canvasRef.current;

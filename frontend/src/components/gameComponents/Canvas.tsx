@@ -35,6 +35,8 @@ const Canvas: React.FC = () => {
       selection: false,
     });
 
+    canvas.freeDrawingCursor = "url('/cursors/brush.svg') 0 32, auto";
+
     const isDrawer = currentDrawer?._id === currentUser?._id;
     let suppressEmit = false; // <--- Flag
 
