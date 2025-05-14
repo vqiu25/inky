@@ -209,7 +209,10 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       .map((_, i) => i + 1);
 
     revealInterval = setInterval(() => {
-      if (unrevealedIndices.length === 0) {
+      if (
+        unrevealedIndices.length === 0 ||
+        unrevealedIndices.length < currentGameState.wordToGuess.length / 2
+      ) {
         clearInterval(revealInterval!);
         return;
       }
