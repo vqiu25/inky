@@ -70,6 +70,22 @@ export default function LobbyPage() {
     };
   }, [navigate, setCurrentDrawer]);
 
+  function handleLeaveLobby() {
+    socket.emit("player-leave", currentUser);
+  }
+
+  useEffect(() => {
+    window.addEventListener("popstate", handleLeaveLobby);
+    window.addEventListener("beforeunload", handleLeaveLobby);
+
+    return () => {
+      setTimeout(() => {
+        window.removeEventListener("popstate", handleLeaveLobby);
+        window.removeEventListener("beforeunload", handleLeaveLobby);
+      }, 0);
+    };
+  });
+
   function onStartGame() {
     socket.emit("game-start", lobbyPlayers);
   }

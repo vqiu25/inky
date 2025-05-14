@@ -6,9 +6,10 @@ import styles from "../../assets/css-modules/WordReveal.module.css";
 
 type WordRevealProps = {
   isDrawer: boolean;
+  revealWord: boolean;
 };
 
-export default function WordReveal({ isDrawer }: WordRevealProps) {
+export default function WordReveal({ isDrawer, revealWord }: WordRevealProps) {
   const { wordToGuess } = useContext(GameStateContext)!;
   const { currentUser } = useContext(UsersContext)!;
   const letters = wordToGuess.split("");
@@ -18,7 +19,9 @@ export default function WordReveal({ isDrawer }: WordRevealProps) {
 
   useEffect(() => {
     // reveal all letters if the drawer
-    setRevealedIndices(isDrawer ? letters.map((_, idx) => idx) : []);
+    setRevealedIndices(
+      isDrawer || revealWord ? letters.map((_, idx) => idx) : [],
+    );
     // handler for server-driven reveals
     const handleReveal = ({
       index,
@@ -40,7 +43,7 @@ export default function WordReveal({ isDrawer }: WordRevealProps) {
     return () => {
       socket.off("reveal-letter", handleReveal);
     };
-  }, [wordToGuess, isDrawer]);
+  }, [wordToGuess, revealWord, isDrawer]);
 
   return (
     <div className={styles.wordReveal}>

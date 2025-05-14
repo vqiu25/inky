@@ -10,7 +10,6 @@ import {
   setUserSplash,
   clearUserSplash
 } from "../game-state/game-state.js";
-import { lobbyPlayers } from "./lobbyHandlers.js";
 
 export let currentGameState: GameState;
 let numPlayersGuessed = 0;
@@ -45,8 +44,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   socket.on("game-start", (players: User[]) => {
     currentGameState = getInitialGameState(players);
 
-    io.to("game-room").emit("lobby-change", lobbyPlayers);
-
     io.to("game-room").emit("drawer-select", currentGameState.drawer);
     console.log("Broadcasting drawer to game-room:", currentGameState.drawer.username);
   });
@@ -65,6 +62,8 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     if (timerInterval) {
       clearInterval(timerInterval);
     }
+
+    io.to("game-room").emit("timer", currentTimerDuration); // Emit the time
 
     // Start a new interval to emit the timer every second
     timerInterval = setInterval(() => {
@@ -92,9 +91,9 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   /**
    * Update all of the user properties based on the game results.
    */
-  const finishGame = (): [User, number, boolean][] => {
+  const finishGame = (): [User, number, boolean, boolean][] => {
     const updatedPlayerPoints = currentGameState.playerPoints;
-    let winners: [User, number, boolean][] = [];
+    let winners: [User, number, boolean, boolean][] = [];
     for (let i = 0; i < updatedPlayerPoints.length; i++) {
       const user = updatedPlayerPoints[i][0];
       const userPoints = updatedPlayerPoints[i][1];
@@ -142,7 +141,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    * If the game is finished, it emits a "game-finished" event and updates user properties.
    * Otherwise, it emits a "drawer-select" event to select the next drawer.
    */
-  const endTurn = (timeOut: boolean): void => {
+  const endTurn = (timeOut: boolean, drawerLeft?: boolean, goToResults?: boolean): void => {
     currentGameState = getNewGameState(currentGameState);
 
     // Reset the timer for word reveal
@@ -155,12 +154,14 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       clearInterval(timerInterval);
       timerInterval = null;
     }
-    io.to("game-room").emit("turn-end", timeOut);
+    io.to("game-room").emit("turn-end", timeOut, drawerLeft);
 
     // Clear any existing interval
     if (nextTurnCountdownInterval) {
       clearInterval(nextTurnCountdownInterval);
     }
+
+    io.to("game-room").emit("next-turn-timer", nextTurnCountdownDuration);
 
     // Start a new interval to emit the timer every second
     nextTurnCountdownInterval = setInterval(() => {
@@ -175,7 +176,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
         console.log("Next turn countdown ended");
         io.to("game-room").emit("next-turn-timer", 0); // Emit 0 to indicate the timer has ended
 
-        if (currentGameState.round > getMaxRounds()) {
+        if (currentGameState.round > getMaxRounds() || goToResults) {
           finishGame();
           io.to("game-room").emit("game-finished", currentGameState);
         } else {
@@ -330,5 +331,44 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     });
     incrementPowerupCountInGameState(currentGameState, userId, "scoreMultiplier");
     emitPowerupMessage("Score Multiplier", getUserById(userId)?.username || "Unknown");
+  });
+
+  /**
+   * Listener for when a player leaves the game.
+   * Removes the player from the game state and ends the turn if the drawer leaves.
+   */
+  socket.on("leave-game", (userId: string) => {
+    if (!currentGameState?.playerPoints?.length) {
+      return;
+    }
+
+    // Remove the player from the game state
+    currentGameState.playerPoints.forEach((player) => {
+      if (player[0]._id === userId) {
+        player[3] = true;
+      }
+    });
+
+    const isDrawerLeaving = currentGameState.drawer._id === userId;
+    const isOnePlayerLeft = currentGameState.playerPoints.length === 2;
+    const haveAllLeft = currentGameState.playerPoints.length === 1;
+
+    if ((isDrawerLeaving || isOnePlayerLeft) && !haveAllLeft) {
+      nextTurnCountdownDuration = 5;
+      endTurn(isOnePlayerLeft && !isDrawerLeaving, isDrawerLeaving, isOnePlayerLeft);
+      return;
+    }
+
+    // If all players have in the game have guessed the word, the turn should end
+    if (numPlayersGuessed >= currentGameState.playerPoints.length - 2 && !haveAllLeft) {
+      numPlayersGuessed = 0;
+      nextTurnCountdownDuration = 5;
+      endTurn(false);
+      return;
+    }
+
+    currentGameState.playerPoints = currentGameState.playerPoints.filter(
+      (player) => player[0]._id !== userId
+    );
   });
 }

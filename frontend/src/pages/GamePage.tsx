@@ -29,11 +29,13 @@ export default function GamePage() {
     clearCanvas,
     isTurnFinished,
     setIsTurnFinished,
+    setNewPlayers,
   } = useContext(GameStateContext)!;
   const { currentUser } = useContext(UsersContext)!;
   const [timedOut, setTimedOut] = useState(false);
   const [isCurrentUserDrawer, setIsCurrentUserDrawer] = useState(false);
   const { setProgress } = useContext(AuthContext)!;
+  const [drawerLeft, setDrawerLeft] = useState(false);
 
   useEffect(() => {
     setProgress(Progress.GAME);
@@ -80,16 +82,30 @@ export default function GamePage() {
   });
 
   useEffect(() => {
-    socket.on("turn-end", (timeOut: boolean) => {
+    socket.on("turn-end", (timeOut: boolean, drawerLeft: boolean) => {
       console.log("Turn ended");
       setIsTurnFinished(true);
       setTimedOut(timeOut);
+      setDrawerLeft(drawerLeft);
     });
 
     return () => {
       socket.off("turn-end");
     };
   });
+
+  // Get the list of players in the lobby
+  useEffect(() => {
+    const handleLobbyPlayer = (newPlayers: User[]) => {
+      setNewPlayers(newPlayers);
+    };
+
+    socket.on("lobby-change", handleLobbyPlayer);
+
+    return () => {
+      socket.off("lobby-change", handleLobbyPlayer);
+    };
+  }, [setNewPlayers]);
 
   useEffect(() => {
     console.log("Registering game-finished listener");
@@ -102,6 +118,7 @@ export default function GamePage() {
 
   useEffect(() => {
     const handleDrawerSelect = (drawer: User) => {
+      setWordToGuess("");
       console.log("Drawer selected:", drawer.username);
       setCurrentDrawer(drawer);
       setIsSelectingWord(true);
@@ -118,8 +135,8 @@ export default function GamePage() {
 
   return (
     <>
-      {isSelectingWord && <WordSelection />}
-      {isTurnFinished && <TurnEnd timeOut={timedOut} />}
+      {!isTurnFinished && isSelectingWord && <WordSelection />}
+      {isTurnFinished && <TurnEnd timeOut={timedOut} drawerLeft={drawerLeft} />}
       <div ref={wrapperRef} className={styles.gameWrapper}>
         <div className={styles.gameGrid}>
           <GameStatusBar />

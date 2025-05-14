@@ -5,9 +5,10 @@ import { socket } from "../../services/socket";
 
 interface TurnEndProps {
   timeOut: boolean;
+  drawerLeft: boolean;
 }
 
-export default function TurnEnd({ timeOut }: TurnEndProps) {
+export default function TurnEnd({ timeOut, drawerLeft }: TurnEndProps) {
   const { wordToGuess } = useContext(GameStateContext)!;
   const [timeRemaining, setTimeRemaining] = useState<number>(5);
 
@@ -23,9 +24,18 @@ export default function TurnEnd({ timeOut }: TurnEndProps) {
   return (
     <div className={styles.turnEndContainer}>
       <div className={styles.turnEndText}>
-        {timeOut ? "Time's up!" : "Everyone guessed the word!"}
-        <br />
-        The word was: <span className={styles.wordToGuess}>{wordToGuess}</span>
+        {drawerLeft
+          ? "The drawer left the game!"
+          : timeOut
+            ? "Time's up!"
+            : "Everyone guessed the word!"}
+        {wordToGuess && (
+          <>
+            <br />
+            The word was:{" "}
+            <span className={styles.wordToGuess}>{wordToGuess}</span>
+          </>
+        )}
         <div className={styles.progressBar}>
           <div
             className={styles.progressFill}

@@ -51,6 +51,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket.on("word-guessed", (player: User) => {
+      console.log("Guessed Chat");
       const message = {
         username: "System",
         text: `${player.username} has guessed the word!`,

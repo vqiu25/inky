@@ -7,7 +7,7 @@ export interface GameState {
   round: number;
   wordToGuess: string;
   drawer: User;
-  playerPoints: [User, number, boolean][];
+  playerPoints: [User, number, boolean, hasLeftGame: boolean][];
   timeRemaining: number;
   splashExpiries: Record<string, number>;
 }
@@ -21,7 +21,7 @@ export const getInitialGameState = (players: User[]): GameState => {
     round: 1,
     wordToGuess: "",
     drawer: players[0],
-    playerPoints: players.map((player) => [player, 0, false]),
+    playerPoints: players.map((player) => [player, 0, false, false]),
     timeRemaining: turnTime,
     splashExpiries: {}
   };
@@ -40,19 +40,28 @@ export const getNewGameState = (previousGameState: GameState): GameState => {
 
   const isNewRound: boolean = previousDrawerIndex === previousGameState.playerPoints.length - 1;
   const newRound = isNewRound ? previousGameState.round + 1 : previousGameState.round;
-  const newWord = "";
+
   const newDrawer = isNewRound
     ? previousGameState.playerPoints[0][0]
-    : previousGameState.playerPoints[previousDrawerIndex + 1][0];
+    : previousGameState.playerPoints[previousDrawerIndex + 1]?.[0];
 
-  // reset boolean in playerPoints to false
+  // Filter out players who have left the game
+  previousGameState.playerPoints = previousGameState.playerPoints.filter((player) => !player[3]);
+
+  if (previousGameState.playerPoints.length === 0) {
+    return {
+      ...previousGameState
+    };
+  }
+
+  // Reset scoreMultiplier boolean in playerPoints to false
   for (let i = 0; i < previousGameState.playerPoints.length; i++) {
     previousGameState.playerPoints[i][2] = false;
   }
 
   return {
     round: newRound,
-    wordToGuess: newWord,
+    wordToGuess: "",
     drawer: newDrawer,
     playerPoints: previousGameState.playerPoints,
     timeRemaining: turnTime,
@@ -72,8 +81,9 @@ export const updatePlayerPoints = (
   gameState: GameState,
   player: User,
   timeRemaining: number
-): [User, number, boolean][] => {
-  const updatedPlayerPoints: [User, number, boolean][] = gameState.playerPoints;
+): [User, number, boolean, hasLeftGame: boolean][] => {
+  const updatedPlayerPoints: [User, number, boolean, hasLeftGame: boolean][] =
+    gameState.playerPoints;
   for (let i = 0; i < updatedPlayerPoints.length; i++) {
     if (updatedPlayerPoints[i][0]._id === player._id) {
       updatedPlayerPoints[i][1] += updatedPlayerPoints[i][2] ? timeRemaining * 2 : timeRemaining;
