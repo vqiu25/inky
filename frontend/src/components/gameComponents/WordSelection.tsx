@@ -53,7 +53,7 @@ export default function WordSelection() {
       if (timeout) clearTimeout(timeout);
       if (interval) clearInterval(interval);
     };
-  }, [currentUser, currentDrawer, phrases, isSelectingWord, wordSelected]);
+  }, [currentUser, currentDrawer, phrases]);
 
   function handleWordSelection(word: string) {
     setWordSelected(true);

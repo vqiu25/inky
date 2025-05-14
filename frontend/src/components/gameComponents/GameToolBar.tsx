@@ -1,12 +1,13 @@
 import styles from "../../assets/css-modules/GameToolBar.module.css";
-import { canvasRef } from "./Canvas";
 import brushIcon from "../../assets/images/brush.svg";
 import eraserIcon from "../../assets/images/eraser.svg";
 import trashIcon from "../../assets/images/trash.svg";
 import { useContext, useEffect, useState } from "react";
 import { GameStateContext } from "../../context/GameStateContext";
+import { canvasReference } from "./CanvasReference";
 
 export default function GameToolBar() {
+  const canvasRef = canvasReference;
   const { clearCanvas } = useContext(GameStateContext)!;
   const colours: string[] = [
     "black",

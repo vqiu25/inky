@@ -1,8 +1,8 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { Phrase, User } from "../types/types";
 import { GameStateContext } from "./GameStateContext";
-import { canvasRef } from "../components/gameComponents/Canvas";
 import useGet from "../hooks/useGet";
+import { canvasReference } from "../components/gameComponents/CanvasReference";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 /**
@@ -56,7 +56,7 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   const clearCanvas = () => {
-    const canvas = canvasRef.current;
+    const canvas = canvasReference.current;
     if (canvas) {
       canvas.clear();
       canvas.setBackgroundColor("white", () => canvas.renderAll());

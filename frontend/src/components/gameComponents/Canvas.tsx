@@ -1,7 +1,5 @@
 import React, {
   useEffect,
-  RefObject,
-  createRef,
   useContext,
   useRef,
   useState,
@@ -11,10 +9,10 @@ import { socket } from "../../services/socket";
 import styles from "../../assets/css-modules/Canvas.module.css";
 import { GameStateContext } from "../../context/GameStateContext";
 import useCurrentUser from "../../hooks/useCurrentUser";
-
-export const canvasRef: RefObject<fabric.Canvas | null> = createRef();
+import { canvasReference } from "./CanvasReference";
 
 const Canvas: React.FC = () => {
+  const canvasRef = canvasReference;
   const { currentDrawer } = useContext(GameStateContext)!;
   const currentUser = useCurrentUser();
   const parentRef = useRef<HTMLDivElement>(null);
