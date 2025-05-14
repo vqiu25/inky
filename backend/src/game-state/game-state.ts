@@ -87,14 +87,8 @@ export const updatePlayerPoints = (
   for (let i = 0; i < updatedPlayerPoints.length; i++) {
     if (updatedPlayerPoints[i][0]._id === player._id) {
       updatedPlayerPoints[i][1] += updatedPlayerPoints[i][2] ? timeRemaining * 2 : timeRemaining;
-      console.log(
-        `Updating points for ${updatedPlayerPoints[i][0].username}(guesser) to ${updatedPlayerPoints[i][1]}`
-      );
     } else if (updatedPlayerPoints[i][0]._id === gameState.drawer._id) {
       updatedPlayerPoints[i][1] += timeRemaining / (gameState.playerPoints.length - 1);
-      console.log(
-        `Updating points for ${updatedPlayerPoints[i][0].username}(drawer) to ${updatedPlayerPoints[i][1]}`
-      );
     }
   }
 
@@ -119,9 +113,6 @@ export const incrementPowerupCountInGameState = (
     if (user._id === userId) {
       if (user.powerups[powerupName] !== undefined) {
         user.powerups[powerupName]++;
-        console.log(
-          `Powerup ${powerupName} for user ${userId} incremented to ${user.powerups[powerupName]}`
-        );
         return true;
       }
       // Invalid powerup name

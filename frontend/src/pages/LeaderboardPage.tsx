@@ -9,7 +9,6 @@ import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 export default function LeaderboardPage() {
   const { usersList, usersLoading, refreshUsers } = useContext(UsersContext)!;
   useEffect(() => {
-    console.log("Loading leaderboard page");
     const fetchUsers = async () => {
       await refreshUsers();
     };

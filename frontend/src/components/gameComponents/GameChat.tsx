@@ -30,7 +30,6 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket.on("chat-data", (message: ChatMessage) => {
-      console.log("I received a message", message);
       setMessages((prev) => [...prev, message]);
     });
     return () => {
@@ -42,7 +41,6 @@ const Chat: React.FC = () => {
     socket.on("new-turn", (gameState: GameState) => {
       setMessages([]);
       setHaveGuessed(false);
-      console.log("New turn started", gameState);
     });
     return () => {
       socket.off("new-turn");
@@ -51,7 +49,6 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket.on("word-guessed", (player: User) => {
-      console.log("Guessed Chat");
       const message = {
         username: "System",
         text: `${player.username} has guessed the word!`,
@@ -76,9 +73,6 @@ const Chat: React.FC = () => {
           // If they have actually guessed the word and not previously guessed
           if (!haveGuessed) {
             socket.emit("word-guessed", currentUser, timeRemaining);
-            console.log(
-              `Guesser ${currentUser?.username} guessed the word at time ${timeRemaining}`,
-            );
             message = { username: username, text };
             setHaveGuessed(true);
           } else {
@@ -102,7 +96,6 @@ const Chat: React.FC = () => {
     } else {
       // Normal chat message
       message = { username: username, text };
-      console.log("sending a message", message);
       socket.emit("chat-data", message);
     }
     if (message) {

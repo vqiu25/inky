@@ -23,7 +23,6 @@ export default function WordSelection() {
       currentUser?._id === currentDrawer?._id &&
       phrases?.length > 0
     ) {
-      console.log("allWords", phrases);
       const wordsCopy = [...phrases];
       const selectedWords: string[] = [];
       for (let i = 0; i < 3; i++) {
@@ -31,7 +30,6 @@ export default function WordSelection() {
         selectedWords.push(wordsCopy.splice(randomIndex, 1)[0].phrase);
       }
       setWordsToSelect(selectedWords);
-      console.log("selectedWords", selectedWords);
 
       // Set a timeout to auto-select a random word after 5 seconds
       timeout = setTimeout(() => {

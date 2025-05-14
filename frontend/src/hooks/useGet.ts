@@ -21,7 +21,6 @@ export default function useGet<T = unknown>(
 
   useEffect(() => {
     async function fetchData() {
-      console.log("useGet called with URL:", url);
       try {
         setLoading(true);
         const response = await axios.get<T>(url);

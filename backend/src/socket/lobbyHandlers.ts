@@ -12,9 +12,7 @@ export default function registerLobbyHandlers(io: Server, socket: Socket) {
    * @param newPlayer - the new player joining the lobby.
    */
   socket.on("player-join", (newPlayer: User) => {
-    console.log("I'm the server. Got new player", newPlayer.username);
     if (lobbyPlayers.length >= maxLobbyPlayers) {
-      console.log("I'm the server. Lobby is full. Can't add more players.");
       io.to(socket.id).emit("lobby-full", "hey there");
       return;
     }
@@ -23,7 +21,6 @@ export default function registerLobbyHandlers(io: Server, socket: Socket) {
     }
 
     socket.join("game-room");
-    console.log("I'm the server. Updated players count:", lobbyPlayers.length);
     io.to("game-room").emit("lobby-change", lobbyPlayers);
   });
 
@@ -38,9 +35,7 @@ export default function registerLobbyHandlers(io: Server, socket: Socket) {
   });
 
   const playerLeaveLobby = (leavingPlayer: User): void => {
-    console.log("I'm the server. Got player leave", leavingPlayer.username);
     lobbyPlayers = lobbyPlayers.filter((player) => player._id !== leavingPlayer._id);
-    console.log("I'm the server. Updated players count:", lobbyPlayers.length);
     socket.leave("game-room");
     io.to("game-room").emit("lobby-change", lobbyPlayers);
   };

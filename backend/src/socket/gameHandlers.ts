@@ -45,7 +45,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     currentGameState = getInitialGameState(players);
 
     io.to("game-room").emit("drawer-select", currentGameState.drawer);
-    console.log("Broadcasting drawer to game-room:", currentGameState.drawer.username);
   });
 
   /**
@@ -56,7 +55,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    */
   const startTimer = (duration: number): void => {
     currentTimerDuration = duration; // Set the initial duration
-    console.log("Starting timer with duration:", duration);
 
     // Clear any existing interval
     if (timerInterval) {
@@ -77,7 +75,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
           timerInterval = null;
           currentTimerDuration = null;
 
-          console.log("Timer ended");
           io.to("game-room").emit("timer", 0); // Emit 0 to indicate the timer has ended
 
           endTurn(true);
@@ -173,7 +170,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
         nextTurnCountdownInterval = null;
         nextTurnCountdownDuration = 4;
 
-        console.log("Next turn countdown ended");
         io.to("game-room").emit("next-turn-timer", 0); // Emit 0 to indicate the timer has ended
 
         if (currentGameState.round > getMaxRounds() || goToResults) {
@@ -196,7 +192,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    * @param word - The word selected by the drawer.
    */
   socket.on("word-selected", (word: string) => {
-    console.log("Word selected: ", word);
     currentGameState.wordToGuess = word;
     io.to("game-room").emit("new-turn", currentGameState);
 
@@ -233,7 +228,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    */
   socket.on("word-guessed", (player: User, timeRemaining: number) => {
     numPlayersGuessed++;
-    console.log("Word guessed by player: ", player.username);
     currentGameState.playerPoints = updatePlayerPoints(currentGameState, player, timeRemaining);
     io.to("game-room").emit("new-scores", currentGameState.playerPoints);
     io.to("game-room").emit("word-guessed", player); // Broadcast the player who guessed the word
@@ -245,13 +239,11 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   });
 
   socket.on("canvas-data", (data) => {
-    console.log("Server Canvas Data: ", data);
     // Broadcast the canvas data to all clients in the game room except the sender
     socket.to("game-room").emit("canvas-data", data);
   });
 
   socket.on("chat-data", (data) => {
-    console.log("Server Chat Data: ", data);
     // Broadcast the chat data to all clients in the game room except the sender
     socket.to("game-room").emit("chat-data", data);
   });

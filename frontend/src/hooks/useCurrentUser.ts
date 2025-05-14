@@ -9,7 +9,6 @@ export default function useCurrentUser(): User | null {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const user = await getCurrentUser();
-      console.log("Current user is:", user?.username);
       setCurrentUser(user);
     };
     fetchCurrentUser();

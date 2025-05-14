@@ -31,15 +31,10 @@ function HomePage() {
 
   useEffect(() => {
     const handleLobbyPlayer = (newPlayers: User[]) => {
-      console.log(
-        "I'm a client in the lobby and got players",
-        newPlayers.length,
-      );
       setNewPlayers(newPlayers);
     };
 
     const handleLobbyFull = (msg: string) => {
-      console.log("I'm a client in the lobby and got this message D:", msg);
       navigate("/home");
       alert("Lobby is full. Please try again later.");
     };
@@ -57,8 +52,6 @@ function HomePage() {
     navigate("/lobby");
 
     if (currentUser) {
-      console.log("I'm joining a lobby now. I am", currentUser.username);
-
       socket.emit("player-join", currentUser);
     }
   }

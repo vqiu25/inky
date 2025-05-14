@@ -49,7 +49,6 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
 
   function setNewPlayers(newPlayers: User[]) {
     setLobbyPlayers(newPlayers);
-    console.log("Lobby player", newPlayers.length);
   }
 
   function updateTime(newTime: number) {

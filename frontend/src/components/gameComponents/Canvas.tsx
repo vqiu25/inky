@@ -21,7 +21,6 @@ const Canvas: React.FC = () => {
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
 
   useEffect(() => {
-    console.log("Initializing canvas...");
     if (!parentRef.current) {
       console.error("Parent ref is null");
       return;
@@ -30,8 +29,6 @@ const Canvas: React.FC = () => {
     const parent = parentRef.current;
     const { width: parentWidth, height: parentHeight } =
       parent.getBoundingClientRect();
-
-    console.log("Initial parent dimensions:", parentWidth, parentHeight);
 
     const newCanvas = new fabric.Canvas("canv", {
       height: parentHeight,
@@ -49,8 +46,6 @@ const Canvas: React.FC = () => {
 
       const { width: newWidth, height: newHeight } =
         parent.getBoundingClientRect();
-
-      console.log("Resizing canvas to:", newWidth, newHeight);
 
       if (newWidth > 0 && newHeight > 0) {
         const oldWidth = newCanvas.getWidth
@@ -116,7 +111,6 @@ const Canvas: React.FC = () => {
     });
 
     canvas.on("canvas:cleared", () => {
-      console.log("I've cleared the canvas!");
       if (!suppressEmit) {
         emitCanvasData(canvas);
       }
@@ -149,7 +143,6 @@ const Canvas: React.FC = () => {
 
   const emitCanvasData = (canvas: fabric.Canvas) => {
     const data = canvas.toJSON();
-    console.log("I'm the drawer and I'm sending something", data);
     socket.emit("canvas-data", { data });
   };
 

@@ -25,7 +25,6 @@ export default function PageHeader({
     navigate(backTo);
     if (exitLobby) {
       if (currentUser) {
-        console.log("im leave a lobby now. i am", currentUser.username);
         socket.emit("player-leave", currentUser);
       }
     }

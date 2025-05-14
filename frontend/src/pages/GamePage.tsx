@@ -60,7 +60,6 @@ export default function GamePage() {
     }
 
     socket.on("new-turn", (gameState: GameState) => {
-      console.log("New turn started", gameState);
       setIsSelectingWord(false);
       setRound(gameState.round);
       setWordToGuess(gameState.wordToGuess);
@@ -84,7 +83,6 @@ export default function GamePage() {
 
   useEffect(() => {
     socket.on("turn-end", (timeOut: boolean, drawerLeft: boolean) => {
-      console.log("Turn ended");
       setIsTurnFinished(true);
       setTimedOut(timeOut);
       setDrawerLeft(drawerLeft);
@@ -110,10 +108,8 @@ export default function GamePage() {
 
   useEffect(() => {
     if (!currentUser) return;
-    console.log("Registering game-finished listener");
     socket.on("game-finished", (gameState: GameState) => {
       setPlayerPoints(gameState.playerPoints);
-      console.log(`Is player null at GamePage? ${currentUser === null}`);
       socket.emit("player-leave", currentUser);
       navigate("/podium");
     });
@@ -123,7 +119,6 @@ export default function GamePage() {
     if (!currentUser) return;
     const handleDrawerSelect = (drawer: User) => {
       setWordToGuess("");
-      console.log("Drawer selected:", drawer.username);
       setCurrentDrawer(drawer);
       setIsSelectingWord(true);
       setIsTurnFinished(false);

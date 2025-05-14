@@ -106,7 +106,6 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     const currentUser = await getCurrentUser();
     // Update the context
     if (currentUser && currentUser._id === user._id) {
-      console.log(`Updating ${user.username} in context`);
       setUser(user);
     }
     try {

@@ -46,15 +46,10 @@ const LoginPage = () => {
     setJwt(jwt);
     setIsAuthenticated(true);
     const payload = JSON.parse(atob(jwt.split(".")[1]));
-    console.log("User:", payload);
-
-    console.log("Users:" + users);
 
     const userExists = users.some((user: User) => user.email === payload.email);
 
-    if (userExists) {
-      console.log("User already exists.");
-    } else {
+    if (!userExists) {
       try {
         // Save user in DB
         const profilePicture = getRandomProfilePicture();

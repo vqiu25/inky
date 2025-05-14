@@ -36,10 +36,6 @@ export default function LobbyPage() {
   // Get the list of players in the lobby
   useEffect(() => {
     const handleLobbyPlayer = (newPlayers: User[]) => {
-      console.log(
-        "I'm a client in the lobby and got players",
-        newPlayers.length,
-      );
       setNewPlayers(newPlayers);
     };
 
@@ -52,7 +48,6 @@ export default function LobbyPage() {
 
   useEffect(() => {
     const handleDrawerSelect = (drawer: User) => {
-      console.log("Drawer selected:", drawer.username);
       setCurrentDrawer(drawer);
       navigate("/play");
     };

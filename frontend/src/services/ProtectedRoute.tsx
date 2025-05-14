@@ -15,8 +15,6 @@ const ProtectedRoute = ({ children, requiredStep }: ProtectedRouteProps) => {
   const { progress } = useContext(AuthContext)!;
   const { validJwt, isLoading } = useJwtValidation();
 
-  console.log("Last progress:", progress);
-
   if (isLoading) {
     return (
       <div className={spinnerStyles.spinnerContainer}>

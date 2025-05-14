@@ -33,9 +33,7 @@ export default function GameStatusBar() {
 
   useEffect(() => {
     socket.on("word-guessed", (player: User) => {
-      console.log("Guessed");
       if (player._id === currentUser?._id) {
-        console.log("You guessed the word!");
         setRevealWord(true);
       }
     });

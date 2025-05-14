@@ -20,7 +20,6 @@ export const useJwtValidation = () => {
 
     const validateJwt = async () => {
       try {
-        console.log("The hook is checking JWT");
         const valid = await isJwtValid();
         setValidJwt(valid);
         setIsAuthenticated(valid);

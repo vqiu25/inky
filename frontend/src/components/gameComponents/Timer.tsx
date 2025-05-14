@@ -6,8 +6,6 @@ export default function Timer() {
   // const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const { timeRemaining, updateTime } = useContext(GameStateContext)!;
   useEffect(() => {
-    console.log("Registering timer listener");
-
     // Listen for the "timer" event from the server
     socket.on("timer", (duration: number) => {
       updateTime(duration);
