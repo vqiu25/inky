@@ -5,7 +5,6 @@ import { UsersContext } from "../../context/UsersContext";
 import useGet from "../../hooks/useGet";
 import { Phrase } from "../../types/types";
 import { socket } from "../../services/socket";
-import { Line } from "rc-progress";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -89,13 +88,14 @@ export default function WordSelection() {
               </button>
             ))}
           </div>
-          <Line
-            percent={(timeRemaining / 5) * 100}
-            strokeWidth={4}
-            strokeColor="#b1b5e0"
-            trailWidth={4}
-            style={{ marginTop: "20px" }}
-          />
+          <div className={styles.progressBar}>
+            <div
+              className={styles.progressFill}
+              style={{
+                width: `${timeRemaining > 0 ? ((timeRemaining - 1) / 4) * 100 : 0}%`,
+              }}
+            />
+          </div>
         </div>
       ) : (
         <div className={styles.wordSelectionTitle}>
