@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useContext, useRef, useState } from "react";
 import { fabric } from "fabric";
 import { socket } from "../../services/socket";
 import styles from "../../assets/css-modules/Canvas.module.css";

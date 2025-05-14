@@ -69,7 +69,9 @@ const LoginPage = () => {
 
   return (
     <div className={styles.container}>
-      <AnimatedLogo size={120} hoverThreshold={150} />
+      <div style={{ marginBottom: "-30px" }}>
+        <AnimatedLogo size={120} hoverThreshold={150} />
+      </div>
       <h1 className={styles.title}>Inky</h1>
       <GoogleSignInButton onSignInSuccess={handleGoogleResponse} />
     </div>

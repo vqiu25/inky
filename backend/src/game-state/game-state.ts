@@ -86,9 +86,11 @@ export const updatePlayerPoints = (
     gameState.playerPoints;
   for (let i = 0; i < updatedPlayerPoints.length; i++) {
     if (updatedPlayerPoints[i][0]._id === player._id) {
-      updatedPlayerPoints[i][1] += updatedPlayerPoints[i][2] ? timeRemaining * 2 : timeRemaining;
+      updatedPlayerPoints[i][1] += Math.round(
+        updatedPlayerPoints[i][2] ? timeRemaining * 2 : timeRemaining
+      );
     } else if (updatedPlayerPoints[i][0]._id === gameState.drawer._id) {
-      updatedPlayerPoints[i][1] += timeRemaining / (gameState.playerPoints.length - 1);
+      updatedPlayerPoints[i][1] += Math.round(timeRemaining / (gameState.playerPoints.length - 1));
     }
   }
 
