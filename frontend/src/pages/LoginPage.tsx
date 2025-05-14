@@ -38,15 +38,12 @@ const LoginPage = () => {
   }
 
   async function handleGoogleResponse(response: unknown) {
-    const users = await getUsers();
-
     const jwt = (response as { credential: string }).credential;
     setJwt(jwt);
     setIsAuthenticated(true);
-    setJwt(jwt);
-    setIsAuthenticated(true);
     const payload = JSON.parse(atob(jwt.split(".")[1]));
-
+    
+    const users = await getUsers();
     const userExists = users.some((user: User) => user.email === payload.email);
 
     if (!userExists) {
@@ -59,12 +56,14 @@ const LoginPage = () => {
           payload.email,
         );
         updateCurrentUser(currentUser);
+        navigate("/home");
       } catch (error) {
         console.error("Failed to create user:", error);
       }
+    } else {
+      navigate("/home");
     }
 
-    navigate("/home");
   }
 
   return (
