@@ -9,19 +9,6 @@ import Phrase from "./phrase-schema.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const users = [
-  {
-    username: "testuser1",
-    email: "testuser1@gmail.com",
-    profilePicture: "src/assets/images/logo.svg"
-  },
-  {
-    username: "testuser2",
-    email: "testuser2@gmail.com",
-    profilePicture: "src/assets/images/paintbrush.svg"
-  }
-];
-
 async function loadPhrasesFromFile(filePath: string): Promise<{ phrase: string }[]> {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const lines = fileContent
@@ -52,7 +39,6 @@ async function run() {
   await User.deleteMany({});
   await Phrase.deleteMany({});
 
-  await User.insertMany(users);
   await insertPhrases();
 
   await mongoose.disconnect();

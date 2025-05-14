@@ -10,7 +10,6 @@ export default function GameToolBar() {
   const { clearCanvas } = useContext(GameStateContext)!;
   const colours: string[] = [
     "black",
-    "white",
     "#FF8686",
     "#ff9e64",
     "#FFD65B",
