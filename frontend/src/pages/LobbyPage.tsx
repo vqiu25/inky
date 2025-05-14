@@ -21,7 +21,7 @@ export default function LobbyPage() {
     useContext(GameStateContext)!;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { setProgress } = useContext(AuthContext)!;
-  const canStart = lobbyPlayers.length >= 2;
+  const canStart = lobbyPlayers.length >= 3;
   const tooltipId = "enter-game-tip";
 
   useEffect(() => {
