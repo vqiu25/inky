@@ -5,13 +5,14 @@ import styles from "../../assets/css-modules/GameStatusBar.module.css";
 import homeIcon from "../../assets/images/home.svg";
 import clockIcon from "../../assets/images/clock.svg";
 import Timer from "./Timer";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import WordReveal from "./WordReveal";
 import { UsersContext } from "../../context/UsersContext";
 import { User } from "../../types/types";
 
 export default function GameStatusBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { round, setRound } = useContext(GameStateContext)!;
   const [isDrawer, setIsDrawer] = useState(false);
   const { currentDrawer } = useContext(GameStateContext)!;
@@ -45,6 +46,12 @@ export default function GameStatusBar() {
     socket.emit("player-leave", currentUser);
     navigate("/home");
   }
+
+  useEffect(() => {
+    if (location.pathname !== "/play") {
+      handleLeaveGame();
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     window.addEventListener("popstate", handleLeaveGame);
