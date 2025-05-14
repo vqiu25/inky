@@ -27,6 +27,7 @@ button:hover {
 button {
   font-size: 20px;
   font-weight: 600;
+  font-family: "Inter", sans-serif;
   border-radius: 30px;
   height: 45px;
   border: 1px solid;
