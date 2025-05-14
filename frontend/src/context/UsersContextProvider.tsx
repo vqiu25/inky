@@ -22,6 +22,7 @@ export interface UsersContextType {
   usersList: User[];
   setUsersList: React.Dispatch<React.SetStateAction<User[]>>;
   getCurrentUser: () => Promise<User | null>;
+  clearCurrentUser: () => void;
   updateCurrentUser: (user: User) => void;
   getUsers: () => Promise<User[]>;
 }
@@ -148,6 +149,10 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     return null;
   }
 
+  function clearCurrentUser() {
+    setUser(null);
+  }
+
   function updateCurrentUser(user: User) {
     setUser(user);
   }
@@ -162,6 +167,7 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         usersList,
         setUsersList,
         getCurrentUser,
+        clearCurrentUser,
         updateCurrentUser,
         usersLoading,
         getUsers,

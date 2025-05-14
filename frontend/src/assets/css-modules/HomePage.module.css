@@ -47,7 +47,6 @@
 }
 
 .infoButton {
-  position: absolute;
   top: 8rem;
   right: 10rem;
   width: 50px;
@@ -55,6 +54,16 @@
   cursor: pointer;
   z-index: 10;
   transition: transform 0.2s ease-in-out;
+  margin-left: 10px;
+}
+
+.buttonContainer {
+  position: absolute;
+  top: 8rem;
+  right: 10rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .infoButton:hover {

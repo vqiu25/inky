@@ -1,5 +1,6 @@
 import "../App.css";
 import infoIcon from "../assets/images/info.svg";
+import logoutIcon from "../assets/images/signout.svg";
 import InfoPopup from "../components/homeComponents/InfoPopup";
 import styles from "../assets/css-modules/HomePage.module.css";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +11,11 @@ import { Progress, User } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
 import useCurrentUser from "../hooks/useCurrentUser";
 import AnimatedLogo from "../components/homeComponents/AnimatedLogo";
+import { UsersContext } from "../context/UsersContext";
 
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
+  const { clearCurrentUser } = useContext(UsersContext)!;
   const navigate = useNavigate();
   const { setProgress } = useContext(AuthContext)!;
   const [showInfo, setShowInfo] = useState(false);
@@ -60,6 +63,12 @@ function HomePage() {
     }
   }
 
+  function onClickLogout() {
+    localStorage.removeItem("jwt");
+    clearCurrentUser();
+    navigate("/login");
+  }
+
   return (
     <div className={styles.container}>
       <AnimatedLogo size={120} hoverThreshold={150} />
@@ -76,12 +85,20 @@ function HomePage() {
       >
         Leaderboard
       </button>
-      <img
-        src={infoIcon}
-        alt="Info"
-        className={styles.infoButton}
-        onClick={() => setShowInfo(true)}
-      />
+      <div className={styles.buttonContainer}>
+        <img
+          src={infoIcon}
+          alt="Info"
+          className={styles.infoButton}
+          onClick={() => setShowInfo(true)}
+        />
+        <img
+          src={logoutIcon}
+          alt="Logout"
+          className={styles.infoButton}
+          onClick={onClickLogout}
+        />
+      </div>
       {showInfo && <InfoPopup onClose={() => setShowInfo(false)} />}
     </div>
   );
