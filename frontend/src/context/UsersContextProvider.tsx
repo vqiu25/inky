@@ -18,11 +18,11 @@ export interface UsersContextType {
   ) => Promise<User>;
   refreshUsers: () => Promise<void>;
   getUserById: (id: string) => Promise<User>;
-  updateGamePlayers: (users: User[]) => Promise<User[]>;
+  updateGamePlayer: (users: User) => Promise<User>;
   usersList: User[];
   setUsersList: React.Dispatch<React.SetStateAction<User[]>>;
-  currentUser: User | null;
-  setCurrentUserFromLocalStorage: () => Promise<void>;
+  getCurrentUser: () => Promise<User | null>;
+  updateCurrentUser: (user: User) => void;
   getUsers: () => Promise<User[]>;
 }
 
@@ -35,9 +35,9 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [usersList, setUsersList] = useState<User[]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [usersLoading, setUsersLoading] = useState<boolean>(false);
-  const { getUserByEmail } = useContext(AuthContext)!;
+  const { getJwtEmail } = useContext(AuthContext)!;
 
   async function refreshUsers() {
     await getUsers();
@@ -101,35 +101,55 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
-  async function updateGamePlayers(users: User[]): Promise<User[]> {
-    const responseData = [];
+  async function updateGamePlayer(user: User): Promise<User> {
+    const currentUser = await getCurrentUser();
+    // Update the context
+    if (currentUser && currentUser._id === user._id) {
+      console.log(`Updating ${user.username} in context`);
+      setUser(user);
+    }
     try {
-      for (const user of users) {
-        const response = await axios.patch<User>(
-          `${API_BASE_URL}/api/users/${user._id}`,
-          user,
-        );
-        if (response.status !== 200) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        responseData.push(response.data);
+      // Update the database
+      const response = await axios.patch<User>(
+        `${API_BASE_URL}/api/users/${user._id}`,
+        user,
+      );
+      if (response.status !== 200) {
+        throw new Error(`Error: ${response.status}`);
       }
+      return response.data;
     } catch (error) {
       console.error("Error updating game players:", error);
       throw error;
     }
-    return responseData;
   }
 
-  async function setCurrentUserFromLocalStorage(): Promise<void> {
-    const storedUser = localStorage.getItem("currentUser");
-    if (storedUser) {
-      const email = JSON.parse(storedUser).email;
-      const updatedUser = await getUserByEmail(email);
-      console.log("Updated user from local storage:", updatedUser);
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-      setCurrentUser(updatedUser);
+  async function getCurrentUser(): Promise<User | null> {
+    if (user) return user;
+
+    const email = getJwtEmail();
+    if (!email) throw new Error("No email found in JWT, are you logged in?");
+
+    try {
+      const { data: user } = await axios.get<User>(
+        `${API_BASE_URL}/api/users`,
+        {
+          params: { email },
+        },
+      );
+      if (user) {
+        setUser(user);
+        return user;
+      }
+    } catch (error) {
+      console.error("Failed to fetch current user:", error);
     }
+
+    return null;
+  }
+
+  function updateCurrentUser(user: User) {
+    setUser(user);
   }
 
   return (
@@ -138,11 +158,11 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({
         addUser,
         refreshUsers,
         getUserById,
-        updateGamePlayers,
+        updateGamePlayer,
         usersList,
         setUsersList,
-        currentUser,
-        setCurrentUserFromLocalStorage,
+        getCurrentUser,
+        updateCurrentUser,
         usersLoading,
         getUsers,
       }}

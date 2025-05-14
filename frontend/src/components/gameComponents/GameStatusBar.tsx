@@ -7,7 +7,7 @@ import clockIcon from "../../assets/images/clock.svg";
 import Timer from "./Timer";
 import { useLocation, useNavigate } from "react-router-dom";
 import WordReveal from "./WordReveal";
-import { UsersContext } from "../../context/UsersContext";
+import useCurrentUser from "../../hooks/useCurrentUser";
 import { User } from "../../types/types";
 
 export default function GameStatusBar() {
@@ -16,7 +16,7 @@ export default function GameStatusBar() {
   const { round, setRound } = useContext(GameStateContext)!;
   const [isDrawer, setIsDrawer] = useState(false);
   const { currentDrawer } = useContext(GameStateContext)!;
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const [revealWord, setRevealWord] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function GameStatusBar() {
     return () => {
       socket.off("new-turn", handleNewTurn);
     };
-  }, [currentDrawer?._id, currentUser?._id, setRound]);
+  }, [currentDrawer, currentUser, setRound]);
 
   useEffect(() => {
     socket.on("word-guessed", (player: User) => {

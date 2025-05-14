@@ -2,12 +2,12 @@ import { useContext } from "react";
 import styles from "../../assets/css-modules/GamePlayerList.module.css";
 import { GameStateContext } from "../../context/GameStateContext";
 import PlayerInfo from "./PlayerInfo";
-import { UsersContext } from "../../context/UsersContext";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 export default function GamePlayerList() {
   const { lobbyPlayers } = useContext(GameStateContext)!;
   const { playerPoints } = useContext(GameStateContext)!;
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
 
   // Sort players by points
   const sortedPlayers = [...lobbyPlayers].sort((a, b) => {

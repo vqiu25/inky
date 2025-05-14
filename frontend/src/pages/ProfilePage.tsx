@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../assets/css-modules/ProfilePage.module.css";
 import PageHeader from "../components/layoutComponents/PageHeader";
 import ProfilePicture from "../components/profileComponents/ProfilePicture";
 import ProfileInfoContainer from "../components/profileComponents/ProfileInfoContainer";
 import { PowerupNames } from "../types/types";
-import { UsersContext } from "../context/UsersContext";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 import squid from "../assets/images/squid.svg";
@@ -20,18 +19,15 @@ import podium from "../assets/images/podium.svg";
 import trophy from "../assets/images/trophy.svg";
 import award from "../assets/images/award.svg";
 import militaryTech from "../assets/images/military-tech.svg";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 export default function ProfilePage() {
-  const { setCurrentUserFromLocalStorage, currentUser } =
-    useContext(UsersContext)!;
   const [loading, setLoading] = useState<boolean>(true);
+  const currentUser = useCurrentUser();
 
   useEffect(() => {
-    console.log("Loading profile page");
-    setLoading(true);
-    setCurrentUserFromLocalStorage();
-    setLoading(false);
-  }, []);
+    setLoading(currentUser === null);
+  }, [currentUser]);
 
   const commonStyle = {
     justifyContent: "center",

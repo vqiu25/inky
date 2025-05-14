@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { socket } from "../../services/socket";
 import { GameStateContext } from "../../context/GameStateContext";
-import { UsersContext } from "../../context/UsersContext";
 import styles from "../../assets/css-modules/WordReveal.module.css";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 type WordRevealProps = {
   isDrawer: boolean;
@@ -11,13 +11,14 @@ type WordRevealProps = {
 
 export default function WordReveal({ isDrawer, revealWord }: WordRevealProps) {
   const { wordToGuess } = useContext(GameStateContext)!;
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const letters = wordToGuess.split("");
 
   // track which positions have been revealed
   const [revealedIndices, setRevealedIndices] = useState<number[]>([]);
 
   useEffect(() => {
+    if (!currentUser) return;
     // reveal all letters if the drawer
     setRevealedIndices(
       isDrawer || revealWord ? letters.map((_, idx) => idx) : [],
@@ -43,7 +44,7 @@ export default function WordReveal({ isDrawer, revealWord }: WordRevealProps) {
     return () => {
       socket.off("reveal-letter", handleReveal);
     };
-  }, [wordToGuess, revealWord, isDrawer]);
+  }, [wordToGuess, revealWord, isDrawer, currentUser]);
 
   return (
     <div className={styles.wordReveal}>

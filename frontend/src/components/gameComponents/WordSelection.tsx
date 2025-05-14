@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import styles from "../../assets/css-modules/WordSelection.module.css";
 import { GameStateContext } from "../../context/GameStateContext";
-import { UsersContext } from "../../context/UsersContext";
 import { socket } from "../../services/socket";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 export default function WordSelection() {
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const { currentDrawer, isSelectingWord, phrases } =
     useContext(GameStateContext)!;
 
@@ -14,6 +14,7 @@ export default function WordSelection() {
   const [timeRemaining, setTimeRemaining] = useState<number>(5);
 
   useEffect(() => {
+    if (!currentUser) return;
     let timeout: NodeJS.Timeout | null = null;
     let interval: NodeJS.Timeout | null = null;
 

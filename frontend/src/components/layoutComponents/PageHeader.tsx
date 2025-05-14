@@ -1,9 +1,9 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../assets/css-modules/PageHeader.module.css";
 import { socket } from "../../services/socket";
-import { UsersContext } from "../../context/UsersContext";
 import backArrow from "../../assets/images/back-arrow.svg";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 interface PageHeaderProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ export default function PageHeader({
   marginTop = "",
 }: PageHeaderProps) {
   const navigate = useNavigate();
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
 
   const handleBackButtonClick = async () => {
     navigate(backTo);

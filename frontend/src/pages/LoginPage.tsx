@@ -9,9 +9,7 @@ import { User } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
-  const { addUser, getUsers, setCurrentUserFromLocalStorage } =
-    useContext(UsersContext)!;
-  const { getUserByEmail } = useContext(AuthContext)!;
+  const { addUser, getUsers, updateCurrentUser } = useContext(UsersContext)!;
   const { setJwt, setIsAuthenticated } = useContext(AuthContext)!;
   const navigate = useNavigate();
 
@@ -60,20 +58,18 @@ const LoginPage = () => {
       try {
         // Save user in DB
         const profilePicture = getRandomProfilePicture();
-        await addUser(payload.name, profilePicture, payload.email);
+        const currentUser = await addUser(
+          payload.name,
+          profilePicture,
+          payload.email,
+        );
+        updateCurrentUser(currentUser);
       } catch (error) {
         console.error("Failed to create user:", error);
       }
     }
 
     navigate("/home");
-
-    const currentUser = await getUserByEmail(payload.email);
-
-    if (currentUser) {
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-      setCurrentUserFromLocalStorage();
-    }
   }
 
   return (

@@ -8,10 +8,10 @@ import rocketIcon from "../../assets/images/rocket.svg";
 import crossIcon from "../../assets/images/cross.svg";
 import greenHourGlassIcon from "../../assets/images/green-hourglass.svg";
 import redHourGlassIcon from "../../assets/images/red-hourglass.svg";
-import { UsersContext } from "../../context/UsersContext";
 import { GameStateContext } from "../../context/GameStateContext";
 import { socket } from "../../services/socket";
 import InkSplatterOverlay from "./InkSplatterOverlay";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 interface PowerupConfig {
   imageSrc: string;
@@ -27,7 +27,7 @@ interface OverlayProps {
 }
 
 export default function GamePowerups(): JSX.Element {
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const { currentDrawer, clearCanvas } = useContext(GameStateContext)!;
 
   // State for ink splash overlay

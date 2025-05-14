@@ -2,11 +2,10 @@ import LeaderboardUser from "./LeaderboardUser";
 import UserInfo from "../userInfoComponents/UserInfo";
 import { User } from "../../types/types";
 import InfoPill from "../userInfoComponents/InfoPill";
-import { useContext } from "react";
-import { UsersContext } from "../../context/UsersContext";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 export default function LeaderboardUserRow({ user }: { user: User }) {
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const isCurrentUser = user._id === currentUser?._id;
 
   return (

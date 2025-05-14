@@ -8,6 +8,7 @@ import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
 import { Progress, User } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
+import useCurrentUser from "../hooks/useCurrentUser";
 import AnimatedLogo from "../components/homeComponents/AnimatedLogo";
 
 function HomePage() {
@@ -15,6 +16,7 @@ function HomePage() {
   const navigate = useNavigate();
   const { setProgress } = useContext(AuthContext)!;
   const [showInfo, setShowInfo] = useState(false);
+  const currentUser = useCurrentUser();
 
   useEffect(() => {
     setProgress(Progress.HOME);
@@ -51,9 +53,7 @@ function HomePage() {
   function onClickPlay() {
     navigate("/lobby");
 
-    const storedUser = localStorage.getItem("currentUser");
-    if (storedUser) {
-      const currentUser: User = JSON.parse(storedUser);
+    if (currentUser) {
       console.log("I'm joining a lobby now. I am", currentUser.username);
 
       socket.emit("player-join", currentUser);

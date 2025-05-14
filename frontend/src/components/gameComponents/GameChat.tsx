@@ -9,11 +9,11 @@ import { socket } from "../../services/socket";
 import { ChatMessage, GameState, User } from "../../types/types";
 import styles from "../../assets/css-modules/GameChat.module.css";
 import planeIcon from "../../assets/images/plane.svg";
-import { UsersContext } from "../../context/UsersContext";
 import { GameStateContext } from "../../context/GameStateContext";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 const Chat: React.FC = () => {
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const { wordToGuess, currentDrawer, timeRemaining } =
     useContext(GameStateContext)!;
   const [messages, setMessages] = useState<ChatMessage[]>([]);

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { UsersContext } from "../context/UsersContext";
 import { Progress, User } from "../types/types";
 import styles from "../assets/css-modules/LobbyPage.module.css";
 import PageHeader from "../components/layoutComponents/PageHeader";
@@ -11,13 +10,13 @@ import { GameStateContext } from "../context/GameStateContext";
 import LoadingSpinner from "../components/layoutComponents/LoadingSpinner";
 import spinnerStyles from "../assets/css-modules/LoadingSpinner.module.css";
 import { AuthContext } from "../context/AuthContext";
+import useCurrentUser from "../hooks/useCurrentUser";
 import { Tooltip } from "react-tooltip";
 
 export default function LobbyPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser, setCurrentUserFromLocalStorage } =
-    useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const { setNewPlayers, lobbyPlayers, setCurrentDrawer } =
     useContext(GameStateContext)!;
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -31,14 +30,8 @@ export default function LobbyPage() {
 
   // Get the current user
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      setIsLoading(true);
-      await setCurrentUserFromLocalStorage();
-      setIsLoading(false);
-    };
-
-    fetchCurrentUser();
-  }, []);
+    setIsLoading(currentUser === null);
+  }, [currentUser]);
 
   // Get the list of players in the lobby
   useEffect(() => {

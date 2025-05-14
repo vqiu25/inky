@@ -10,10 +10,11 @@ export interface AuthContextType {
   clearJwt: () => void;
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-  getUserByEmail: (email: string) => Promise<User>;
   isJwtValid: () => Promise<boolean>;
+  getJwtEmail: () => string | null;
   progress: Progress | null;
   setProgress: React.Dispatch<React.SetStateAction<Progress | null>>;
+  getUserByEmail: (email: string) => Promise<User>;
 }
 
 export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -25,6 +26,20 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const setJwt = (jwt: string) => {
     localStorage.setItem("jwt", jwt);
+  };
+
+  const getJwtPayload = () => {
+    const jwt = getJwt();
+    if (!jwt) {
+      return null;
+    }
+    try {
+      const payload = JSON.parse(atob(jwt.split(".")[1]));
+      return payload;
+    } catch (error) {
+      console.error("Failed to decode JWT:", error);
+      return null;
+    }
   };
 
   const clearJwt = () => {
@@ -54,11 +69,10 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
 
   async function isJwtValid(): Promise<boolean> {
     try {
-      const jwt = getJwt();
-      if (!jwt) {
+      const payload = getJwtPayload();
+      if (!payload) {
         return false;
       }
-      const payload = JSON.parse(atob(jwt.split(".")[1]));
       const currentTime = Math.floor(Date.now() / 1000);
       const timeCheck = payload.exp && currentTime < payload.exp;
       const userCheck = await getUserByEmail(payload.email);
@@ -69,6 +83,14 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  function getJwtEmail(): string | null {
+    const payload = getJwtPayload();
+    if (!payload) {
+      return null;
+    }
+    return payload.email;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -77,10 +99,11 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
         clearJwt,
         isAuthenticated,
         setIsAuthenticated,
-        getUserByEmail,
         isJwtValid,
+        getJwtEmail,
         progress,
         setProgress,
+        getUserByEmail,
       }}
     >
       {children}

@@ -11,9 +11,9 @@ import TurnEnd from "../components/gameComponents/TurnEnd";
 import { GameStateContext } from "../context/GameStateContext";
 import { socket } from "../services/socket";
 import { GameState, Progress, User } from "../types/types";
-import { UsersContext } from "../context/UsersContext";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 export default function GamePage() {
   const navigate = useNavigate();
@@ -31,10 +31,10 @@ export default function GamePage() {
     setIsTurnFinished,
     setNewPlayers,
   } = useContext(GameStateContext)!;
-  const { currentUser } = useContext(UsersContext)!;
   const [timedOut, setTimedOut] = useState(false);
   const [isCurrentUserDrawer, setIsCurrentUserDrawer] = useState(false);
   const { setProgress } = useContext(AuthContext)!;
+  const currentUser = useCurrentUser();
   const [drawerLeft, setDrawerLeft] = useState(false);
 
   useEffect(() => {
@@ -42,6 +42,7 @@ export default function GamePage() {
   }, [setProgress]);
 
   useEffect(() => {
+    if (!currentUser) return;
     const el = wrapperRef.current;
     if (el) {
       const width = window.innerWidth * 0.95;
@@ -70,7 +71,7 @@ export default function GamePage() {
     setIsSelectingWord(true);
     setIsTurnFinished(false);
     setIsCurrentUserDrawer(currentUser?._id === currentDrawer?._id);
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     socket.on("new-scores", (playersPoints) => {
@@ -108,15 +109,18 @@ export default function GamePage() {
   }, [setNewPlayers]);
 
   useEffect(() => {
+    if (!currentUser) return;
     console.log("Registering game-finished listener");
     socket.on("game-finished", (gameState: GameState) => {
       setPlayerPoints(gameState.playerPoints);
+      console.log(`Is player null at GamePage? ${currentUser === null}`);
       socket.emit("player-leave", currentUser);
       navigate("/podium");
     });
-  }, [navigate, setPlayerPoints]);
+  }, [navigate, setPlayerPoints, currentUser]);
 
   useEffect(() => {
+    if (!currentUser) return;
     const handleDrawerSelect = (drawer: User) => {
       setWordToGuess("");
       console.log("Drawer selected:", drawer.username);
@@ -131,7 +135,7 @@ export default function GamePage() {
     return () => {
       socket.off("drawer-select", handleDrawerSelect);
     };
-  }, [setCurrentDrawer]);
+  }, [setCurrentDrawer, currentUser]);
 
   return (
     <>

@@ -4,21 +4,24 @@ import React, {
   createRef,
   useContext,
   useRef,
+  useState,
 } from "react";
 import { fabric } from "fabric";
 import { socket } from "../../services/socket";
 import styles from "../../assets/css-modules/Canvas.module.css";
 import { GameStateContext } from "../../context/GameStateContext";
-import { UsersContext } from "../../context/UsersContext";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 export const canvasRef: RefObject<fabric.Canvas | null> = createRef();
 
 const Canvas: React.FC = () => {
   const { currentDrawer } = useContext(GameStateContext)!;
-  const { currentUser } = useContext(UsersContext)!;
+  const currentUser = useCurrentUser();
   const parentRef = useRef<HTMLDivElement>(null);
+  const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
 
   useEffect(() => {
+    console.log("Initializing canvas...");
     if (!parentRef.current) {
       console.error("Parent ref is null");
       return;
@@ -28,47 +31,83 @@ const Canvas: React.FC = () => {
     const { width: parentWidth, height: parentHeight } =
       parent.getBoundingClientRect();
 
-    const canvas = new fabric.Canvas("canv", {
-      height: parentHeight, // Set initial height based on parent
-      width: parentWidth, // Set initial width based on parent
+    console.log("Initial parent dimensions:", parentWidth, parentHeight);
+
+    const newCanvas = new fabric.Canvas("canv", {
+      height: parentHeight,
+      width: parentWidth,
       backgroundColor: "white",
       selection: false,
     });
+    newCanvas.freeDrawingCursor = "url('/cursors/brush.svg') 0 32, auto";
 
-    canvas.freeDrawingCursor = "url('/cursors/brush.svg') 0 32, auto";
+    canvasRef.current = newCanvas;
+    setCanvas(newCanvas);
 
+    const resizeCanvas = () => {
+      if (!parent) return;
+
+      const { width: newWidth, height: newHeight } =
+        parent.getBoundingClientRect();
+
+      console.log("Resizing canvas to:", newWidth, newHeight);
+
+      if (newWidth > 0 && newHeight > 0) {
+        const oldWidth = newCanvas.getWidth
+          ? newCanvas.getWidth()
+          : newCanvas.width;
+        const oldHeight = newCanvas.getHeight
+          ? newCanvas.getHeight()
+          : newCanvas.height;
+
+        newCanvas.setDimensions(
+          { width: newWidth, height: newHeight },
+          { cssOnly: false },
+        );
+
+        if (oldWidth && oldHeight && newCanvas.getObjects().length > 0) {
+          newCanvas.getObjects().forEach((obj) => {
+            obj.scaleX = (obj.scaleX || 1) * (newWidth / oldWidth);
+            obj.scaleY = (obj.scaleY || 1) * (newHeight / oldHeight);
+            obj.left = (obj.left || 0) * (newWidth / oldWidth);
+            obj.top = (obj.top || 0) * (newHeight / oldHeight);
+            obj.setCoords();
+          });
+        }
+
+        newCanvas.renderAll();
+      }
+    };
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas();
+    });
+    resizeObserver.observe(parent);
+
+    window.addEventListener("resize", resizeCanvas);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", resizeCanvas);
+      newCanvas.dispose();
+      canvasRef.current = null;
+    };
+  }, [parentRef, currentDrawer]);
+
+  // Second useEffect to handle drawing permissions and socket events
+  useEffect(() => {
+    if (!canvas || !currentUser) return;
+
+    let suppressEmit = false;
     const isDrawer = currentDrawer?._id === currentUser?._id;
-    let suppressEmit = false; // <--- Flag
 
     if (isDrawer) {
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.width = 5;
       canvas.freeDrawingBrush.color = "black";
+    } else {
+      canvas.isDrawingMode = false;
     }
-
-    canvasRef.current = canvas;
-
-    const resizeCanvas = () => {
-      const { width: newWidth, height: newHeight } =
-        parent.getBoundingClientRect();
-
-      canvas.setWidth(newWidth);
-      canvas.setHeight(newHeight);
-
-      // Optionally scale content proportionally
-      canvas.getObjects().forEach((obj) => {
-        obj.scaleX = (obj.scaleX || 1) * (newWidth / canvas.width!);
-        obj.scaleY = (obj.scaleY || 1) * (newHeight / canvas.height!);
-        obj.left = (obj.left || 0) * (newWidth / canvas.width!);
-        obj.top = (obj.top || 0) * (newHeight / canvas.height!);
-        obj.setCoords();
-      });
-
-      canvas.renderAll();
-    };
-
-    window.addEventListener("resize", resizeCanvas);
 
     canvas.on("path:created", () => {
       if (!suppressEmit) {
@@ -102,11 +141,11 @@ const Canvas: React.FC = () => {
     });
 
     return () => {
-      canvas.dispose(); // Cleanup
       socket.off("canvas-data");
-      window.removeEventListener("resize", resizeCanvas);
+      canvas.off("path:created");
+      canvas.off("canvas:cleared");
     };
-  }, [parentRef.current, currentDrawer]);
+  }, [canvas, currentUser, currentDrawer]);
 
   const emitCanvasData = (canvas: fabric.Canvas) => {
     const data = canvas.toJSON();
