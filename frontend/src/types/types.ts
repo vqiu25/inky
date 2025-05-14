@@ -31,6 +31,14 @@ export interface User {
 export interface ChatMessage {
   username: string;
   text: string;
+  type?: "normal" | "system" | "powerup";
+  powerup?:
+    | "erase"
+    | "ink"
+    | "multiplier"
+    | "reveal"
+    | "increaseTime"
+    | "decreaseTime";
 }
 
 export enum PowerupNames {

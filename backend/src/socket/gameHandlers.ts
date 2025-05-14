@@ -248,10 +248,20 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     socket.to("game-room").emit("chat-data", data);
   });
 
-  const emitPowerupMessage = (powerup: string, username: string) => {
+  type PowerupKey =
+    | "eraseDrawing"
+    | "inkSplatter"
+    | "scoreMultiplier"
+    | "revealLetter"
+    | "timeIncrease"
+    | "timeDecrease";
+
+  const emitPowerupMessage = (powerupLabel: string, username: string, powerup: PowerupKey) => {
     const message = {
       username: "System",
-      text: `${username} used ${powerup}!`
+      text: `${username} used ${powerupLabel}!`,
+      type: "powerup",
+      powerup
     };
 
     io.to("game-room").emit("chat-data", message);
@@ -267,7 +277,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       startTimer((currentTimerDuration += 30));
     }
     incrementPowerupCountInGameState(currentGameState, userId, "timeIncrease");
-    emitPowerupMessage("Increase Time", getUserById(userId)?.username || "Unknown");
+    emitPowerupMessage("Increase Time", getUserById(userId)?.username || "Unknown", "timeIncrease");
   });
 
   /* Decrease Time Powerup Listener */
@@ -276,7 +286,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       startTimer((currentTimerDuration -= 30));
     }
     incrementPowerupCountInGameState(currentGameState, userId, "timeDecrease");
-    emitPowerupMessage("Decrease Time", getUserById(userId)?.username || "Unknown");
+    emitPowerupMessage("Decrease Time", getUserById(userId)?.username || "Unknown", "timeDecrease");
   });
 
   /* Ink Splatter Powerup Listener  */
@@ -298,19 +308,19 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     }, durationMs);
 
     incrementPowerupCountInGameState(currentGameState, userId, "inkSplatter");
-    emitPowerupMessage("Ink Splash", getUserById(userId)?.username || "Unknown");
+    emitPowerupMessage("Ink Splash", getUserById(userId)?.username || "Unknown", "inkSplatter");
   });
 
   socket.on("clear-canvas-powerup", (userId: string) => {
     incrementPowerupCountInGameState(currentGameState, userId, "eraseDrawing");
-    emitPowerupMessage("Erase Canvas", getUserById(userId)?.username || "Unknown");
+    emitPowerupMessage("Erase Canvas", getUserById(userId)?.username || "Unknown", "eraseDrawing");
   });
 
   /* Reveal Letter Powerup Listener */
   socket.on("reveal-letter-powerup", (userId: string) => {
     io.to("game-room").emit("reveal-letter", { index: 0, userId });
     incrementPowerupCountInGameState(currentGameState, userId, "revealLetter");
-    emitPowerupMessage("Reveal Letter", getUserById(userId)?.username || "Unknown");
+    emitPowerupMessage("Reveal Letter", getUserById(userId)?.username || "Unknown", "revealLetter");
   });
 
   /* Multiplier Powerup Listener */
@@ -322,7 +332,11 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       }
     });
     incrementPowerupCountInGameState(currentGameState, userId, "scoreMultiplier");
-    emitPowerupMessage("Score Multiplier", getUserById(userId)?.username || "Unknown");
+    emitPowerupMessage(
+      "Score Multiplier",
+      getUserById(userId)?.username || "Unknown",
+      "scoreMultiplier"
+    );
   });
 
   /**

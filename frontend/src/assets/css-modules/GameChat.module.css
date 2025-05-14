@@ -34,7 +34,7 @@
   word-wrap: break-word;
 }
 
-.message:nth-child(even) {
+.message:nth-child(even):not(.powerupMessage) {
   background-color: #3d4053;
 }
 
@@ -73,4 +73,34 @@
   width: 20px;
   height: 20px;
   transform: rotate(-90deg);
+}
+
+.inkSplatter {
+  background-color: #d5edff;
+  color: #66a6d7;
+}
+
+.eraseDrawing {
+  background-color: #ffc4a6;
+  color: #d46b36;
+}
+
+.scoreMultiplier {
+  background-color: #ffefbf;
+  color: #eebe2e;
+}
+
+.revealLetter {
+  background-color: #e9d5ff;
+  color: #a46be2;
+}
+
+.timeIncrease {
+  background-color: #c9fbb9;
+  color: #5eb643;
+}
+
+.timeDecrease {
+  background-color: #fbb9b9;
+  color: #e25f5f;
 }

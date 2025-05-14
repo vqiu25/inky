@@ -107,11 +107,20 @@ const Chat: React.FC = () => {
   return (
     <div className={styles.chatContainer}>
       <div className={styles.messages}>
-        {messages.map((msg, idx) => (
-          <div key={idx} className={styles.message}>
-            <strong>{msg.username}:</strong> <span>{msg.text}</span>
-          </div>
-        ))}
+        {messages.map((msg, idx) => {
+          const isPowerup = msg.type === "powerup";
+          const powerupClass =
+            isPowerup && msg.powerup ? styles[msg.powerup] : "";
+
+          return (
+            <div
+              key={idx}
+              className={`${styles.message} ${isPowerup ? styles.powerupMessage : ""} ${powerupClass}`}
+            >
+              <strong>{msg.username}:</strong> <span>{msg.text}</span>
+            </div>
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
 
