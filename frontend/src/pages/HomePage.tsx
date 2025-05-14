@@ -34,7 +34,7 @@ function HomePage() {
       setNewPlayers(newPlayers);
     };
 
-    const handleLobbyFull = (msg: string) => {
+    const handleLobbyFull = () => {
       navigate("/home");
       alert("Lobby is full. Please try again later.");
     };

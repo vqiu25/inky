@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { socket } from "../../services/socket";
-import { ChatMessage, GameState, User } from "../../types/types";
+import { ChatMessage, User } from "../../types/types";
 import styles from "../../assets/css-modules/GameChat.module.css";
 import planeIcon from "../../assets/images/plane.svg";
 import { GameStateContext } from "../../context/GameStateContext";
@@ -38,7 +38,7 @@ const Chat: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("new-turn", (gameState: GameState) => {
+    socket.on("new-turn", () => {
       setMessages([]);
       setHaveGuessed(false);
     });
