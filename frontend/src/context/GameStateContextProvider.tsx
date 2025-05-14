@@ -1,8 +1,10 @@
-import React, { ReactNode, useState } from "react";
-import { User } from "../types/types";
+import React, { ReactNode, useEffect, useState } from "react";
+import { Phrase, User } from "../types/types";
 import { GameStateContext } from "./GameStateContext";
 import { canvasRef } from "../components/gameComponents/Canvas";
+import useGet from "../hooks/useGet";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 /**
  * Interface for the UsersContext values.
  */
@@ -24,6 +26,7 @@ export interface GameStateContextType {
   clearCanvas: () => void;
   isTurnFinished: boolean;
   setIsTurnFinished: (isTurnFinished: boolean) => void;
+  phrases: Phrase[];
 }
 
 /**
@@ -42,6 +45,7 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   const [playerPoints, setPlayerPoints] = useState<[User, number][]>([]);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [isTurnFinished, setIsTurnFinished] = useState(false);
+  const [phrases, setPhrases] = useState<Phrase[]>([]);
 
   function setNewPlayers(newPlayers: User[]) {
     setLobbyPlayers(newPlayers);
@@ -59,6 +63,15 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
       canvas.setBackgroundColor("white", () => canvas.renderAll());
     }
   };
+
+  const { data: allWords } = useGet<Phrase[]>(
+    `${API_BASE_URL}/api/phrases`,
+    [],
+  ) ?? { data: [] };
+
+  useEffect(() => {
+    setPhrases(allWords ?? []);
+  }, [allWords]);
 
   return (
     <GameStateContext.Provider
@@ -80,6 +93,7 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
         clearCanvas,
         isTurnFinished,
         setIsTurnFinished,
+        phrases,
       }}
     >
       {children}

@@ -2,20 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import styles from "../../assets/css-modules/WordSelection.module.css";
 import { GameStateContext } from "../../context/GameStateContext";
 import { UsersContext } from "../../context/UsersContext";
-import useGet from "../../hooks/useGet";
-import { Phrase } from "../../types/types";
 import { socket } from "../../services/socket";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 export default function WordSelection() {
   const { currentUser } = useContext(UsersContext)!;
-  const { currentDrawer, isSelectingWord } = useContext(GameStateContext)!;
+  const { currentDrawer, isSelectingWord, phrases } =
+    useContext(GameStateContext)!;
 
-  const { data: allWords } = useGet<Phrase[]>(
-    `${API_BASE_URL}/api/phrases`,
-    [],
-  ) ?? { data: [] };
   const [wordsToSelect, setWordsToSelect] = useState<string[]>([]);
   const [wordSelected, setWordSelected] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(5);
@@ -27,11 +20,10 @@ export default function WordSelection() {
     if (
       isSelectingWord &&
       currentUser?._id === currentDrawer?._id &&
-      allWords &&
-      allWords.length > 0
+      phrases?.length > 0
     ) {
-      console.log("allWords", allWords);
-      const wordsCopy = [...allWords];
+      console.log("allWords", phrases);
+      const wordsCopy = [...phrases];
       const selectedWords: string[] = [];
       for (let i = 0; i < 3; i++) {
         const randomIndex = Math.floor(Math.random() * wordsCopy.length);
@@ -62,7 +54,7 @@ export default function WordSelection() {
       if (timeout) clearTimeout(timeout);
       if (interval) clearInterval(interval);
     };
-  }, [currentUser, currentDrawer, allWords, isSelectingWord, wordSelected]);
+  }, [currentUser, currentDrawer, phrases, isSelectingWord, wordSelected]);
 
   function handleWordSelection(word: string) {
     setWordSelected(true);
