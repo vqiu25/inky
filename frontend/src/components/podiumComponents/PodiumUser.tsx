@@ -5,28 +5,27 @@ import useCurrentUser from "../../hooks/useCurrentUser";
 
 export default function PodiumUser({
   user,
-  points,
   isWinner = false,
 }: {
   user: User;
-  points: number;
   isWinner: boolean;
 }) {
   const currentUser = useCurrentUser();
   const isCurrentUser = user._id === currentUser?._id;
 
   return (
-    <div className={styles.podiumUser}>
-      {isWinner && (
-        <img src={CrownIcon} alt="Winner" className={styles.crown} />
-      )}
-      <div className={styles.points}>{points}</div>
-      <div className={styles.avatarContainer}>
-        <img
-          src={user.profilePicture}
-          alt="User Avatar"
-          className={styles.avatar}
-        />
+    <div className={styles.podiumUserWrapper}>
+      <div className={styles.podiumUser}>
+        {isWinner && (
+          <img src={CrownIcon} alt="Winner" className={styles.crown} />
+        )}
+        <div className={styles.avatarContainer}>
+          <img
+            src={user.profilePicture}
+            alt="User Avatar"
+            className={styles.avatar}
+          />
+        </div>
       </div>
       <div className={styles.username}>
         {user.username}

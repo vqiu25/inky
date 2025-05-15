@@ -42,7 +42,7 @@ const LoginPage = () => {
     setJwt(jwt);
     setIsAuthenticated(true);
     const payload = JSON.parse(atob(jwt.split(".")[1]));
-    
+
     const users = await getUsers();
     const userExists = users.some((user: User) => user.email === payload.email);
 
@@ -63,7 +63,6 @@ const LoginPage = () => {
     } else {
       navigate("/home");
     }
-
   }
 
   return (

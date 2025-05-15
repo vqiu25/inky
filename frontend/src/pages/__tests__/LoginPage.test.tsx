@@ -1,17 +1,17 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { BrowserRouter } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { BrowserRouter } from "react-router-dom";
 import LoginPage from "../LoginPage";
 import { UsersContext } from "../../context/UsersContext";
 import { AuthContext } from "../../context/AuthContext";
 
 // Mock the useNavigate hook
-vi.mock('react-router-dom', async () => {
-    const actual = await vi.importActual('react-router-dom');
-    return {
-        ...actual,
-        useNavigate: () => mockNavigate
-    };
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
 });
 
 // Create mocks
@@ -23,173 +23,183 @@ const mockSetJwt = vi.fn();
 const mockSetIsAuthenticated = vi.fn();
 
 // Mock Google Sign-In Button component to access its callback
-vi.mock('../../components/signInComponents/GoogleSignInButton', () => ({
-    default: ({ onSignInSuccess }: { onSignInSuccess: (response: { credential: string }) => void }) => {
-        // Store the callback for later use in tests
-        window.googleSignInCallback = onSignInSuccess;
-        return <div data-testid="google-signin-button">Google Sign In</div>;
-    }
+vi.mock("../../components/signInComponents/GoogleSignInButton", () => ({
+  default: ({
+    onSignInSuccess,
+  }: {
+    onSignInSuccess: (response: { credential: string }) => void;
+  }) => {
+    // Store the callback for later use in tests
+    window.googleSignInCallback = onSignInSuccess;
+    return <div data-testid="google-signin-button">Google Sign In</div>;
+  },
 }));
 
 describe("LoginPage", () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
+  beforeEach(() => {
+    vi.clearAllMocks();
 
-        // Setup user mock data
-        mockGetUsers.mockResolvedValue([
-            { email: "existing@example.com", name: "Existing User" }
-        ]);
+    // Setup user mock data
+    mockGetUsers.mockResolvedValue([
+      { email: "existing@example.com", name: "Existing User" },
+    ]);
 
-        mockAddUser.mockResolvedValue({
-            id: "new-user-id",
-            email: "new@example.com",
-            name: "New User",
-            profilePicture: "profile-pictures/some-picture.svg"
-        });
+    mockAddUser.mockResolvedValue({
+      id: "new-user-id",
+      email: "new@example.com",
+      name: "New User",
+      profilePicture: "profile-pictures/some-picture.svg",
+    });
+  });
+
+  function renderLoginPage() {
+    return render(
+      <BrowserRouter>
+        <AuthContext.Provider
+          value={{
+            getJwt: () => "mockJwt",
+            setJwt: mockSetJwt,
+            clearJwt: vi.fn(),
+            isAuthenticated: false,
+            setIsAuthenticated: mockSetIsAuthenticated,
+            isJwtValid: vi.fn(),
+            getJwtEmail: vi.fn(),
+            progress: null,
+            setProgress: vi.fn(),
+            getUserByEmail: vi.fn(),
+          }}
+        >
+          <UsersContext.Provider
+            value={{
+              usersLoading: false,
+              addUser: mockAddUser,
+              refreshUsers: mockGetUsers,
+              getUserById: vi.fn(),
+              updateGamePlayer: vi.fn(),
+              usersList: [],
+              setUsersList: vi.fn(),
+              getCurrentUser: vi.fn(),
+              clearCurrentUser: vi.fn(),
+              updateCurrentUser: mockUpdateCurrentUser,
+              getUsers: mockGetUsers,
+            }}
+          >
+            <LoginPage />
+          </UsersContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>,
+    );
+  }
+
+  it("renders correctly with logo and Google sign-in button", () => {
+    renderLoginPage();
+    expect(screen.getByText("Inky")).toBeInTheDocument();
+    expect(screen.getByTestId("google-signin-button")).toBeInTheDocument();
+  });
+
+  it("handles Google sign-in for an existing user", async () => {
+    renderLoginPage();
+
+    // Create a mock JWT with the necessary payload structure
+    const mockJwt = createMockJwt({
+      email: "existing@example.com",
+      name: "Existing User",
+      exp: Math.floor(Date.now() / 1000) + 3600, // Expiry in 1 hour
     });
 
-    function renderLoginPage() {
-        return render(
-            <BrowserRouter>
-                <AuthContext.Provider value={{
-                    getJwt: () => "mockJwt",
-                    setJwt: mockSetJwt,
-                    clearJwt: vi.fn(),
-                    isAuthenticated: false,
-                    setIsAuthenticated: mockSetIsAuthenticated,
-                    isJwtValid: vi.fn(),
-                    getJwtEmail: vi.fn(),
-                    progress: null,
-                    setProgress: vi.fn(),
-                    getUserByEmail: vi.fn()
-                }}>
-                    <UsersContext.Provider value={{
-                        usersLoading: false,
-                        addUser: mockAddUser,
-                        refreshUsers: mockGetUsers,
-                        getUserById: vi.fn(),
-                        updateGamePlayer: vi.fn(),
-                        usersList: [],
-                        setUsersList: vi.fn(),
-                        getCurrentUser: vi.fn(),
-                        clearCurrentUser: vi.fn(),
-                        updateCurrentUser: mockUpdateCurrentUser,
-                        getUsers: mockGetUsers
-                    }}>
-                        <LoginPage />
-                    </UsersContext.Provider>
-                </AuthContext.Provider>
-            </BrowserRouter>
-        );
-    }
+    // Trigger the Google sign-in callback with mock response
+    await window.googleSignInCallback({ credential: mockJwt });
 
-    it("renders correctly with logo and Google sign-in button", () => {
-        renderLoginPage();
-        expect(screen.getByText("Inky")).toBeInTheDocument();
-        expect(screen.getByTestId("google-signin-button")).toBeInTheDocument();
+    // Verify JWT is processed correctly
+    expect(mockSetJwt).toHaveBeenCalledWith(mockJwt);
+    expect(mockSetIsAuthenticated).toHaveBeenCalledWith(true);
+
+    // For existing users, we shouldn't call addUser
+    expect(mockAddUser).not.toHaveBeenCalled();
+
+    // Verify navigation
+    expect(mockNavigate).toHaveBeenCalledWith("/home");
+  });
+
+  it("handles Google sign-in for a new user", async () => {
+    renderLoginPage();
+
+    // Create a mock JWT for a new user
+    const mockJwt = createMockJwt({
+      email: "new@example.com",
+      name: "New User",
+      exp: Math.floor(Date.now() / 1000) + 3600,
     });
 
-    it("handles Google sign-in for an existing user", async () => {
-        renderLoginPage();
+    // Trigger the Google sign-in callback
+    await window.googleSignInCallback({ credential: mockJwt });
 
-        // Create a mock JWT with the necessary payload structure
-        const mockJwt = createMockJwt({
-            email: "existing@example.com",
-            name: "Existing User",
-            exp: Math.floor(Date.now() / 1000) + 3600 // Expiry in 1 hour
-        });
+    // Verify JWT handling
+    expect(mockSetJwt).toHaveBeenCalledWith(mockJwt);
+    expect(mockSetIsAuthenticated).toHaveBeenCalledWith(true);
 
-        // Trigger the Google sign-in callback with mock response
-        await window.googleSignInCallback({ credential: mockJwt });
-
-        // Verify JWT is processed correctly
-        expect(mockSetJwt).toHaveBeenCalledWith(mockJwt);
-        expect(mockSetIsAuthenticated).toHaveBeenCalledWith(true);
-
-        // For existing users, we shouldn't call addUser
-        expect(mockAddUser).not.toHaveBeenCalled();
-
-        // Verify navigation
-        expect(mockNavigate).toHaveBeenCalledWith("/home");
+    // For new users, we should call addUser with the right info
+    await waitFor(() => {
+      expect(mockAddUser).toHaveBeenCalledWith(
+        "New User",
+        expect.stringMatching(/^profile-pictures\/.+\.(png|svg)$/),
+        "new@example.com",
+      );
+      expect(mockUpdateCurrentUser).toHaveBeenCalled();
     });
 
-    it("handles Google sign-in for a new user", async () => {
-        renderLoginPage();
+    // Verify navigation
+    expect(mockNavigate).toHaveBeenCalledWith("/home");
+  });
 
-        // Create a mock JWT for a new user
-        const mockJwt = createMockJwt({
-            email: "new@example.com",
-            name: "New User",
-            exp: Math.floor(Date.now() / 1000) + 3600
-        });
+  it("handles error during user creation", async () => {
+    // Mock console.error to prevent test output clutter
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
-        // Trigger the Google sign-in callback
-        await window.googleSignInCallback({ credential: mockJwt });
+    // Make addUser throw an error
+    mockAddUser.mockRejectedValue(new Error("Database error"));
 
-        // Verify JWT handling
-        expect(mockSetJwt).toHaveBeenCalledWith(mockJwt);
-        expect(mockSetIsAuthenticated).toHaveBeenCalledWith(true);
+    renderLoginPage();
 
-        // For new users, we should call addUser with the right info
-        await waitFor(() => {
-            expect(mockAddUser).toHaveBeenCalledWith(
-                "New User",
-                expect.stringMatching(/^profile-pictures\/.+\.(png|svg)$/),
-                "new@example.com"
-            );
-            expect(mockUpdateCurrentUser).toHaveBeenCalled();
-        });
-
-        // Verify navigation
-        expect(mockNavigate).toHaveBeenCalledWith("/home");
+    const mockJwt = createMockJwt({
+      email: "new@example.com",
+      name: "New User",
+      exp: Math.floor(Date.now() / 1000) + 3600,
     });
 
-    it("handles error during user creation", async () => {
-        // Mock console.error to prevent test output clutter
-        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+    // Trigger the Google sign-in callback
+    await window.googleSignInCallback({ credential: mockJwt });
 
-        // Make addUser throw an error
-        mockAddUser.mockRejectedValue(new Error("Database error"));
+    await waitFor(() => {
+      // Verify error is logged
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Failed to create user:",
+        expect.any(Error),
+      );
 
-        renderLoginPage();
-
-        const mockJwt = createMockJwt({
-            email: "new@example.com",
-            name: "New User",
-            exp: Math.floor(Date.now() / 1000) + 3600
-        });
-
-        // Trigger the Google sign-in callback
-        await window.googleSignInCallback({ credential: mockJwt });
-
-        await waitFor(() => {
-            // Verify error is logged
-            expect(consoleErrorSpy).toHaveBeenCalledWith(
-                "Failed to create user:",
-                expect.any(Error)
-            );
-
-            // Should not navigate
-            expect(mockNavigate).not.toHaveBeenCalled();
-        });
-
-        consoleErrorSpy.mockRestore();
+      // Should not navigate
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
+
+    consoleErrorSpy.mockRestore();
+  });
 });
 
 // Helper function to create a mock JWT
 function createMockJwt(payload: object): string {
-    // Create a simple mock JWT with header, payload, and signature parts
-    const header = btoa(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-    const encodedPayload = btoa(JSON.stringify(payload));
-    const signature = "fake_signature";
+  // Create a simple mock JWT with header, payload, and signature parts
+  const header = btoa(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+  const encodedPayload = btoa(JSON.stringify(payload));
+  const signature = "fake_signature";
 
-    return `${header}.${encodedPayload}.${signature}`;
+  return `${header}.${encodedPayload}.${signature}`;
 }
 
 // Add the callback type to the global Window interface
 declare global {
-    interface Window {
-        googleSignInCallback: (response: { credential: string; }) => void;
-    }
+  interface Window {
+    googleSignInCallback: (response: { credential: string }) => void;
+  }
 }

@@ -1,37 +1,169 @@
-.podium {
+@keyframes riseUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.content {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 5rem;
+}
+
+.topThree {
+  display: flex;
+  align-items: flex-end;
   justify-content: center;
-  margin-top: -30px;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.card {
+  position: relative;
+  width: 120px;
+  padding-top: 60px;
+}
+
+.bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
+  background-color: #aab5ee;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 1.2rem;
+  padding-bottom: 1rem;
+  gap: 0.5rem;
 }
 
-.podiumIcon {
-  width: 50%;
-  height: 50%;
-  justify-content: center;
-  align-items: center;
+.place1 .bar {
+  height: 200px;
+}
+
+.place2 .bar {
+  height: 140px;
+}
+
+.place3 .bar {
+  height: 100px;
+}
+
+.userWrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.place1 .userWrapper {
+  top: -105px;
+}
+
+.place2 .userWrapper,
+.place3 .userWrapper {
+  top: -55px;
+}
+
+.placeLabel {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3f3f7f;
+}
+
+.pointsValue {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #3f3f7f;
+}
+
+.pointsText {
+  margin-top: -0.25rem;
+  font-size: 0.9rem;
+  color: #3f3f7f;
+}
+
+.place3 {
+  opacity: 0;
+  animation: riseUp 0.5s ease-out forwards;
+  animation-delay: 0s;
+}
+
+.place2 {
+  opacity: 0;
+  animation: riseUp 0.5s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+.place1 {
+  opacity: 0;
+  animation: riseUp 0.5s ease-out forwards;
+  animation-delay: 0.4s;
+}
+
+.bottomGroup {
   display: flex;
-  margin-bottom: 10px;
-}
-
-.podiumIcon img {
-  width: 300px;
-}
-
-.podiumPlayers {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  gap: 2rem;
   justify-content: center;
-  gap: 35px;
+  margin-top: 1rem;
+  margin-bottom: 6rem;
 }
 
-.second {
-  margin-bottom: -150px;
+.bottomUser {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: floatUp 0.5s ease-out forwards;
+  animation-delay: 0.6s;
 }
 
-.third {
-  margin-bottom: -200px;
+.bottomPill {
+  background-color: #aab5ee;
+  color: #3f3f7f;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  text-align: center;
+  display: inline-flex;
+  gap: 0.25rem;
+  font-weight: bold;
+}
+
+.pillNumber {
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+.pillText {
+  font-weight: normal;
+  font-size: 0.9rem;
 }
