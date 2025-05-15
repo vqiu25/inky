@@ -82,13 +82,16 @@ export const updatePlayerPoints = (
   player: User,
   timeRemaining: number
 ): [User, number, boolean, hasLeftGame: boolean][] => {
+  const scoreMultiplier = 1.5;
   const updatedPlayerPoints: [User, number, boolean, hasLeftGame: boolean][] =
     gameState.playerPoints;
   for (let i = 0; i < updatedPlayerPoints.length; i++) {
+    // Award points to the guesser
     if (updatedPlayerPoints[i][0]._id === player._id) {
       updatedPlayerPoints[i][1] += Math.round(
-        updatedPlayerPoints[i][2] ? timeRemaining * 2 : timeRemaining
+        updatedPlayerPoints[i][2] ? timeRemaining * scoreMultiplier : timeRemaining // Apply multiplier if score multiplier flag is true
       );
+      // Award points to the drawer
     } else if (updatedPlayerPoints[i][0]._id === gameState.drawer._id) {
       updatedPlayerPoints[i][1] += Math.round(timeRemaining / (gameState.playerPoints.length - 1));
     }

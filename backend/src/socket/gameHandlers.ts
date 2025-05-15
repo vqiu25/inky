@@ -29,10 +29,10 @@ let nextTurnCountdownDuration = 4;
 
 // Benchmark values for achievements
 const gamesForAchievement = 5;
-const pointsForAchievement = 1000;
-const powerupsForAchievement = 10;
+const pointsForAchievement = 10000;
+const powerupsForAchievement = 50;
 const winsForAchievement = 5;
-const highScoreForAchievement = 500;
+const highScoreForAchievement = 1000;
 
 export default function registerGameHandlers(io: Server, socket: Socket) {
   /**

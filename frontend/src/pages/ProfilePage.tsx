@@ -145,12 +145,12 @@ export default function ProfilePage() {
                 <div className={styles.achievementsContainer}>
                   <GameAchievement
                     src={medal}
-                    tooltipContent="Score 1000 Points"
+                    tooltipContent="Score 10000 Points"
                     achieved={currentUser.achievements.pointsAchievement}
                   />
                   <GameAchievement
                     src={award}
-                    tooltipContent="Use 10 Powerups"
+                    tooltipContent="Use 50 Powerups"
                     achieved={currentUser.achievements.powerupAchievement}
                   />
                   <GameAchievement
@@ -166,7 +166,7 @@ export default function ProfilePage() {
                   />
                   <GameAchievement
                     src={trophy}
-                    tooltipContent="High Score of 500+"
+                    tooltipContent="High Score of 1000+"
                     achieved={currentUser.achievements.highScoreAchievement}
                   />
                 </div>
