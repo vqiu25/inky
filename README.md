@@ -1,7 +1,7 @@
 # CS732 Project - Team Concerning Elegant Horses
 
 <p align="center">
-  <img width="200" alt="inky-logo" src="https://github.com/user-attachments/assets/401b9d4e-4baa-4f80-9960-a37b982257e5">
+  <img width="200" alt="inky-logo" src="https://github.com/user-attachments/assets/6e4e5653-e33d-4066-8db0-e83f0f2169a7">
 </p>
 
 <p align="center">
@@ -36,19 +36,19 @@ As a guesser, a series of powerups will be available to help you or hinder other
 ### 🖼️ Images
 
 <p align="center">
-  <img width="1000" alt="inky-photos" src="https://github.com/user-attachments/assets/fbc9569d-438d-4c3e-a5e1-7c391adc96bb">
+  <img width="1000" alt="inky-photos" src="https://github.com/user-attachments/assets/285ae5fe-5551-40be-a24d-07220e6fe37c">
 </p>
 
 ### 🎥 Video
 
-https://github.com/user-attachments/assets/039c40b2-26f4-46bd-a1f2-ef84b3b99400
+https://github.com/user-attachments/assets/a045a653-9381-4c06-8f06-436e6dc8b0bf
 
 ### 🏗️ Architecture
 
 Our project is built using the **MERN** stack with **TypeScript**. The system architecture is outlined below:
 
 <p align="center">
-  <img width="750" alt="architecture" src="https://github.com/user-attachments/assets/e87e04ac-2546-408d-956a-b9543a196273">
+  <img width="700" alt="architecture" src="https://github.com/user-attachments/assets/f51f6977-8ff5-4cb0-bd15-9fe2546c32a0">
 </p>
 
 ## 🚀 Getting Started
@@ -173,5 +173,5 @@ Our team members are:
 - Joshua Tan _(jtan678@aucklanduni.ac.nz)_
 
 <p align="center">
-  <img width="250" alt="footer" src="https://github.com/user-attachments/assets/7fc23946-19cd-43dc-a328-1570555f7563">
+  <img width="250" alt="footer" src="https://github.com/user-attachments/assets/d8ca1cab-0ec3-48c5-9d52-8161793b0857">
 </p>
