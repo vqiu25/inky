@@ -47,6 +47,7 @@ export const GameStateContextProvider: React.FC<{ children: ReactNode }> = ({
   const [isTurnFinished, setIsTurnFinished] = useState(false);
   const [phrases, setPhrases] = useState<Phrase[]>([]);
 
+  // Function to clear the canvas
   const clearCanvas = () => {
     const canvas = canvasReference.current;
     if (canvas) {
@@ -60,6 +61,7 @@ export const GameStateContextProvider: React.FC<{ children: ReactNode }> = ({
     [],
   ) ?? { data: [] };
 
+  // Fetch phrases from the server
   useEffect(() => {
     setPhrases(allWords ?? []);
   }, [allWords]);

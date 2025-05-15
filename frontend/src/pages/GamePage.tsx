@@ -74,6 +74,7 @@ export default function GamePage() {
   }, [currentUser]);
 
   useEffect(() => {
+    // Listen for when the scores are updated
     socket.on("new-scores", (playersPoints) => {
       setPlayerStates(playersPoints);
     });
@@ -83,6 +84,7 @@ export default function GamePage() {
   });
 
   useEffect(() => {
+    // Listen for when the turn ends
     socket.on("turn-end", (timeOut: boolean, drawerLeft: boolean) => {
       setIsTurnFinished(true);
       setTimedOut(timeOut);
@@ -100,6 +102,7 @@ export default function GamePage() {
       setLobbyPlayers(newPlayers);
     };
 
+    // Listen for when a player joins or leaves the lobby
     socket.on("lobby-change", handleLobbyPlayer);
 
     return () => {
@@ -107,6 +110,7 @@ export default function GamePage() {
     };
   }, [setLobbyPlayers]);
 
+  // useEffect for when a game finishes
   useEffect(() => {
     if (!currentUser) return;
     socket.on("game-finished", (gameState: GameState) => {
@@ -116,6 +120,7 @@ export default function GamePage() {
     });
   }, [navigate, setPlayerStates, currentUser]);
 
+  // useEffect for when the drawer selects a word
   useEffect(() => {
     if (!currentUser) return;
     const handleDrawerSelect = (drawer: User) => {

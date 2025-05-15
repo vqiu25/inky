@@ -43,6 +43,12 @@ export default function registerLobbyHandlers(io: Server, socket: Socket) {
     playerLeaveLobby(leavingPlayer);
   });
 
+  /**
+   * Function to handle a player leaving the lobby.
+   *
+   * @param leavingPlayer - the player leaving the lobby.
+   * @returns void
+   */
   const playerLeaveLobby = (leavingPlayer: User): void => {
     lobbyPlayers = lobbyPlayers.filter((player) => player._id !== leavingPlayer._id);
     socket.leave("game-room");

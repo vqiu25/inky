@@ -13,6 +13,7 @@ export default function TurnEnd({ timeOut, drawerLeft }: TurnEndProps) {
   const [timeRemaining, setTimeRemaining] = useState<number>(5);
 
   useEffect(() => {
+    // Listen for the timer till the next turn from the server
     socket.on("next-turn-timer", (duration: number) => {
       setTimeRemaining(duration);
     });

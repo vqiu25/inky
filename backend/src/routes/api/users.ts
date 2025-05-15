@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
+// Gets all users or a user by email
 router.get("/", async (req: Request, res: Response) => {
   const { email } = req.query;
   try {
@@ -28,6 +29,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+// Gets a user by ID
 router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -51,6 +53,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Adds a new user
 router.post("/", async (req: Request, res: Response) => {
   const { username, profilePicture, email } = req.body;
 
@@ -86,6 +89,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// Updates a user by ID
 router.patch("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -123,6 +127,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Deletes a user by ID
 router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 

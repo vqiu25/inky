@@ -29,6 +29,7 @@ const Chat: React.FC = () => {
   }, [messages]);
 
   useEffect(() => {
+    // Listen for chat messages from the server
     socket.on("chat-data", (message: ChatMessage) => {
       setMessages((prev) => [...prev, message]);
     });
@@ -38,6 +39,7 @@ const Chat: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Listen for when a new turn happens from the server
     socket.on("new-turn", () => {
       setMessages([]);
       setHaveGuessed(false);
@@ -48,6 +50,7 @@ const Chat: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Listen for when a word is guessed from the server
     socket.on("word-guessed", (player: User) => {
       const message = {
         username: "System",

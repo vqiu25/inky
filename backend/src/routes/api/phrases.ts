@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
+// Gets all phrases
 router.get("/", async (_req: Request, res: Response) => {
   try {
     const phrases = await Phrase.find();
@@ -15,6 +16,7 @@ router.get("/", async (_req: Request, res: Response) => {
   }
 });
 
+// Gets a phrase by ID
 router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -38,6 +40,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Adds a new phrase
 router.post("/", async (req: Request, res: Response) => {
   const { phrase } = req.body;
 
@@ -71,6 +74,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// Deletes a phrase by ID
 router.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 

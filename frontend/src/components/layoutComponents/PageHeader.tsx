@@ -21,6 +21,7 @@ export default function PageHeader({
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
 
+  // Function to handle back button click
   const handleBackButtonClick = async () => {
     navigate(backTo);
     if (exitLobby) {

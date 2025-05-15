@@ -20,11 +20,14 @@ export default function GameStatusBar() {
   const [revealWord, setRevealWord] = useState(false);
 
   useEffect(() => {
+    // Logic that happens when a new turn occurs
     const handleNewTurn = (state: { round: number }) => {
       setRound(state.round);
       setIsDrawer(currentUser?._id === currentDrawer?._id);
       setRevealWord(false);
     };
+
+    // Listen for new turn events from the server
     socket.on("new-turn", handleNewTurn);
     return () => {
       socket.off("new-turn", handleNewTurn);
@@ -32,6 +35,7 @@ export default function GameStatusBar() {
   }, [currentDrawer, currentUser, setRound]);
 
   useEffect(() => {
+    // Logic that happens when a player guesses the word
     socket.on("word-guessed", (player: User) => {
       if (player._id === currentUser?._id) {
         setRevealWord(true);
@@ -39,12 +43,14 @@ export default function GameStatusBar() {
     });
   });
 
+  // Logic that happens when a player leaves the game
   function handleLeaveGame() {
     socket.emit("leave-game", currentUser?._id);
     socket.emit("player-leave", currentUser);
     navigate("/home");
   }
 
+  // useEffect for when the player goes to another page
   useEffect(() => {
     if (location.pathname !== "/play") {
       handleLeaveGame();

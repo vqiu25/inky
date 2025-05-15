@@ -37,6 +37,12 @@ const LoginPage = () => {
     return `profile-pictures/${filenames[randomIndex]}`;
   }
 
+  /**
+   *
+   * Handles the Google Sign-In response.
+   * @param response The response from Google Sign-In
+   * @returns void
+   */
   async function handleGoogleResponse(response: unknown) {
     const jwt = (response as { credential: string }).credential;
     setJwt(jwt);

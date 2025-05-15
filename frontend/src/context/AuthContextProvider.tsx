@@ -28,6 +28,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
     localStorage.setItem("jwt", jwt);
   };
 
+  // Function to decode JWT and extract payload
   const getJwtPayload = () => {
     const jwt = getJwt();
     if (!jwt) {
@@ -67,6 +68,11 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  /**
+   * Checks if the JWT is valid.
+   *
+   * @returns True if the JWT is valid, false otherwise.
+   */
   async function isJwtValid(): Promise<boolean> {
     try {
       const payload = getJwtPayload();
@@ -83,6 +89,11 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  /**
+   * Retrieves the email from the JWT payload.
+   *
+   * @returns The email address from the JWT payload, or null if not found.
+   */
   function getJwtEmail(): string | null {
     const payload = getJwtPayload();
     if (!payload) {

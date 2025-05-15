@@ -102,6 +102,12 @@ export const UsersContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  /**
+   * Updates a game player and refreshes the users list.
+   *
+   * @param user - The user to update.
+   * @returns The updated user.
+   */
   async function updateGamePlayer(user: User): Promise<User> {
     const currentUser = await getCurrentUser();
     // Update the context
@@ -124,6 +130,11 @@ export const UsersContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }
 
+  /**
+   * Fetches the current user using the JWT email.
+   *
+   * @returns The current user or null if not found.
+   */
   async function getCurrentUser(): Promise<User | null> {
     if (user) return user;
 

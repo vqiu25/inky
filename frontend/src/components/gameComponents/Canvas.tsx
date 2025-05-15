@@ -13,6 +13,9 @@ const Canvas: React.FC = () => {
   const parentRef = useRef<HTMLDivElement>(null);
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
 
+  // First useEffect to initialize the canvas
+  // and set up the resize observer
+  // and drawing permissions
   useEffect(() => {
     if (!parentRef.current) {
       console.error("Parent ref is null");
@@ -34,6 +37,7 @@ const Canvas: React.FC = () => {
     canvasRef.current = newCanvas;
     setCanvas(newCanvas);
 
+    // Resize the canvas when the parent element is resized
     const resizeCanvas = () => {
       if (!parent) return;
 
@@ -66,6 +70,8 @@ const Canvas: React.FC = () => {
         newCanvas.renderAll();
       }
     };
+
+    // Resize the canvas when the parent element is resized
     const resizeObserver = new ResizeObserver(() => {
       resizeCanvas();
     });

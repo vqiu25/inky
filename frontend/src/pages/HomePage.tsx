@@ -35,6 +35,7 @@ function HomePage() {
       setLobbyPlayers(newPlayers);
     };
 
+    // Listen for when players join and leave the lobby
     socket.on("lobby-change", handleLobbyPlayer);
 
     return () => {
@@ -42,6 +43,7 @@ function HomePage() {
     };
   }, [navigate, setLobbyPlayers]);
 
+  // When the player clicks play
   function onClickPlay() {
     const callToast = (message: string) => {
       toast.error(message, {
@@ -60,6 +62,7 @@ function HomePage() {
 
     if (!currentUser) return;
 
+    // Listeners for when a player tries to join the lobby
     socket.once("lobby-change", (newPlayers: User[]) => {
       setLobbyPlayers(newPlayers);
       navigate("/lobby");
@@ -74,6 +77,7 @@ function HomePage() {
     socket.emit("player-join", currentUser);
   }
 
+  // When the player clicks logout
   function onClickLogout() {
     localStorage.removeItem("jwt");
     clearCurrentUser();

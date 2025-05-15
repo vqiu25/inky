@@ -24,6 +24,12 @@ export const getMaxRounds = (): number => {
   return maxRounds;
 };
 
+/**
+ * Get the initial game state for a new game.
+ *
+ * @param players - The list of players in the game.
+ * @returns The initial game state.
+ * */
 export const getInitialGameState = (players: User[]): GameState => {
   return {
     round: 1,

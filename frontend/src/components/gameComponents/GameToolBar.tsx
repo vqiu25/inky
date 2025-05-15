@@ -23,16 +23,19 @@ export default function GameToolBar() {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [selectedColour, setSelectedColour] = useState<string | null>(null);
 
+  // Set default colour and tool when the component mounts
   useEffect(() => {
     handleColourClick(colours[0]); // Set default colour to the first one in the array
     setSelectedTool("pen"); // Set default tool to pen
   }, []);
 
+  // Function to handle tool selection
   const handleToolClick = (tool: string, action: () => void) => {
     setSelectedTool(tool);
     action();
   };
 
+  // Function to handle colour selection
   const handleColourClick = (colour: string) => {
     setSelectedColour(colour);
     if (selectedTool === "eraser") {
@@ -41,6 +44,7 @@ export default function GameToolBar() {
     setColour(colour);
   };
 
+  // Function to set the tool as the pen
   const setPen = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -53,6 +57,7 @@ export default function GameToolBar() {
     }
   };
 
+  // Function to set the tool as the eraser
   const setEraser = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -64,6 +69,7 @@ export default function GameToolBar() {
     }
   };
 
+  // Function to set the colour of the brush
   const setColour = (colour: string) => {
     const canvas = canvasRef.current;
     if (canvas) {
