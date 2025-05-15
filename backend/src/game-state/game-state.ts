@@ -1,6 +1,6 @@
 import { User } from "../types/types.js";
 
-const maxRounds: number = 3;
+const maxRounds: number = 1;
 const turnTime: number = 90;
 
 export interface GameState {

@@ -24,8 +24,9 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (
-        origin?.startsWith("http://localhost") || // Allow all localhost origins
-        origin === "https://inky-frontend-ywb1.onrender.com" // Allow the deployed frontend
+        !origin ||
+        origin.startsWith("http://localhost") ||
+        origin === "https://inky-frontend-ywb1.onrender.com"
       ) {
         callback(null, true);
       } else {
