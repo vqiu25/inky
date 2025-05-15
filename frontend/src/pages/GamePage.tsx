@@ -6,6 +6,7 @@ import GameStatusBar from "../components/gameComponents/GameStatusBar";
 import GamePlayerList from "../components/gameComponents/GamePlayerList";
 import GameCanvasArea from "../components/gameComponents/GameCanvasArea";
 import GameChat from "../components/gameComponents/GameChat";
+import DrawerDisplay from "../components/gameComponents/DrawerDisplay";
 import WordSelection from "../components/gameComponents/WordSelection";
 import TurnEnd from "../components/gameComponents/TurnEnd";
 import { GameStateContext } from "../context/GameStateContext";
@@ -147,7 +148,11 @@ export default function GamePage() {
 
           <GameCanvasArea />
           <GameChat />
-          {currentDrawer?._id === currentUser?._id && <GameToolBar />}
+          {currentDrawer?._id === currentUser?._id ? (
+            <GameToolBar />
+          ) : (
+            <DrawerDisplay />
+          )}
         </div>
       </div>
     </>

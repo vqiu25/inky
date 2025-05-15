@@ -1,0 +1,21 @@
+.outerContainer {
+  grid-area: tools;
+  border-radius: 999px;
+  background-color: #282a35;
+  align-items: center;
+  display: flex;
+  color: #9da3cb;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.text {
+  color: var(--purple);
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-right: 10px;
+}

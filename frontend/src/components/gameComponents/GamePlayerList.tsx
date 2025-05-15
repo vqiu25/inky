@@ -11,8 +11,10 @@ export default function GamePlayerList() {
 
   // Sort players by points
   const sortedPlayers = [...lobbyPlayers].sort((a, b) => {
-    const pointsA = playerStates.find((u) => u.user._id === a._id)?.points ?? 0;
-    const pointsB = playerStates.find((u) => u.user._id === b._id)?.points ?? 0;
+    const pointsA =
+      playerStates?.find((u) => u.user._id === a._id)?.points ?? 0;
+    const pointsB =
+      playerStates?.find((u) => u.user._id === b._id)?.points ?? 0;
     return pointsB - pointsA;
   });
 
