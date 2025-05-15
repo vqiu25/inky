@@ -42,7 +42,10 @@ export default function PodiumPage() {
       <PageHeader>Game Finished!</PageHeader>
       <div className={styles.content}>
         {sortedPoints.length === 0 ? (
-          <div className={spinnerStyles.spinnerContainer}>
+          <div
+            className={spinnerStyles.spinnerContainer}
+            data-testid="loading-spinner"
+          >
             <LoadingSpinner />
           </div>
         ) : (

@@ -1,9 +1,11 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import LoginPage from "../LoginPage";
 import { UsersContext } from "../../context/UsersContext";
 import { AuthContext } from "../../context/AuthContext";
+import { AuthContextType } from "../../context/AuthContextProvider";
+import { UsersContextType } from "../../context/UsersContextProvider";
 
 // Mock the useNavigate hook
 vi.mock("react-router-dom", async () => {
@@ -53,37 +55,37 @@ describe("LoginPage", () => {
   });
 
   function renderLoginPage() {
+    const mockAuthContextValue: AuthContextType = {
+      getJwt: () => "mockJwt",
+      setJwt: mockSetJwt,
+      clearJwt: vi.fn(),
+      isAuthenticated: false,
+      setIsAuthenticated: mockSetIsAuthenticated,
+      isJwtValid: vi.fn(),
+      getJwtEmail: vi.fn(),
+      progress: null,
+      setProgress: vi.fn(),
+      getUserByEmail: vi.fn(),
+    };
+
+    const mockUsersContextValue: UsersContextType = {
+      usersLoading: false,
+      addUser: mockAddUser,
+      refreshUsers: mockGetUsers,
+      getUserById: vi.fn(),
+      updateGamePlayer: vi.fn(),
+      usersList: [],
+      setUsersList: vi.fn(),
+      getCurrentUser: vi.fn(),
+      clearCurrentUser: vi.fn(),
+      updateCurrentUser: mockUpdateCurrentUser,
+      getUsers: mockGetUsers,
+    };
+
     return render(
       <BrowserRouter>
-        <AuthContext.Provider
-          value={{
-            getJwt: () => "mockJwt",
-            setJwt: mockSetJwt,
-            clearJwt: vi.fn(),
-            isAuthenticated: false,
-            setIsAuthenticated: mockSetIsAuthenticated,
-            isJwtValid: vi.fn(),
-            getJwtEmail: vi.fn(),
-            progress: null,
-            setProgress: vi.fn(),
-            getUserByEmail: vi.fn(),
-          }}
-        >
-          <UsersContext.Provider
-            value={{
-              usersLoading: false,
-              addUser: mockAddUser,
-              refreshUsers: mockGetUsers,
-              getUserById: vi.fn(),
-              updateGamePlayer: vi.fn(),
-              usersList: [],
-              setUsersList: vi.fn(),
-              getCurrentUser: vi.fn(),
-              clearCurrentUser: vi.fn(),
-              updateCurrentUser: mockUpdateCurrentUser,
-              getUsers: mockGetUsers,
-            }}
-          >
+        <AuthContext.Provider value={mockAuthContextValue}>
+          <UsersContext.Provider value={mockUsersContextValue}>
             <LoginPage />
           </UsersContext.Provider>
         </AuthContext.Provider>
@@ -92,9 +94,9 @@ describe("LoginPage", () => {
   }
 
   it("renders correctly with logo and Google sign-in button", () => {
-    renderLoginPage();
-    expect(screen.getByText("Inky")).toBeInTheDocument();
-    expect(screen.getByTestId("google-signin-button")).toBeInTheDocument();
+    const { getByText, getByTestId } = renderLoginPage();
+    expect(getByText("Inky")).toBeInTheDocument();
+    expect(getByTestId("google-signin-button")).toBeInTheDocument();
   });
 
   it("handles Google sign-in for an existing user", async () => {

@@ -14,7 +14,7 @@ export default function PodiumUser({
   const isCurrentUser = user._id === currentUser?._id;
 
   return (
-    <div className={styles.podiumUserWrapper}>
+    <div className={styles.podiumUserWrapper} data-testid="podium-user">
       <div className={styles.podiumUser}>
         {isWinner && (
           <img src={CrownIcon} alt="Winner" className={styles.crown} />

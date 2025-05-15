@@ -39,6 +39,7 @@ export default function PageHeader({
         <button
           className={styles.backButton}
           onClick={() => handleBackButtonClick()}
+          data-testid="back-button"
         >
           <img src={backArrow} className={styles.arrow} />
         </button>

@@ -17,6 +17,7 @@ export default function UserInfo({ user, isCurrent }: UserInfoProps) {
           width: "35px",
           height: "35px",
         }}
+        username={user?.username}
       ></ProfilePicture>
       <div>
         {user.username} {isCurrent ? " (You)" : ""}

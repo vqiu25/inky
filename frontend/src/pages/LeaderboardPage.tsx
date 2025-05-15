@@ -28,7 +28,10 @@ export default function LeaderboardPage() {
             ))}
         </div>
       ) : (
-        <div className={spinnerStyles.spinnerContainer}>
+        <div
+          className={spinnerStyles.spinnerContainer}
+          data-testid="loading-spinner"
+        >
           <LoadingSpinner />
         </div>
       )}

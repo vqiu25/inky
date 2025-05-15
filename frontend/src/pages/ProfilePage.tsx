@@ -49,7 +49,10 @@ export default function ProfilePage() {
     <div className={styles.pageContainer}>
       <PageHeader marginTop="0">Profile</PageHeader>
       {loading || !currentUser ? (
-        <div className={spinnerStyles.spinnerContainer}>
+        <div
+          className={spinnerStyles.spinnerContainer}
+          data-testid="loading-spinner"
+        >
           <LoadingSpinner />
         </div>
       ) : (
@@ -70,6 +73,7 @@ export default function ProfilePage() {
                   width: "100px",
                   height: "100px",
                 }}
+                username={currentUser?.username}
               />
               <div style={{ marginTop: "20px" }}>
                 <ProfileInfoContainer title="Name" pillStyles={commonStyle}>

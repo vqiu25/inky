@@ -90,7 +90,10 @@ export default function LobbyPage() {
     <div>
       <PageHeader exitLobby={true}>Lobby</PageHeader>
       {isLoading ? (
-        <div className={spinnerStyles.spinnerContainer}>
+        <div
+          className={spinnerStyles.spinnerContainer}
+          data-testid="loading-spinner"
+        >
           <LoadingSpinner />
         </div>
       ) : (

@@ -39,6 +39,7 @@ export default function PlayerInfo({
           objectFit: "contain",
           display: "block",
         }}
+        username={username}
       />
       <div className={styles.playerInfoSubContainer}>
         <div className={styles.playerInfoUsername}>

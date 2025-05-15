@@ -21,19 +21,25 @@ export default function GamePlayerList() {
   return (
     <div className={styles.playerList}>
       {sortedPlayers.map((player) => (
-        <PlayerInfo
+        <div
+          data-testid="game-list-player"
+          style={{ width: "100%" }}
           key={player._id}
-          username={player.username}
-          profilePicture={player.profilePicture}
-          points={
-            playerStates.find((u) => u.user._id === player._id)?.points ?? 0
-          }
-          isCurrentUser={currentUser?._id === player._id}
-          hasGuessedWord={
-            playerStates.find((u) => u.user._id === player._id)
-              ?.hasGuessedWord ?? false
-          }
-        />
+        >
+          <PlayerInfo
+            key={player._id}
+            username={player.username}
+            profilePicture={player.profilePicture}
+            points={
+              playerStates.find((u) => u.user._id === player._id)?.points ?? 0
+            }
+            isCurrentUser={currentUser?._id === player._id}
+            hasGuessedWord={
+              playerStates.find((u) => u.user._id === player._id)
+                ?.hasGuessedWord ?? false
+            }
+          />
+        </div>
       ))}
     </div>
   );

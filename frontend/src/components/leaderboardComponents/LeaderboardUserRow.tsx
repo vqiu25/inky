@@ -9,22 +9,24 @@ export default function LeaderboardUserRow({ user }: { user: User }) {
   const isCurrentUser = user._id === currentUser?._id;
 
   return (
-    <LeaderboardUser>
-      <InfoPill
-        children={<UserInfo user={user} isCurrent={isCurrentUser} />}
-        className="darkBackground"
-        style={{ minWidth: "450px", paddingInlineEnd: "10px" }}
-      />
-      <InfoPill
-        children={user.totalPoints}
-        className="lightBackground"
-        style={{
-          justifyContent: "center",
-          marginLeft: "10px",
-          minWidth: "180px",
-          paddingInline: "10px",
-        }}
-      />
-    </LeaderboardUser>
+    <div data-testid="leaderboard-user-row">
+      <LeaderboardUser>
+        <InfoPill
+          children={<UserInfo user={user} isCurrent={isCurrentUser} />}
+          className="darkBackground"
+          style={{ minWidth: "450px", paddingInlineEnd: "10px" }}
+        />
+        <InfoPill
+          children={user.totalPoints}
+          className="lightBackground"
+          style={{
+            justifyContent: "center",
+            marginLeft: "10px",
+            minWidth: "180px",
+            paddingInline: "10px",
+          }}
+        />
+      </LeaderboardUser>
+    </div>
   );
 }
