@@ -11,7 +11,7 @@ export default function WordSelection() {
 
   const [wordsToSelect, setWordsToSelect] = useState<string[]>([]);
   const [wordSelected, setWordSelected] = useState<boolean>(false);
-  const [timeRemaining, setTimeRemaining] = useState<number>(11);
+  const [timeRemaining, setTimeRemaining] = useState<number>(5);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -31,14 +31,14 @@ export default function WordSelection() {
       }
       setWordsToSelect(selectedWords);
 
-      // Set a timeout to auto-select a random word after 10 seconds
+      // Set a timeout to auto-select a random word after 5 seconds
       timeout = setTimeout(() => {
         if (!wordSelected) {
           const randomWord =
             selectedWords[Math.floor(Math.random() * selectedWords.length)];
           handleWordSelection(randomWord);
         }
-      }, 11_000);
+      }, 5000);
 
       // Sets an interval to update the timer every second
       interval = setInterval(() => {
@@ -83,7 +83,7 @@ export default function WordSelection() {
             <div
               className={styles.progressFill}
               style={{
-                width: `${timeRemaining > 0 ? ((timeRemaining - 1) / 10) * 100 : 0}%`,
+                width: `${timeRemaining > 0 ? ((timeRemaining - 1) / 4) * 100 : 0}%`,
               }}
             />
           </div>
