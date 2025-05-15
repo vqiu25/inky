@@ -11,47 +11,56 @@ import useCurrentUser from "../hooks/useCurrentUser";
 export default function PodiumPage() {
   const { updateGamePlayer } = useContext(UsersContext)!;
   const { playerPoints } = useContext(GameStateContext)!;
-  const gamePlayers = playerPoints.map((p) => p[0]);
   const currentUser = useCurrentUser();
 
-  // Sort descending by points
-  playerPoints.sort((a, b) => b[1] - a[1]);
+  const sortedPoints = [...playerPoints].sort((a, b) => b[1] - a[1]);
 
   useEffect(() => {
     if (!currentUser) return;
     const syncCurrent = async () => {
-      for (const player of gamePlayers) {
-        if (player._id === currentUser._id) {
-          await updateGamePlayer(player);
+      for (const [user] of sortedPoints) {
+        if (user._id === currentUser._id) {
+          await updateGamePlayer(user);
+          break;
         }
       }
     };
     syncCurrent();
-  }, [currentUser, gamePlayers, updateGamePlayer]);
+  }, [currentUser, sortedPoints, updateGamePlayer]);
 
-  const podiumOrder = [1, 0, 2];
+  const topThree = sortedPoints.slice(0, 3);
+  const nextThree = sortedPoints.slice(3, 6);
+
+  const ordinal = (n: number) => {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return `${n}${s[(v - 20) % 10] || s[v] || s[0]}`;
+  };
 
   return (
     <div className={styles.container}>
       <PageHeader>Game Finished!</PageHeader>
       <div className={styles.content}>
-        {playerPoints.length > 0 ? (
+        {sortedPoints.length === 0 ? (
+          <div className={spinnerStyles.spinnerContainer}>
+            <LoadingSpinner />
+          </div>
+        ) : (
           <>
             {/* Top-3 Podium */}
             <div className={styles.topThree}>
-              {podiumOrder.map((i) => {
-                const [user, pts] = playerPoints[i];
-                const placeLabel = i === 0 ? "1st" : i === 1 ? "2nd" : "3rd";
+              {topThree.map(([user, pts], idx) => {
+                const place = idx + 1;
                 return (
                   <div
-                    key={i}
-                    className={`${styles.card} ${styles[`place${i + 1}`]}`}
+                    key={user._id}
+                    className={`${styles.card} ${styles[`place${place}`]}`}
                   >
                     <div className={styles.userWrapper}>
-                      <PodiumUser user={user} isWinner={i === 0} />
+                      <PodiumUser user={user} isWinner={place === 1} />
                     </div>
                     <div className={styles.bar}>
-                      <div className={styles.placeLabel}>{placeLabel}</div>
+                      <div className={styles.placeLabel}>{ordinal(place)}</div>
                       <div className={styles.pointsValue}>{pts}</div>
                       <div className={styles.pointsText}>Points</div>
                     </div>
@@ -61,25 +70,24 @@ export default function PodiumPage() {
             </div>
 
             {/* 4th–6th without bars */}
-            {playerPoints.length > 3 && (
+            {nextThree.length > 0 && (
               <div className={styles.bottomGroup}>
-                {playerPoints.slice(3, 6).map(([user, pts], idx) => (
-                  <div key={idx} className={styles.bottomUser}>
-                    <div className={styles.bottomPill}>{idx + 4}th</div>
-                    <div className={styles.bottomPill}>
-                      <span className={styles.pillNumber}>{pts}</span>
-                      <span className={styles.pillText}>points</span>
+                {nextThree.map(([user, pts], idx) => {
+                  const place = idx + 4;
+                  return (
+                    <div key={user._id} className={styles.bottomUser}>
+                      <div className={styles.bottomPill}>{ordinal(place)}</div>
+                      <div className={styles.bottomPill}>
+                        <span className={styles.pillNumber}>{pts}</span>
+                        <span className={styles.pillText}>points</span>
+                      </div>
+                      <PodiumUser user={user} isWinner={false} />
                     </div>
-                    <PodiumUser user={user} isWinner={false} />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </>
-        ) : (
-          <div className={spinnerStyles.spinnerContainer}>
-            <LoadingSpinner />
-          </div>
         )}
       </div>
     </div>
