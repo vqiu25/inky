@@ -17,21 +17,25 @@ const io = new Server(server, {
   }
 });
 
+app.set("trust proxy", 1);
+
+const allowedOrigins = ["https://inky-frontend-ywb1.onrender.com"];
+
 /**
  * CORS middleware to allow requests from specific origins.
  */
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (
-        !origin ||
-        origin.startsWith("http://localhost") ||
-        origin === "https://inky-frontend-ywb1.onrender.com"
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+      // Allow requests with no origin (like curl or mobile apps)
+      if (!origin) return callback(null, true);
+
+      // Allow localhost and onrender frontend
+      if (origin.includes("localhost") || allowedOrigins.includes(origin)) {
+        return callback(null, true);
       }
+
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true
   })
