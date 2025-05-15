@@ -17,7 +17,7 @@ export default function LobbyPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const currentUser = useCurrentUser();
-  const { setNewPlayers, lobbyPlayers, setCurrentDrawer } =
+  const { setNewPlayers, lobbyPlayers, setCurrentDrawer, setWordToGuess } =
     useContext(GameStateContext)!;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { setProgress } = useContext(AuthContext)!;
@@ -82,6 +82,7 @@ export default function LobbyPage() {
   }, [location.pathname]);
 
   function onStartGame() {
+    setWordToGuess("");
     socket.emit("game-start", lobbyPlayers);
   }
 

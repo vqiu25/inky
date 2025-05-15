@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { User } from "../types/types.js";
-import { setGameInProgress, clearLobbyPlayers } from "./lobbyHandlers.js";
+import { setGameInProgress } from "./lobbyHandlers.js";
 import {
   GameState,
   getNewGameState,
@@ -45,7 +45,6 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   socket.on("game-start", (players: User[]) => {
     currentGameState = getInitialGameState(players);
     setGameInProgress(true);
-    clearLobbyPlayers(); // Clear the lobby players when the game starts
 
     io.to("game-room").emit("drawer-select", currentGameState.drawer);
   });

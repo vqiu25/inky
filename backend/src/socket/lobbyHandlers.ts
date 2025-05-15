@@ -9,10 +9,6 @@ export function setGameInProgress(value: boolean) {
   gameInProgress = value;
 }
 
-export function clearLobbyPlayers() {
-  lobbyPlayers = [];
-}
-
 export default function registerLobbyHandlers(io: Server, socket: Socket) {
   /**
    * Listener for when a player joins the game.
