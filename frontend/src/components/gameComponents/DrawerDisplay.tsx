@@ -19,6 +19,7 @@ export default function DrawerDisplay() {
             height: "25px",
             aspectRatio: "1/1",
           }}
+          username={currentDrawer?.username ?? ""}
         />
       </div>
     </div>
