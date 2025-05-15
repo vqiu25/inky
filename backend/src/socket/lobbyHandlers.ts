@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { User } from "../types/types.js";
 
-let lobbyPlayers: User[] = [];
+export let lobbyPlayers: User[] = [];
 const maxLobbyPlayers = 6;
 let gameInProgress = false;
 

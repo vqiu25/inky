@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { User } from "../types/types.js";
-import { setGameInProgress } from "./lobbyHandlers.js";
+import { lobbyPlayers, setGameInProgress } from "./lobbyHandlers.js";
 import {
   GameState,
   getNewGameState,
@@ -157,6 +157,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
       timerInterval = null;
     }
     io.to("game-room").emit("turn-end", timeOut, drawerLeft);
+    numPlayersGuessed = 0;
 
     // Clear any existing interval
     if (nextTurnCountdownInterval) {
@@ -237,7 +238,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     io.to("game-room").emit("new-scores", currentGameState.playerStates);
     io.to("game-room").emit("word-guessed", player); // Broadcast the player who guessed the word
     // If all players have guessed the word, the turn should end
-    if (numPlayersGuessed >= currentGameState.playerStates.length - 1) {
+    if (numPlayersGuessed >= lobbyPlayers.length - 1) {
       numPlayersGuessed = 0;
       endTurn(false);
     }
