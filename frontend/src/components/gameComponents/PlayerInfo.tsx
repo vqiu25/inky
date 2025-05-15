@@ -6,14 +6,18 @@ export default function PlayerInfo({
   profilePicture,
   points,
   isCurrentUser,
+  hasGuessedWord,
 }: {
   username: string;
   profilePicture: string;
   points: number;
   isCurrentUser: boolean;
+  hasGuessedWord: boolean;
 }) {
   return (
-    <div className={styles.playerInfoContainer}>
+    <div
+      className={`${styles.playerInfoContainer} ${hasGuessedWord ? styles.guessedWord : ""}`}
+    >
       <ProfilePicture
         src={profilePicture}
         pictureBorderSize={{

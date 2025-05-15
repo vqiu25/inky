@@ -63,6 +63,14 @@ export interface GameState {
   round: number;
   wordToGuess: string;
   drawer: User;
-  playerPoints: [User, number][];
+  playerStates: PlayerState[];
   timeRemaining: number;
+}
+
+export interface PlayerState {
+  user: User;
+  points: number;
+  scoreMultiplier: boolean;
+  hasLeftGame: boolean;
+  hasGuessedWord: boolean;
 }

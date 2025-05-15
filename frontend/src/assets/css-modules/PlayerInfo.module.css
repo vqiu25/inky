@@ -6,6 +6,11 @@
   width: 96%;
   height: 3.25rem;
   border-radius: 999px;
+  border: solid 2px #282a35;
+}
+
+.guessedWord {
+  border: solid 2px var(--purple);
 }
 
 .playerInfoSubContainer {

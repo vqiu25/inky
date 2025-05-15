@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { Phrase, User } from "../types/types";
+import { Phrase, User, PlayerState } from "../types/types";
 import { GameStateContext } from "./GameStateContext";
 import useGet from "../hooks/useGet";
 import { canvasReference } from "../components/gameComponents/CanvasReference";
@@ -19,8 +19,8 @@ export interface GameStateContextType {
   setRound: (round: number) => void;
   wordToGuess: string;
   setWordToGuess: (word: string) => void;
-  playerPoints: [User, number][];
-  setPlayerPoints: (playerPoints: [User, number][]) => void;
+  playerStates: PlayerState[];
+  setPlayerStates: (playerStates: PlayerState[]) => void;
   timeRemaining: number | null;
   updateTime: (newTime: number) => void;
   clearCanvas: () => void;
@@ -42,7 +42,7 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   const [isSelectingWord, setIsSelectingWord] = useState(true);
   const [round, setRound] = useState(0);
   const [wordToGuess, setWordToGuess] = useState("");
-  const [playerPoints, setPlayerPoints] = useState<[User, number][]>([]);
+  const [playerStates, setPlayerStates] = useState<PlayerState[]>([]);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [isTurnFinished, setIsTurnFinished] = useState(false);
   const [phrases, setPhrases] = useState<Phrase[]>([]);
@@ -85,8 +85,8 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
         setRound,
         wordToGuess,
         setWordToGuess,
-        playerPoints,
-        setPlayerPoints,
+        playerStates: playerStates,
+        setPlayerStates: setPlayerStates,
         timeRemaining,
         updateTime,
         clearCanvas,

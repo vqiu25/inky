@@ -23,7 +23,7 @@ export default function GamePage() {
     setIsSelectingWord,
     setRound,
     setWordToGuess,
-    setPlayerPoints,
+    setPlayerStates: setPlayerStates,
     currentDrawer,
     setCurrentDrawer,
     clearCanvas,
@@ -63,7 +63,7 @@ export default function GamePage() {
       setIsSelectingWord(false);
       setRound(gameState.round);
       setWordToGuess(gameState.wordToGuess);
-      setPlayerPoints(gameState.playerPoints);
+      setPlayerStates(gameState.playerStates);
       clearCanvas();
     });
 
@@ -74,7 +74,7 @@ export default function GamePage() {
 
   useEffect(() => {
     socket.on("new-scores", (playersPoints) => {
-      setPlayerPoints(playersPoints);
+      setPlayerStates(playersPoints);
     });
     return () => {
       socket.off("new-scores");
@@ -109,11 +109,11 @@ export default function GamePage() {
   useEffect(() => {
     if (!currentUser) return;
     socket.on("game-finished", (gameState: GameState) => {
-      setPlayerPoints(gameState.playerPoints);
+      setPlayerStates(gameState.playerStates);
       socket.emit("player-leave", currentUser);
       navigate("/podium");
     });
-  }, [navigate, setPlayerPoints, currentUser]);
+  }, [navigate, setPlayerStates, currentUser]);
 
   useEffect(() => {
     if (!currentUser) return;

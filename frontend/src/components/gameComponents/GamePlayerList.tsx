@@ -6,13 +6,13 @@ import useCurrentUser from "../../hooks/useCurrentUser";
 
 export default function GamePlayerList() {
   const { lobbyPlayers } = useContext(GameStateContext)!;
-  const { playerPoints } = useContext(GameStateContext)!;
+  const { playerStates: playerStates } = useContext(GameStateContext)!;
   const currentUser = useCurrentUser();
 
   // Sort players by points
   const sortedPlayers = [...lobbyPlayers].sort((a, b) => {
-    const pointsA = playerPoints.find(([u]) => u._id === a._id)?.[1] ?? 0;
-    const pointsB = playerPoints.find(([u]) => u._id === b._id)?.[1] ?? 0;
+    const pointsA = playerStates.find((u) => u.user._id === a._id)?.points ?? 0;
+    const pointsB = playerStates.find((u) => u.user._id === b._id)?.points ?? 0;
     return pointsB - pointsA;
   });
 
@@ -23,8 +23,14 @@ export default function GamePlayerList() {
           key={player._id}
           username={player.username}
           profilePicture={player.profilePicture}
-          points={playerPoints.find(([u]) => u._id === player._id)?.[1] ?? 0}
+          points={
+            playerStates.find((u) => u.user._id === player._id)?.points ?? 0
+          }
           isCurrentUser={currentUser?._id === player._id}
+          hasGuessedWord={
+            playerStates.find((u) => u.user._id === player._id)
+              ?.hasGuessedWord ?? false
+          }
         />
       ))}
     </div>

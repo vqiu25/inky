@@ -9,7 +9,8 @@ import {
   incrementPowerupCountInGameState,
   getInitialGameState,
   setUserSplash,
-  clearUserSplash
+  clearUserSplash,
+  PlayerState
 } from "../game-state/game-state.js";
 
 export let currentGameState: GameState;
@@ -90,17 +91,17 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   /**
    * Update all of the user properties based on the game results.
    */
-  const finishGame = (): [User, number, boolean, boolean][] => {
-    const updatedPlayerPoints = currentGameState.playerPoints;
-    let winners: [User, number, boolean, boolean][] = [];
-    for (let i = 0; i < updatedPlayerPoints.length; i++) {
-      const user = updatedPlayerPoints[i][0];
-      const userPoints = updatedPlayerPoints[i][1];
+  const finishGame = (): PlayerState[] => {
+    const updatedPlayerStates = currentGameState.playerStates;
+    let winners: PlayerState[] = [];
+    for (let i = 0; i < updatedPlayerStates.length; i++) {
+      const user = updatedPlayerStates[i].user;
+      const userPoints = updatedPlayerStates[i].points;
 
-      if (winners.length === 0 || userPoints > winners[0][1]) {
-        winners = [updatedPlayerPoints[i]];
-      } else if (userPoints === winners[0][1]) {
-        winners.push(updatedPlayerPoints[i]);
+      if (winners.length === 0 || userPoints > winners[0].points) {
+        winners = [updatedPlayerStates[i]];
+      } else if (userPoints === winners[0].points) {
+        winners.push(updatedPlayerStates[i]);
       }
 
       user.totalGames += 1;
@@ -125,7 +126,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     }
 
     for (const winner of winners) {
-      const winnerUser = winner[0];
+      const winnerUser = winner.user;
       winnerUser.totalWins += 1;
       if (winnerUser.totalWins === winsForAchievement) {
         winnerUser.achievements.winsAchievement = true;
@@ -134,7 +135,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
 
     setGameInProgress(false);
 
-    return updatedPlayerPoints;
+    return updatedPlayerStates;
   };
 
   /**
@@ -232,11 +233,11 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    */
   socket.on("word-guessed", (player: User, timeRemaining: number) => {
     numPlayersGuessed++;
-    currentGameState.playerPoints = updatePlayerPoints(currentGameState, player, timeRemaining);
-    io.to("game-room").emit("new-scores", currentGameState.playerPoints);
+    currentGameState.playerStates = updatePlayerPoints(currentGameState, player, timeRemaining);
+    io.to("game-room").emit("new-scores", currentGameState.playerStates);
     io.to("game-room").emit("word-guessed", player); // Broadcast the player who guessed the word
     // If all players have guessed the word, the turn should end
-    if (numPlayersGuessed >= currentGameState.playerPoints.length - 1) {
+    if (numPlayersGuessed >= currentGameState.playerStates.length - 1) {
       numPlayersGuessed = 0;
       endTurn(false);
     }
@@ -272,7 +273,8 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   };
 
   const getUserById = (userId: string): User | undefined => {
-    return currentGameState.playerPoints.find((player) => player[0]._id === userId)?.[0];
+    return currentGameState.playerStates.find((player: PlayerState) => player.user._id === userId)
+      ?.user;
   };
 
   /* Increase Time Powerup Listener */
@@ -330,9 +332,9 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
   /* Multiplier Powerup Listener */
   socket.on("multiplier-powerup", (userId: string) => {
     //set boolean in playerPoints for the player to true
-    currentGameState.playerPoints.forEach((player) => {
-      if (player[0]._id === userId) {
-        player[2] = true;
+    currentGameState.playerStates.forEach((player) => {
+      if (player.user._id === userId) {
+        player.scoreMultiplier = true;
       }
     });
     incrementPowerupCountInGameState(currentGameState, userId, "scoreMultiplier");
@@ -348,20 +350,20 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    * Removes the player from the game state and ends the turn if the drawer leaves.
    */
   socket.on("leave-game", (userId: string) => {
-    if (!currentGameState?.playerPoints?.length) {
+    if (!currentGameState?.playerStates?.length) {
       return;
     }
 
     // Remove the player from the game state
-    currentGameState.playerPoints.forEach((player) => {
-      if (player[0]._id === userId) {
-        player[3] = true;
+    currentGameState.playerStates.forEach((player) => {
+      if (player.user._id === userId) {
+        player.hasLeftGame = true;
       }
     });
 
     const isDrawerLeaving = currentGameState.drawer._id === userId;
-    const isOnePlayerLeft = currentGameState.playerPoints.length === 2;
-    const haveAllLeft = currentGameState.playerPoints.length === 1;
+    const isOnePlayerLeft = currentGameState.playerStates.length === 2;
+    const haveAllLeft = currentGameState.playerStates.length === 1;
 
     if ((isDrawerLeaving || isOnePlayerLeft) && !haveAllLeft) {
       nextTurnCountdownDuration = 5;
@@ -371,15 +373,15 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
     }
 
     // If all players have in the game have guessed the word, the turn should end
-    if (numPlayersGuessed >= currentGameState.playerPoints.length - 2 && !haveAllLeft) {
+    if (numPlayersGuessed >= currentGameState.playerStates.length - 2 && !haveAllLeft) {
       numPlayersGuessed = 0;
       nextTurnCountdownDuration = 5;
       endTurn(false);
       return;
     }
 
-    currentGameState.playerPoints = currentGameState.playerPoints.filter(
-      (player) => player[0]._id !== userId
+    currentGameState.playerStates = currentGameState.playerStates.filter(
+      (player) => player.user._id !== userId
     );
   });
 }

@@ -7,9 +7,17 @@ export interface GameState {
   round: number;
   wordToGuess: string;
   drawer: User;
-  playerPoints: [User, number, boolean, hasLeftGame: boolean][];
+  playerStates: PlayerState[];
   timeRemaining: number;
   splashExpiries: Record<string, number>;
+}
+
+export interface PlayerState {
+  user: User;
+  points: number;
+  scoreMultiplier: boolean;
+  hasLeftGame: boolean;
+  hasGuessedWord: boolean;
 }
 
 export const getMaxRounds = (): number => {
@@ -21,7 +29,13 @@ export const getInitialGameState = (players: User[]): GameState => {
     round: 1,
     wordToGuess: "",
     drawer: players[0],
-    playerPoints: players.map((player) => [player, 0, false, false]),
+    playerStates: players.map((player) => ({
+      user: player,
+      points: 0,
+      scoreMultiplier: false,
+      hasLeftGame: false,
+      hasGuessedWord: false
+    })),
     timeRemaining: turnTime,
     splashExpiries: {}
   };
@@ -34,36 +48,39 @@ export const getInitialGameState = (players: User[]): GameState => {
  * @returns the new game state for the next turn. or false if the game is over
  */
 export const getNewGameState = (previousGameState: GameState): GameState => {
-  const previousDrawerIndex = previousGameState.playerPoints.findIndex(
-    (player) => player[0] == previousGameState.drawer
+  const previousDrawerIndex = previousGameState.playerStates.findIndex(
+    (player: PlayerState) => player.user == previousGameState.drawer
   );
 
-  const isNewRound: boolean = previousDrawerIndex === previousGameState.playerPoints.length - 1;
+  const isNewRound: boolean = previousDrawerIndex === previousGameState.playerStates.length - 1;
   const newRound = isNewRound ? previousGameState.round + 1 : previousGameState.round;
 
   const newDrawer = isNewRound
-    ? previousGameState.playerPoints[0][0]
-    : previousGameState.playerPoints[previousDrawerIndex + 1]?.[0];
+    ? previousGameState.playerStates[0].user
+    : previousGameState.playerStates[previousDrawerIndex + 1]?.user;
 
   // Filter out players who have left the game
-  previousGameState.playerPoints = previousGameState.playerPoints.filter((player) => !player[3]);
+  previousGameState.playerStates = previousGameState.playerStates.filter(
+    (player: PlayerState) => !player.hasLeftGame
+  );
 
-  if (previousGameState.playerPoints.length === 0) {
+  if (previousGameState.playerStates.length === 0) {
     return {
       ...previousGameState
     };
   }
 
-  // Reset scoreMultiplier boolean in playerPoints to false
-  for (let i = 0; i < previousGameState.playerPoints.length; i++) {
-    previousGameState.playerPoints[i][2] = false;
+  // Reset scoreMultiplier and hasGuessedWord boolean in playerPoints to false
+  for (let i = 0; i < previousGameState.playerStates.length; i++) {
+    previousGameState.playerStates[i].scoreMultiplier = false;
+    previousGameState.playerStates[i].hasGuessedWord = false;
   }
 
   return {
     round: newRound,
     wordToGuess: "",
     drawer: newDrawer,
-    playerPoints: previousGameState.playerPoints,
+    playerStates: previousGameState.playerStates,
     timeRemaining: turnTime,
     splashExpiries: {}
   };
@@ -81,23 +98,25 @@ export const updatePlayerPoints = (
   gameState: GameState,
   player: User,
   timeRemaining: number
-): [User, number, boolean, hasLeftGame: boolean][] => {
+): PlayerState[] => {
   const scoreMultiplier = 1.5;
-  const updatedPlayerPoints: [User, number, boolean, hasLeftGame: boolean][] =
-    gameState.playerPoints;
-  for (let i = 0; i < updatedPlayerPoints.length; i++) {
+  const updatedPlayerStates: PlayerState[] = gameState.playerStates;
+  for (let i = 0; i < updatedPlayerStates.length; i++) {
     // Award points to the guesser
-    if (updatedPlayerPoints[i][0]._id === player._id) {
-      updatedPlayerPoints[i][1] += Math.round(
-        updatedPlayerPoints[i][2] ? timeRemaining * scoreMultiplier : timeRemaining // Apply multiplier if score multiplier flag is true
+    if (updatedPlayerStates[i].user._id === player._id) {
+      updatedPlayerStates[i].points += Math.round(
+        updatedPlayerStates[i].scoreMultiplier ? timeRemaining * scoreMultiplier : timeRemaining
       );
       // Award points to the drawer
-    } else if (updatedPlayerPoints[i][0]._id === gameState.drawer._id) {
-      updatedPlayerPoints[i][1] += Math.round(timeRemaining / (gameState.playerPoints.length - 1));
+      updatedPlayerStates[i].hasGuessedWord = true;
+    } else if (updatedPlayerStates[i].user._id === gameState.drawer._id) {
+      updatedPlayerStates[i].points += Math.round(
+        timeRemaining / (gameState.playerStates.length - 1)
+      );
     }
   }
 
-  return updatedPlayerPoints;
+  return updatedPlayerStates;
 };
 
 /**
@@ -113,8 +132,8 @@ export const incrementPowerupCountInGameState = (
   userId: string,
   powerupName: keyof User["powerups"]
 ): boolean => {
-  for (let i = 0; i < gameState.playerPoints.length; i++) {
-    const [user] = gameState.playerPoints[i];
+  for (let i = 0; i < gameState.playerStates.length; i++) {
+    const user = gameState.playerStates[i].user;
     if (user._id === userId) {
       if (user.powerups[powerupName] !== undefined) {
         user.powerups[powerupName]++;

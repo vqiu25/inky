@@ -10,17 +10,17 @@ import useCurrentUser from "../hooks/useCurrentUser";
 
 export default function PodiumPage() {
   const { updateGamePlayer } = useContext(UsersContext)!;
-  const { playerPoints } = useContext(GameStateContext)!;
+  const { playerStates: playerStates } = useContext(GameStateContext)!;
   const currentUser = useCurrentUser();
 
-  const sortedPoints = [...playerPoints].sort((a, b) => b[1] - a[1]);
+  const sortedPoints = [...playerStates].sort((a, b) => b.points - a.points);
 
   useEffect(() => {
     if (!currentUser) return;
     const syncCurrent = async () => {
-      for (const [user] of sortedPoints) {
-        if (user._id === currentUser._id) {
-          await updateGamePlayer(user);
+      for (const user of sortedPoints) {
+        if (user.user._id === currentUser._id) {
+          await updateGamePlayer(user.user);
           break;
         }
       }
@@ -49,19 +49,19 @@ export default function PodiumPage() {
           <>
             {/* Top-3 Podium */}
             <div className={styles.topThree}>
-              {topThree.map(([user, pts], idx) => {
+              {topThree.map((player, idx) => {
                 const place = idx + 1;
                 return (
                   <div
-                    key={user._id}
+                    key={player.user._id}
                     className={`${styles.card} ${styles[`place${place}`]}`}
                   >
                     <div className={styles.userWrapper}>
-                      <PodiumUser user={user} isWinner={place === 1} />
+                      <PodiumUser user={player.user} isWinner={place === 1} />
                     </div>
                     <div className={styles.bar}>
                       <div className={styles.placeLabel}>{ordinal(place)}</div>
-                      <div className={styles.pointsValue}>{pts}</div>
+                      <div className={styles.pointsValue}>{player.points}</div>
                       <div className={styles.pointsText}>Points</div>
                     </div>
                   </div>
@@ -72,16 +72,18 @@ export default function PodiumPage() {
             {/* 4th–6th without bars */}
             {nextThree.length > 0 && (
               <div className={styles.bottomGroup}>
-                {nextThree.map(([user, pts], idx) => {
+                {nextThree.map((player, idx) => {
                   const place = idx + 4;
                   return (
-                    <div key={user._id} className={styles.bottomUser}>
+                    <div key={player.user._id} className={styles.bottomUser}>
                       <div className={styles.bottomPill}>{ordinal(place)}</div>
                       <div className={styles.bottomPill}>
-                        <span className={styles.pillNumber}>{pts}</span>
+                        <span className={styles.pillNumber}>
+                          {player.points}
+                        </span>
                         <span className={styles.pillText}>points</span>
                       </div>
-                      <PodiumUser user={user} isWinner={false} />
+                      <PodiumUser user={player.user} isWinner={false} />
                     </div>
                   );
                 })}
