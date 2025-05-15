@@ -8,7 +8,7 @@ import { canvasReference } from "./CanvasReference";
 
 export default function GameToolBar() {
   const canvasRef = canvasReference;
-  const { clearCanvas } = useContext(GameStateContext)!;
+  const { clearCanvas } = useContext(GameStateContext);
   const colours: string[] = [
     "black",
     "#FF8686",

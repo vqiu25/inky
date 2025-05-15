@@ -37,13 +37,13 @@ vi.mock("react-router-dom", async () => {
 
 describe("LobbyPage Component", () => {
   const mockSetProgress = vi.fn();
-  const mockSetNewPlayers = vi.fn();
+  const mockSetLobbyPlayers = vi.fn();
   const mockSetCurrentDrawer = vi.fn();
   const mockSetWordToGuess = vi.fn();
 
   const gameStateContextValue = {
     lobbyPlayers: [mockCurrentUser, ...newUsers],
-    setNewPlayers: mockSetNewPlayers,
+    setLobbyPlayers: mockSetLobbyPlayers,
     currentDrawer: null,
     setCurrentDrawer: mockSetCurrentDrawer,
     setWordToGuess: mockSetWordToGuess,
@@ -55,7 +55,7 @@ describe("LobbyPage Component", () => {
     playerStates: [],
     setPlayerStates: vi.fn(),
     timeRemaining: null,
-    updateTime: vi.fn(),
+    setTimeRemaining: vi.fn(),
     clearCanvas: vi.fn(),
     isTurnFinished: false,
     setIsTurnFinished: vi.fn(),

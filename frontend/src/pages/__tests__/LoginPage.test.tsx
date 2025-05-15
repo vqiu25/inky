@@ -6,6 +6,7 @@ import { UsersContext } from "../../context/UsersContext";
 import { AuthContext } from "../../context/AuthContext";
 import { AuthContextType } from "../../context/AuthContextProvider";
 import { UsersContextType } from "../../context/UsersContextProvider";
+import { createMockJwt } from "./test-util";
 
 // Mock the useNavigate hook
 vi.mock("react-router-dom", async () => {
@@ -188,16 +189,6 @@ describe("LoginPage", () => {
     consoleErrorSpy.mockRestore();
   });
 });
-
-// Helper function to create a mock JWT
-function createMockJwt(payload: object): string {
-  // Create a simple mock JWT with header, payload, and signature parts
-  const header = btoa(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-  const encodedPayload = btoa(JSON.stringify(payload));
-  const signature = "fake_signature";
-
-  return `${header}.${encodedPayload}.${signature}`;
-}
 
 // Add the callback type to the global Window interface
 declare global {

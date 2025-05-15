@@ -9,8 +9,8 @@ import { UsersContext } from "../context/UsersContext";
 import useCurrentUser from "../hooks/useCurrentUser";
 
 export default function PodiumPage() {
-  const { updateGamePlayer } = useContext(UsersContext)!;
-  const { playerStates: playerStates } = useContext(GameStateContext)!;
+  const { updateGamePlayer } = useContext(UsersContext);
+  const { playerStates } = useContext(GameStateContext);
   const currentUser = useCurrentUser();
 
   const sortedPoints = [...playerStates].sort((a, b) => b.points - a.points);

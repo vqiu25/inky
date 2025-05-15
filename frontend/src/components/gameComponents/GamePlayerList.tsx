@@ -5,8 +5,8 @@ import PlayerInfo from "./PlayerInfo";
 import useCurrentUser from "../../hooks/useCurrentUser";
 
 export default function GamePlayerList() {
-  const { lobbyPlayers } = useContext(GameStateContext)!;
-  const { playerStates: playerStates } = useContext(GameStateContext)!;
+  const { lobbyPlayers } = useContext(GameStateContext);
+  const { playerStates } = useContext(GameStateContext);
   const currentUser = useCurrentUser();
 
   // Sort players by points

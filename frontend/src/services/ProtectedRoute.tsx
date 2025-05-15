@@ -12,7 +12,7 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute = ({ children, requiredStep }: ProtectedRouteProps) => {
-  const { progress } = useContext(AuthContext)!;
+  const { progress } = useContext(AuthContext);
   const { validJwt, isLoading } = useJwtValidation();
 
   if (isLoading) {

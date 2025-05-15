@@ -7,7 +7,7 @@ import useCurrentUser from "../../hooks/useCurrentUser";
 export default function WordSelection() {
   const currentUser = useCurrentUser();
   const { currentDrawer, isSelectingWord, phrases } =
-    useContext(GameStateContext)!;
+    useContext(GameStateContext);
 
   const [wordsToSelect, setWordsToSelect] = useState<string[]>([]);
   const [wordSelected, setWordSelected] = useState<boolean>(false);

@@ -39,7 +39,7 @@ vi.mock("../../hooks/useCurrentUser", () => ({
 
 describe("HomePage", () => {
   // Mock context functions
-  const mockSetNewPlayers = vi.fn();
+  const mockSetLobbyPlayers = vi.fn();
   const mockClearCurrentUser = vi.fn();
   const mockSetProgress = vi.fn();
 
@@ -63,7 +63,7 @@ describe("HomePage", () => {
 
     const mockGameStateContextValue: GameStateContextType = {
       lobbyPlayers: [],
-      setNewPlayers: mockSetNewPlayers,
+      setLobbyPlayers: mockSetLobbyPlayers,
       currentDrawer: null,
       setCurrentDrawer: vi.fn(),
       isSelectingWord: true,
@@ -75,7 +75,7 @@ describe("HomePage", () => {
       playerStates: [],
       setPlayerStates: vi.fn(),
       timeRemaining: null,
-      updateTime: vi.fn(),
+      setTimeRemaining: vi.fn(),
       clearCanvas: vi.fn(),
       isTurnFinished: false,
       setIsTurnFinished: vi.fn(),

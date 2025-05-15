@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthContext";
  */
 export const useJwtValidation = () => {
   const { isJwtValid, isAuthenticated, setIsAuthenticated } =
-    useContext(AuthContext)!;
+    useContext(AuthContext);
   const [validJwt, setValidJwt] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

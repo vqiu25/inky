@@ -15,10 +15,10 @@ import { UsersContext } from "../context/UsersContext";
 import toast, { Toaster } from "react-hot-toast";
 
 function HomePage() {
-  const { setNewPlayers } = useContext(GameStateContext)!;
-  const { clearCurrentUser } = useContext(UsersContext)!;
+  const { setLobbyPlayers } = useContext(GameStateContext);
+  const { clearCurrentUser } = useContext(UsersContext);
   const navigate = useNavigate();
-  const { setProgress } = useContext(AuthContext)!;
+  const { setProgress } = useContext(AuthContext);
   const [showInfo, setShowInfo] = useState(false);
   const currentUser = useCurrentUser();
 
@@ -32,7 +32,7 @@ function HomePage() {
 
   useEffect(() => {
     const handleLobbyPlayer = (newPlayers: User[]) => {
-      setNewPlayers(newPlayers);
+      setLobbyPlayers(newPlayers);
     };
 
     socket.on("lobby-change", handleLobbyPlayer);
@@ -40,7 +40,7 @@ function HomePage() {
     return () => {
       socket.off("lobby-change", handleLobbyPlayer); // removes only this exact handler
     };
-  }, [navigate, setNewPlayers]);
+  }, [navigate, setLobbyPlayers]);
 
   function onClickPlay() {
     const callToast = (message: string) => {
@@ -61,7 +61,7 @@ function HomePage() {
     if (!currentUser) return;
 
     socket.once("lobby-change", (newPlayers: User[]) => {
-      setNewPlayers(newPlayers);
+      setLobbyPlayers(newPlayers);
       navigate("/lobby");
     });
     socket.once("lobby-full", () => {

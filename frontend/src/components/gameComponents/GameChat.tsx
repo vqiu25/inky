@@ -15,7 +15,7 @@ import useCurrentUser from "../../hooks/useCurrentUser";
 const Chat: React.FC = () => {
   const currentUser = useCurrentUser();
   const { wordToGuess, currentDrawer, timeRemaining } =
-    useContext(GameStateContext)!;
+    useContext(GameStateContext);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [haveGuessed, setHaveGuessed] = useState(false);

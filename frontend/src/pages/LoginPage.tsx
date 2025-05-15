@@ -9,8 +9,8 @@ import { User } from "../types/types";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
-  const { addUser, getUsers, updateCurrentUser } = useContext(UsersContext)!;
-  const { setJwt, setIsAuthenticated } = useContext(AuthContext)!;
+  const { addUser, getUsers, updateCurrentUser } = useContext(UsersContext);
+  const { setJwt, setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   function getRandomProfilePicture(): string {

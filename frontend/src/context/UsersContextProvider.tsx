@@ -32,13 +32,13 @@ export interface UsersContextType {
  *
  * @param children - React components that consume this provider.
  */
-export const UsersProvider: React.FC<{ children: ReactNode }> = ({
+export const UsersContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [usersList, setUsersList] = useState<User[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [usersLoading, setUsersLoading] = useState<boolean>(false);
-  const { getJwtEmail } = useContext(AuthContext)!;
+  const { getJwtEmail } = useContext(AuthContext);
 
   async function refreshUsers() {
     await getUsers();

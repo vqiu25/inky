@@ -30,11 +30,11 @@ export default function GamePage() {
     clearCanvas,
     isTurnFinished,
     setIsTurnFinished,
-    setNewPlayers,
-  } = useContext(GameStateContext)!;
+    setLobbyPlayers,
+  } = useContext(GameStateContext);
   const [timedOut, setTimedOut] = useState(false);
   const [isCurrentUserDrawer, setIsCurrentUserDrawer] = useState(false);
-  const { setProgress } = useContext(AuthContext)!;
+  const { setProgress } = useContext(AuthContext);
   const currentUser = useCurrentUser();
   const [drawerLeft, setDrawerLeft] = useState(false);
 
@@ -97,7 +97,7 @@ export default function GamePage() {
   // Get the list of players in the lobby
   useEffect(() => {
     const handleLobbyPlayer = (newPlayers: User[]) => {
-      setNewPlayers(newPlayers);
+      setLobbyPlayers(newPlayers);
     };
 
     socket.on("lobby-change", handleLobbyPlayer);
@@ -105,7 +105,7 @@ export default function GamePage() {
     return () => {
       socket.off("lobby-change", handleLobbyPlayer);
     };
-  }, [setNewPlayers]);
+  }, [setLobbyPlayers]);
 
   useEffect(() => {
     if (!currentUser) return;

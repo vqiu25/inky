@@ -17,10 +17,10 @@ export default function LobbyPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const currentUser = useCurrentUser();
-  const { setNewPlayers, lobbyPlayers, setCurrentDrawer, setWordToGuess } =
-    useContext(GameStateContext)!;
+  const { setLobbyPlayers, lobbyPlayers, setCurrentDrawer, setWordToGuess } =
+    useContext(GameStateContext);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { setProgress } = useContext(AuthContext)!;
+  const { setProgress } = useContext(AuthContext);
   const canStart = lobbyPlayers.length >= 3;
   const tooltipId = "enter-game-tip";
 
@@ -36,7 +36,7 @@ export default function LobbyPage() {
   // Get the list of players in the lobby
   useEffect(() => {
     const handleLobbyPlayer = (newPlayers: User[]) => {
-      setNewPlayers(newPlayers);
+      setLobbyPlayers(newPlayers);
     };
 
     socket.on("lobby-change", handleLobbyPlayer);
@@ -44,7 +44,7 @@ export default function LobbyPage() {
     return () => {
       socket.off("lobby-change", handleLobbyPlayer); // removes only this exact handler
     };
-  }, [setNewPlayers]);
+  }, [setLobbyPlayers]);
 
   useEffect(() => {
     const handleDrawerSelect = (drawer: User) => {

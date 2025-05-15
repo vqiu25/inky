@@ -10,7 +10,7 @@ type WordRevealProps = {
 };
 
 export default function WordReveal({ isDrawer, revealWord }: WordRevealProps) {
-  const { wordToGuess } = useContext(GameStateContext)!;
+  const { wordToGuess } = useContext(GameStateContext);
   const currentUser = useCurrentUser();
   const letters = wordToGuess.split("");
 

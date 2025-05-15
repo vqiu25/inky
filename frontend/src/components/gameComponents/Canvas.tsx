@@ -8,7 +8,7 @@ import { canvasReference } from "./CanvasReference";
 
 const Canvas: React.FC = () => {
   const canvasRef = canvasReference;
-  const { currentDrawer } = useContext(GameStateContext)!;
+  const { currentDrawer } = useContext(GameStateContext);
   const currentUser = useCurrentUser();
   const parentRef = useRef<HTMLDivElement>(null);
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);

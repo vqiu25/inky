@@ -10,7 +10,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
  */
 export interface GameStateContextType {
   lobbyPlayers: User[];
-  setNewPlayers: (newPlayers: User[]) => void;
+  setLobbyPlayers: (newPlayers: User[]) => void;
   currentDrawer: User | null;
   setCurrentDrawer: (drawer: User) => void;
   isSelectingWord: boolean;
@@ -22,7 +22,7 @@ export interface GameStateContextType {
   playerStates: PlayerState[];
   setPlayerStates: (playerStates: PlayerState[]) => void;
   timeRemaining: number | null;
-  updateTime: (newTime: number) => void;
+  setTimeRemaining: (newTime: number) => void;
   clearCanvas: () => void;
   isTurnFinished: boolean;
   setIsTurnFinished: (isTurnFinished: boolean) => void;
@@ -34,7 +34,7 @@ export interface GameStateContextType {
  *
  * @param children - React components that consume this provider.
  */
-export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
+export const GameStateContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [lobbyPlayers, setLobbyPlayers] = useState<User[]>([]);
@@ -46,14 +46,6 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [isTurnFinished, setIsTurnFinished] = useState(false);
   const [phrases, setPhrases] = useState<Phrase[]>([]);
-
-  function setNewPlayers(newPlayers: User[]) {
-    setLobbyPlayers(newPlayers);
-  }
-
-  function updateTime(newTime: number) {
-    setTimeRemaining(newTime);
-  }
 
   const clearCanvas = () => {
     const canvas = canvasReference.current;
@@ -76,7 +68,7 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
     <GameStateContext.Provider
       value={{
         lobbyPlayers,
-        setNewPlayers,
+        setLobbyPlayers,
         currentDrawer,
         setCurrentDrawer,
         isSelectingWord,
@@ -88,7 +80,7 @@ export const GameStateProvider: React.FC<{ children: ReactNode }> = ({
         playerStates: playerStates,
         setPlayerStates: setPlayerStates,
         timeRemaining,
-        updateTime,
+        setTimeRemaining,
         clearCanvas,
         isTurnFinished,
         setIsTurnFinished,

@@ -56,6 +56,7 @@ export enum Progress {
   GAME = "game",
 }
 export interface Phrase {
+  _id: string;
   phrase: string;
 }
 

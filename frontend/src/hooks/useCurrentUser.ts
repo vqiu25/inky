@@ -4,7 +4,7 @@ import { UsersContext } from "../context/UsersContext";
 
 export default function useCurrentUser(): User | null {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const { getCurrentUser } = useContext(UsersContext)!;
+  const { getCurrentUser } = useContext(UsersContext);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {

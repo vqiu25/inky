@@ -9,7 +9,7 @@ interface TurnEndProps {
 }
 
 export default function TurnEnd({ timeOut, drawerLeft }: TurnEndProps) {
-  const { wordToGuess } = useContext(GameStateContext)!;
+  const { wordToGuess } = useContext(GameStateContext);
   const [timeRemaining, setTimeRemaining] = useState<number>(5);
 
   useEffect(() => {

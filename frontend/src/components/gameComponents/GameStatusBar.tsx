@@ -13,9 +13,9 @@ import { User } from "../../types/types";
 export default function GameStatusBar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { round, setRound } = useContext(GameStateContext)!;
+  const { round, setRound } = useContext(GameStateContext);
   const [isDrawer, setIsDrawer] = useState(false);
-  const { currentDrawer } = useContext(GameStateContext)!;
+  const { currentDrawer } = useContext(GameStateContext);
   const currentUser = useCurrentUser();
   const [revealWord, setRevealWord] = useState(false);
 

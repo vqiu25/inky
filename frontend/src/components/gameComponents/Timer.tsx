@@ -4,11 +4,11 @@ import { GameStateContext } from "../../context/GameStateContext";
 
 export default function Timer() {
   // const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
-  const { timeRemaining, updateTime } = useContext(GameStateContext)!;
+  const { timeRemaining, setTimeRemaining } = useContext(GameStateContext);
   useEffect(() => {
     // Listen for the "timer" event from the server
     socket.on("timer", (duration: number) => {
-      updateTime(duration);
+      setTimeRemaining(duration);
     });
 
     return () => {

@@ -58,7 +58,17 @@ export const newUsers: User[] = [
 ];
 
 export const mockPhrases: Phrase[] = [
-  { phrase: "cat" },
-  { phrase: "dog" },
-  { phrase: "bird" },
+  { _id: "1", phrase: "cat" },
+  { _id: "2", phrase: "dog" },
+  { _id: "3", phrase: "bird" },
 ];
+
+// Helper function to create a mock JWT
+export function createMockJwt(payload: object): string {
+  // Create a simple mock JWT with header, payload, and signature parts
+  const header = btoa(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+  const encodedPayload = btoa(JSON.stringify(payload));
+  const signature = "fake_signature";
+
+  return `${header}.${encodedPayload}.${signature}`;
+}

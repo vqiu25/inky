@@ -28,7 +28,7 @@ interface OverlayProps {
 
 export default function GamePowerups(): JSX.Element {
   const currentUser = useCurrentUser();
-  const { currentDrawer, clearCanvas } = useContext(GameStateContext)!;
+  const { currentDrawer, clearCanvas } = useContext(GameStateContext);
 
   // State for ink splash overlay
   const [showSplash, setShowSplash] = useState(false);

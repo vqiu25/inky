@@ -89,7 +89,7 @@ vi.mock("../../components/gameComponents/GameChat", () => ({
 }));
 
 describe("GamePage", () => {
-  const mockSetNewPlayers = vi.fn();
+  const mockSetLobbyPlayers = vi.fn();
   const mockSetProgress = vi.fn();
   const mockSetCurrentDrawer = vi.fn();
   const mockSetIsSelectingWord = vi.fn();
@@ -135,7 +135,7 @@ describe("GamePage", () => {
 
     const mockGameStateContextValue: GameStateContextType = {
       lobbyPlayers: [mockCurrentUser, ...newUsers],
-      setNewPlayers: mockSetNewPlayers,
+      setLobbyPlayers: mockSetLobbyPlayers,
       currentDrawer: currentDrawer,
       setCurrentDrawer: mockSetCurrentDrawer,
       isSelectingWord: isSelectingWord,
@@ -169,7 +169,7 @@ describe("GamePage", () => {
       ],
       setPlayerStates: mockSetPlayersStates,
       timeRemaining: 90,
-      updateTime: vi.fn(),
+      setTimeRemaining: vi.fn(),
       clearCanvas: mockClearCanvas,
       isTurnFinished: isTurnFinished,
       setIsTurnFinished: mockSetIsTurnFinished,
@@ -359,7 +359,7 @@ describe("GamePage", () => {
       const updatedPlayers = [mockCurrentUser, newUsers[0]]; // One player left
       lobbyChangeHandler(updatedPlayers);
 
-      expect(mockSetNewPlayers).toHaveBeenCalledWith(updatedPlayers);
+      expect(mockSetLobbyPlayers).toHaveBeenCalledWith(updatedPlayers);
     } else {
       fail("lobby-change event handler not found");
     }
