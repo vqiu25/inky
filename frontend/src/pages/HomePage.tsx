@@ -12,6 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 import useCurrentUser from "../hooks/useCurrentUser";
 import AnimatedLogo from "../components/homeComponents/AnimatedLogo";
 import { UsersContext } from "../context/UsersContext";
+import toast, { Toaster } from "react-hot-toast";
 
 function HomePage() {
   const { setNewPlayers } = useContext(GameStateContext)!;
@@ -34,26 +35,43 @@ function HomePage() {
       setNewPlayers(newPlayers);
     };
 
-    const handleLobbyFull = () => {
-      navigate("/home");
-      alert("Lobby is full. Please try again later.");
-    };
-
     socket.on("lobby-change", handleLobbyPlayer);
-    socket.on("lobby-full", handleLobbyFull);
 
     return () => {
       socket.off("lobby-change", handleLobbyPlayer); // removes only this exact handler
-      socket.off("lobby-full", handleLobbyFull); // removes only this exact handler
     };
   }, [navigate, setNewPlayers]);
 
   function onClickPlay() {
-    navigate("/lobby");
+    const callToast = (message: string) => {
+      toast.error(message, {
+        style: {
+          padding: "16px",
+          color: "#B1B5E0",
+          background: "#282a35",
+          borderRadius: "10px",
+        },
+        iconTheme: {
+          primary: "#FF8686",
+          secondary: "#FFFAEE",
+        },
+      });
+    };
 
-    if (currentUser) {
-      socket.emit("player-join", currentUser);
-    }
+    if (!currentUser) return;
+
+    socket.once("lobby-change", (newPlayers: User[]) => {
+      setNewPlayers(newPlayers);
+      navigate("/lobby");
+    });
+    socket.once("lobby-full", () => {
+      callToast("Lobby is full. Please try again later.");
+    });
+    socket.once("game-in-progress", () => {
+      callToast("Game is already in progress. Please try again later.");
+    });
+
+    socket.emit("player-join", currentUser);
   }
 
   function onClickLogout() {
@@ -64,6 +82,9 @@ function HomePage() {
 
   return (
     <div className={styles.container}>
+      <div>
+        <Toaster />
+      </div>
       <div style={{ marginBottom: "-30px" }}>
         <AnimatedLogo size={120} hoverThreshold={150} />
       </div>

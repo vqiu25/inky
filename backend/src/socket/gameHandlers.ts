@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { User } from "../types/types.js";
+import { setGameInProgress, clearLobbyPlayers } from "./lobbyHandlers.js";
 import {
   GameState,
   getNewGameState,
@@ -43,6 +44,8 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
    */
   socket.on("game-start", (players: User[]) => {
     currentGameState = getInitialGameState(players);
+    setGameInProgress(true);
+    clearLobbyPlayers(); // Clear the lobby players when the game starts
 
     io.to("game-room").emit("drawer-select", currentGameState.drawer);
   });
@@ -129,6 +132,8 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
         winnerUser.achievements.winsAchievement = true;
       }
     }
+
+    setGameInProgress(false);
 
     return updatedPlayerPoints;
   };
@@ -361,6 +366,7 @@ export default function registerGameHandlers(io: Server, socket: Socket) {
 
     if ((isDrawerLeaving || isOnePlayerLeft) && !haveAllLeft) {
       nextTurnCountdownDuration = 5;
+      numPlayersGuessed = 0;
       endTurn(isOnePlayerLeft && !isDrawerLeaving, isDrawerLeaving, isOnePlayerLeft);
       return;
     }

@@ -43,7 +43,7 @@ Candy
 Carpet
 Cash
 Cast
-Catalog
+Catalogue
 Caviar
 Celery
 Chair
@@ -66,7 +66,6 @@ Crow
 Cub
 Cube
 Cucumber
-Curb
 Darts
 Dead End
 Deep
@@ -136,6 +135,7 @@ Index
 Jacket
 Jungle
 Kayak
+Kerb
 Key
 Kitchen
 Knight
@@ -177,7 +177,7 @@ Mushroom
 Musician
 Napkin
 Narwhal
-Neighbor
+Neighbour
 Oar
 Open
 Ornament
@@ -205,7 +205,7 @@ Piranha
 Pizza
 Plantation
 Plate
-Plow
+Plough
 Pocket
 Pollution
 Pond

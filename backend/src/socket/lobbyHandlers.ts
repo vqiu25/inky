@@ -1,8 +1,17 @@
 import { Server, Socket } from "socket.io";
 import { User } from "../types/types.js";
 
-export let lobbyPlayers: User[] = [];
+let lobbyPlayers: User[] = [];
 const maxLobbyPlayers = 6;
+let gameInProgress = false;
+
+export function setGameInProgress(value: boolean) {
+  gameInProgress = value;
+}
+
+export function clearLobbyPlayers() {
+  lobbyPlayers = [];
+}
 
 export default function registerLobbyHandlers(io: Server, socket: Socket) {
   /**
@@ -13,7 +22,11 @@ export default function registerLobbyHandlers(io: Server, socket: Socket) {
    */
   socket.on("player-join", (newPlayer: User) => {
     if (lobbyPlayers.length >= maxLobbyPlayers) {
-      io.to(socket.id).emit("lobby-full", "hey there");
+      io.to(socket.id).emit("lobby-full");
+      return;
+    }
+    if (gameInProgress) {
+      io.to(socket.id).emit("game-in-progress");
       return;
     }
     if (!lobbyPlayers.some((p) => p._id === newPlayer._id)) {
